@@ -1,0 +1,20 @@
+<div class="navbar-container">
+  <p-toolbar styleClass="custom-toolbar">
+    <ng-template pTemplate="left">
+      <p-button label="bookNest" icon="pi pi-book">
+      </p-button>
+
+      <p-splitButton label="Books" icon="pi pi-shopping-bag"></p-splitButton>
+
+      <p-button label="Customers" icon="pi pi-users" routerLink="/customers">
+      </p-button>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+      <p-button icon="pi pi-shopping-cart" routerLink="/cart">
+      </p-button>
+
+      <p-splitButton icon="pi pi-user"></p-splitButton>
+    </ng-template>
+  </p-toolbar>
+</div>
