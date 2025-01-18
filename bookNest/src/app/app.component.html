@@ -1,20 +1,37 @@
-<div class="navbar-container">
-  <p-toolbar styleClass="custom-toolbar">
-    <ng-template pTemplate="left">
-      <p-button label="bookNest" icon="pi pi-book">
-      </p-button>
+<mat-toolbar>
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Book Nest</span>
+  <span class="example-spacer"></span>
 
-      <p-splitButton label="Books" icon="pi pi-shopping-bag"></p-splitButton>
+  <span *ngIf="!isAuthenticated">
+    <button mat-button [routerLink]="'/auth/login'">Log in</button>
+    <button mat-button [routerLink]="'/auth/register'">Register</button>
+  </span>
 
-      <p-button label="Customers" icon="pi pi-users" routerLink="/customers">
-      </p-button>
-    </ng-template>
+  <span *ngIf="isAuthenticated">
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <mat-icon>person</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>dialpad</mat-icon>
+        <span>Dashboard</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>notifications_off</mat-icon>
+        <span>View Profile</span>
+      </button>
 
-    <ng-template pTemplate="right">
-      <p-button icon="pi pi-shopping-cart" routerLink="/cart">
-      </p-button>
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>log_out</mat-icon>
+        <span>Log out</span>
+      </button>
+    </mat-menu>
+  </span>
+</mat-toolbar>
+<app-spinner></app-spinner>
+<router-outlet>
 
-      <p-splitButton icon="pi pi-user"></p-splitButton>
-    </ng-template>
-  </p-toolbar>
-</div>
+</router-outlet>

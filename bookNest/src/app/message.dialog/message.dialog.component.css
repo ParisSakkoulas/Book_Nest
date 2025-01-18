@@ -1,0 +1,96 @@
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  width: auto;
+  height: auto;
+  text-align: center;
+}
+
+.dialog-header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-button {
+  color: #757575;
+}
+
+.dialog-icon {
+  margin: 20px 0;
+  width: 100%;
+}
+
+.icon-success {
+  color: #4caf50;
+  font-size: 100px;
+}
+
+.icon-error {
+  color: #f44336;
+  font-size: 100px;
+}
+
+
+.icon-info {
+  color: #2196f3;
+  font-size: 100px;
+}
+
+.icon-new {
+  color: #ffc107;
+  font-size: 100px;
+}
+
+.info h1 {
+  color: #2196f3;
+}
+
+.new h1 {
+  color: #ffc107;
+}
+
+.dialog-content {
+  margin: 20px 0;
+  width: 100%;
+}
+
+.dialog-content h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.dialog-content p {
+  font-size: 16px;
+  color: #666;
+}
+
+.success h1 {
+  color: #4caf50;
+}
+
+.error h1 {
+  color: #f44336;
+}
+
+.dialog-actions {
+  margin-top: 20px;
+  width: 20%;
+}
+
+.dialog-actions button {
+  width: 100%;
+
+}
+
+
+@media (max-width: 550px) {
+  .dialog-actions {
+    width: 50%;
+  }
+
+}

@@ -6,3 +6,64 @@ body {
   margin: 0px;
   padding: 0px;
 }
+
+
+.btn {
+  font-size: 0.85rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Primary Button */
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #007bff;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+}
+
+/* Primary Button */
+.btn-danger {
+  background-color: #ff1f1f;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #d31414;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+}
+
+/* Disabled state */
+.btn:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+
+/* Outline Button */
+.btn-outline {
+  background-color: transparent;
+  color: #5c5c5c;
+}
+
+.btn-outline:hover {
+  background-color: #007bff;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

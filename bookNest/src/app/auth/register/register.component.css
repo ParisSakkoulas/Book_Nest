@@ -1,0 +1,130 @@
+.register-body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.log-in-message-class {
+  margin-top: 4%;
+  align-self: center;
+}
+
+mat-card-title {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #007bff;
+}
+
+
+
+.custom-card {
+  margin-top: 4%;
+  width: 40%;
+  height: auto;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 16px;
+}
+
+.text-danger {
+  font-size: 14px;
+  font-weight: 500;
+
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+mat-card-actions {
+  width: 60%;
+}
+
+mat-card-actions button {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 60%;
+  margin-top: 1%;
+}
+
+
+
+.custom-card {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+@media(max-width: 1000px) {
+
+  .custom-card {
+    width: 80%;
+  }
+
+}
+
+
+@media(max-width: 650px) {
+
+  .custom-card {
+    margin-top: 5%;
+  }
+
+  mat-card-actions {
+    width: 80%;
+  }
+
+  mat-card-actions button {
+    width: 100%;
+  }
+
+  mat-form-field {
+    width: 80%;
+    margin-top: 1%;
+  }
+
+}
+
+
+@media(max-width: 450px) {
+
+  .custom-card {
+    margin-top: 0;
+    width: 100%;
+    height: auto;
+    background-color: transparent;
+    box-shadow: none;
+    overflow: hidden;
+    padding: 10px;
+  }
+
+
+}

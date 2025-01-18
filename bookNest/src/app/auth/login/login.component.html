@@ -1,0 +1,39 @@
+<div class="log-in-container">
+
+  <mat-card class="custom-card">
+    <mat-card-title>Log in</mat-card-title>
+
+    <form (submit)="onLogin(loginForm)" #loginForm="ngForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="text" name="email" required ngModel #email="ngModel">
+        <mat-error *ngIf="email.invalid">Email required to log in!</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="showPassword ? 'text' : 'password'" name="password" required ngModel
+          #passwordInput="ngModel"><mat-icon (click)="togglePasswordVisibility()" matSuffix>
+          {{showPassword?'visibility_off':'visibility'}}</mat-icon>
+        <mat-error *ngIf="passwordInput.invalid">Password required to log in!</mat-error>
+
+      </mat-form-field>
+
+      <div class="button-group">
+        <button type="submit" class="saveButton" class="btn btn-primary" [disabled]="loginForm.invalid">Log
+          in</button>
+
+        <button type="button" class="saveButton" class="btn btn-outline" (click)="openDialogForResetPassword()">Forget
+          your password?</button>
+
+        <button type="button" class="saveButton" class="btn btn-outline" [routerLink]="'/auth/register'">Make new
+          account</button>
+      </div>
+
+
+
+    </form>
+
+  </mat-card>
+
+</div>

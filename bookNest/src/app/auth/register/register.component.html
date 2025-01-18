@@ -1,0 +1,52 @@
+<section class="register-body">
+  <mat-card class="custom-card">
+    <mat-card-header>
+      <mat-card-title>Register</mat-card-title>
+    </mat-card-header>
+
+    <form [formGroup]="signUpForm" (ngSubmit)="onRegister()">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="Enter your email">
+        <mat-error *ngIf="signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched">
+          {{ getErrorMessage('email') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password"
+          placeholder="Enter your password">
+        <mat-icon matSuffix (click)="togglePasswordVisibility()"
+          [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+          {{showPassword ? 'visibility_off' : 'visibility'}}
+        </mat-icon>
+        <mat-error *ngIf="signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched">
+          {{ getErrorMessage('password') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="confirm_password"
+          placeholder="Confirm your password">
+        <mat-icon matSuffix (click)="togglePasswordVisibility()"
+          [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+          {{showPassword ? 'visibility_off' : 'visibility'}}
+        </mat-icon>
+        <mat-error *ngIf="signUpForm.get('confirm_password')?.invalid && signUpForm.get('confirm_password')?.touched">
+          {{ getErrorMessage('confirm_password') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-card-actions class="button-group">
+        <button class="btn btn-primary" type="submit" [disabled]="signUpForm.invalid">
+          Sign Up
+        </button>
+        <button class="btn btn-outline" type="button" routerLink="/auth/login">
+          Already have an account? Log in
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</section>

@@ -1,0 +1,30 @@
+<div class="dialog-container" [ngClass]="data.type.toLowerCase()">
+  <div class="dialog-header">
+    <button mat-icon-button class="close-button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+
+  <div class="dialog-icon">
+    <i class="fa-regular fa-face-smile icon-success" *ngIf="getTitle() === 'Success'"></i>
+    <i class="fa-regular fa-face-frown icon-error" *ngIf="getTitle() === 'Error'"></i>
+    <i class="fa-solid fa-circle-info icon-info" *ngIf="getTitle() === 'Information'"></i>
+    <i class="fa-regular fa-comment icon-info" *ngIf="getTitle() === 'New Notification'"></i>
+  </div>
+
+
+  <div class="dialog-content" [ngClass]="{
+    'success': getTitle() === 'Success',
+    'error': getTitle() === 'Error',
+    'info': getTitle() === 'Information',
+    'new': getTitle() === 'New Notification'
+  }">
+    <h1>{{ getTitle() }}</h1>
+    <p>{{ data.message }}</p>
+  </div>
+
+  <div class="dialog-actions">
+    <button class="dialog-button btn btn-primary" (click)="closeDialog()">OK</button>
+  </div>
+</div>
