@@ -1,7 +1,7 @@
 
 // auth routes
 const express = require('express');
-const { registerUser, loginUser, getUserProfile } = require('../controllers/auth.controller');
+const { registerUser, loginUser, getUserProfile, verifyUser } = require('../controllers/auth.controller');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 
 const router = express.Router();
@@ -14,5 +14,8 @@ router.post('/login', loginUser);
 
 // Route: Get user profile (protected route)
 router.get('/profile', authenticateToken, getUserProfile);
+
+// Route: Get verification code to verify user account
+router.get("/verify/:confirmationCode", verifyUser);
 
 module.exports = router;
