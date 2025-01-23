@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 
 // Middleware to authenticate token
 exports.authenticateToken = (req, res, next) => {
+
+
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Extract token from "Bearer TOKEN"
 

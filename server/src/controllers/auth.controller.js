@@ -1,9 +1,13 @@
 const User = require('../models/user.model');
+const Customer = require('../models/customer.model');
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
 const transporter = require('../config/email.config');
+const { USER_STATUS } = require('../models/user.status.constants');
+const { CUSTOMER_STATUS } = require('../models/customer.status.constants');
 
 // Controller: Register a new user
 exports.registerUser = async (req, res) => {
@@ -11,12 +15,12 @@ exports.registerUser = async (req, res) => {
 
 
         //Get sign up data body
-        const { email, password } = req.body;
+        const { email, password, firstName, lastName } = req.body;
 
         // Input validation
-        if (!email || !password) {
+        if (!email && !password && !firstName && !lastName) {
             return res.status(400).json({
-                message: "Email and password required to sign up"
+                message: "You are required to provide your Full name, an email and a password in order to register"
             })
         }
 
@@ -39,8 +43,11 @@ exports.registerUser = async (req, res) => {
             email: email.toLowerCase(),
             password: hashedPassword,
             uniqueString: verificationToken,
-            status: 'inactive'
+            status: USER_STATUS.PENDING_VERIFICATION
         });
+
+
+
 
         console.log(newUser)
 
@@ -48,7 +55,7 @@ exports.registerUser = async (req, res) => {
         await newUser.save();
 
         // Send verification email
-        await sendVerificationEmail({
+        await exports.sendVerificationEmail({
             email: newUser.email,
             verificationToken
         });
@@ -60,6 +67,16 @@ exports.registerUser = async (req, res) => {
         delete userResponse.verificationToken;
 
 
+        //  Create new customer
+        const customer = await Customer.create({
+            user: userResponse._id,
+            firstName,
+            lastName,
+            email,
+            customerStatus: CUSTOMER_STATUS.REGISTERED
+        });
+
+
         return res.status(200).json({
             message: `A confirmation email has been sent to ${userResponse.email}. Check your email!`,
             user: userResponse,
@@ -69,23 +86,28 @@ exports.registerUser = async (req, res) => {
 
     } catch (error) {
 
-        res.status(400).json({
-            message: error.message
+        return res.status(500).json({
+            success: false,
+            message: 'Error creating customer',
+            error: error.message
         });
     }
 };
 
 // Controller: Login user
 exports.loginUser = async (req, res) => {
+
     try {
 
         //Get log in data body
         const { email, password } = req.body;
+        console.log(req.body)
 
 
         //Check if email and password are in the body
         if (!email || !password) {
             return res.status(400).json({
+                success: false,
                 message: "Email and password required to log in"
             })
         }
@@ -95,9 +117,11 @@ exports.loginUser = async (req, res) => {
         //Find user
         const userFound = await User.findOne({ email: email });
 
+
         //If user not exist
         if (!userFound) {
             return res.status(400).json({
+                success: false,
                 message: "User not found with this email"
             })
         }
@@ -109,29 +133,54 @@ exports.loginUser = async (req, res) => {
         //If password incorrect
         if (!isPasswordValid) {
             return res.status(401).json({
+                success: false,
                 message: 'Invalid authentication credentials'
             })
         }
         else {
 
-            //If account is inactive
-            if (userFound.status === 'inactive') {
+            // If account is inactive
+            if (userFound.status !== USER_STATUS.ACTIVE) {
+                const statusMessages = {
+                    PENDING_VERIFICATION: "Please verify your email address to activate your account",
+                    AUTO_CREATED_UNVERIFIED: "This account was automatically created. Please check your email for verification instructions",
+                    DEFAULT: "Account is not active. Please contact support if you need assistance"
+                };
+
                 return res.status(401).json({
-                    message: "Pending Account. Please Verify Your Email!",
-                })
+                    success: false,
+                    message: statusMessages[userFound.status] || statusMessages.DEFAULT
+                });
             }
 
+
+
             //Generate token
-            const token = jwt.sign({ userId: userFound._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ userId: userFound._id, role: userFound.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+            //  userResponse object
+            let userResponse = {
+                user_id: userFound._id,
+                email: userFound.email,
+                role: userFound.role
+            };
 
 
+            if (userFound.role === 'USER') {
+                const customerFound = await Customer.findOne({ user: userFound._id });
+                if (customerFound) {
+                    userResponse.firstName = customerFound.firstName;
+                    userResponse.lastName = customerFound.lastName;
+                }
+            }
 
-            //Sent data to client
             res.status(200).json({
-                message: 'Auth success',
-                token: token,
+                success: true,
+                message: 'Login successful',
+                token,
                 expiresIn: 3600,
-            })
+                user: userResponse
+            });
 
 
 
@@ -143,6 +192,7 @@ exports.loginUser = async (req, res) => {
 
 
     } catch (error) {
+        console.log(error)
         res.status(400).json({ message: error.message });
     }
 };
@@ -178,7 +228,13 @@ exports.verifyUser = async (req, res) => {
             })
         }
 
-        await User.findOneAndUpdate({ uniqueString: uniqueString }, { status: 'active' });
+        if (user.status === USER_STATUS.ACTIVE) {
+            return res.status(201).json({
+                message: 'User is already active. You can log in!'
+            })
+        }
+
+        await User.findOneAndUpdate({ uniqueString: uniqueString }, { status: USER_STATUS.ACTIVE });
 
 
         //Success message
@@ -206,7 +262,7 @@ exports.verifyUser = async (req, res) => {
 }
 
 //Method for sending user verification code
-sendVerificationEmail = async ({ email, verificationToken }) => {
+exports.sendVerificationEmail = async ({ email, verificationToken }) => {
 
     console.log(email);
     console.log(verificationToken);
@@ -261,3 +317,131 @@ sendVerificationEmail = async ({ email, verificationToken }) => {
         throw new Error('Failed to send verification email');
     }
 };
+
+
+// Method for creating an admin when setting up the application
+exports.setupInitialAdmin = async () => {
+    try {
+        // Check if any admin exists
+        const adminExists = await User.findOne({ role: 'ADMIN' });
+
+        if (adminExists) {
+            console.log('Admin already exists. Skipping initial admin setup.');
+            return;
+        }
+
+        // Generate verification token
+        const verificationToken = jwt.sign({ data: 'Data token' }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+        // Create first admin with environment variables
+        const adminData = {
+            email: process.env.INITIAL_ADMIN_EMAIL,
+            password: await bcrypt.hash(process.env.INITIAL_ADMIN_PASSWORD, 12),
+            role: 'ADMIN',
+            status: USER_STATUS.ACTIVE,
+            uniqueString: verificationToken,
+            firstName: process.env.INITIAL_ADMIN_FIRSTNAME,
+            lastName: process.env.INITIAL_ADMIN_LASTNAME
+        };
+
+        const admin = await User.create(adminData);
+        console.log('Initial admin account created successfully');
+
+    } catch (error) {
+        console.error('Error creating initial admin:', error);
+    }
+};
+
+
+exports.resentVerificationEmail = async (req, res) => {
+
+    try {
+
+
+
+        const customerToChange = await Customer.findById(req.params.customerId);
+        if (!customerToChange) {
+            return res.status(201).json({
+                message: 'Cant find customer'
+            })
+        }
+
+        const userToSendLink = await User.findById(customerToChange.user);
+        if (!userToSendLink) {
+            return res.status(201).json({
+                message: 'Not email connected to that user'
+            })
+        }
+
+        // Generate verification token
+        const verificationToken = jwt.sign({ data: 'Data token' }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+        const updatedUser = await User.findByIdAndUpdate(userToSendLink._id, { uniqueString: verificationToken })
+
+        console.log(userToSendLink)
+
+        await exports.sendVerificationEmail({
+            email: userToSendLink.email,
+            verificationToken
+        });
+
+        return res.status(200).json({
+            message: `A confirmation email has been sent to ${userToSendLink.email}. Inform the user!`
+        });
+
+    } catch (err) {
+
+    }
+
+}
+
+exports.userStatusUpdate = async (req, res) => {
+
+    try {
+
+
+        //Find the user
+        const customerFound = await Customer.findById(req.params.customerId);
+        if (!customerFound) {
+            return res.status(400).json({
+                message: "Customer not found"
+            })
+        }
+
+
+        //Get and check the status on body
+        const { newStatus } = req.body;
+        if (!Object.values(USER_STATUS).includes(newStatus)) {
+            return res.status(400).json({
+                message: "Invalid status provided"
+            })
+        }
+
+        //Update user to a specific status type
+        const updatedUser = await User.findByIdAndUpdate(customerFound.user, { status: newStatus }, { new: true });
+
+        // If user not found
+        if (!updatedUser) {
+            return res.status(400).json({
+                message: "User not found"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: `User status changed to ${newStatus} successfully`,
+            user: updatedUser,
+            status: updatedUser.status
+        });
+
+
+    } catch (err) {
+
+        console.log(err)
+        return res.status(400).json({
+
+            message: "Error on activating user"
+        })
+    }
+
+}

@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
+const { USER_STATUS } = require('./user.status.constants');
 const { Schema } = mongoose;
+
+
+
+
+
 
 const userSchema = new Schema({
 
@@ -55,18 +61,16 @@ const userSchema = new Schema({
     role:
     {
         type: String,
-        enum: ['user', 'admin'],
-        default: 'user'
+        enum: ['USER', 'CUSTOMER', 'ADMIN'],
+        default: 'USER'
     },
 
 
 
-    status:
-    {
+    status: {
         type: String,
-        enum: ['active', 'inactive'],
-        default: 'inactive',
-        required: true,
+        enum: Object.values(USER_STATUS),
+        default: USER_STATUS.PENDING_VERIFICATION
     },
 
     uniqueString:

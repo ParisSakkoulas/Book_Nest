@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
+const { setupInitialAdmin } = require('./controllers/auth.controller');
 
 // Environment variables
 dotenv.config();
@@ -20,6 +21,8 @@ const connectDB = async () => {
         app.listen(PORT, () => {
             console.log(`Server running on http://localhost:${PORT}`);
         });
+
+        setupInitialAdmin();
 
         console.log('Connected to MongoDB');
 
