@@ -21,6 +21,8 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
 
     this.signUpForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern('^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$')]],
       confirm_password: ['', [Validators.required, this.passwordMatchValidator]]
@@ -38,6 +40,8 @@ export class RegisterComponent implements OnInit {
       const registerUserData = {
         email: this.signUpForm.value.email,
         password: this.signUpForm.value.password,
+        firstName: this.signUpForm.value.firstName,
+        lastName: this.signUpForm.value.lastName,
       }
 
       this.authService.registerNewUser(registerUserData);
@@ -81,6 +85,19 @@ export class RegisterComponent implements OnInit {
     if (control.hasError('email')) {
       return 'Please enter a valid email address';
     }
+
+    if (control.hasError('firstName')) {
+      return 'Please enter your first name';
+    }
+
+    if (control.hasError('lastName')) {
+      return 'Please enter your last name';
+    }
+
+    if (control.hasError('pattern') && controlName === 'phoneNumber') {
+      return 'Please enter a valid phone number';
+    }
+
     if (control.hasError('pattern') && controlName === 'password') {
       return 'Password must contain 2 uppercase letters, 1 special character, 2 numbers, 3 lowercase letters, and be at least 8 characters long';
     }

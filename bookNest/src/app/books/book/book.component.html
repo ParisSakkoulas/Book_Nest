@@ -1,0 +1,74 @@
+<div class="book-container" *ngIf="book">
+  <div class="breadcrumb">
+    <a routerLink="/books/">Books</a> / {{ book._id }}
+  </div>
+
+  <div class="book-content">
+    <div class="book-image-section">
+      <img [src]="book.imageUrl || '/assets/default-book.png'" [alt]="book.title" class="main-image">
+    </div>
+
+    <div class="book-details-section">
+      <h1 class="book-title">{{ book.title }}</h1>
+      <p class="book-author">by <span>{{ book.author }}</span></p>
+
+      <div class="price-section">
+        <span class="price">${{ book.price }}</span>
+        <div class="stock-badge" [ngClass]="getStockStatus().color">
+          {{ getStockStatus().text }}
+        </div>
+      </div>
+
+      <div class="quantity-section" *ngIf="book.stock > 0">
+        <span class="quantity-label">Quantity:</span>
+        <div class="quantity-controls">
+          <button mat-icon-button (click)="decreaseQuantity()" [disabled]="quantity === 1">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <span class="quantity-value">{{ quantity }}</span>
+          <button mat-icon-button (click)="increaseQuantity()" [disabled]="quantity === book.stock">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" class="add-to-cart-btn" [disabled]="book.stock === 0"
+          (click)="addToCart()">
+          <mat-icon>shopping_cart</mat-icon>
+          Add to Cart
+        </button>
+        <button mat-stroked-button color="primary" class="wishlist-btn">
+          <mat-icon>favorite_border</mat-icon>
+          Add to Wishlist
+        </button>
+      </div>
+
+      <mat-divider class="divider"></mat-divider>
+
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" [(selectedIndex)]="selectedTab">
+        <mat-tab label="Description">
+          <div class="tab-content">
+            <p class="description">{{ book.description }}</p>
+          </div>
+        </mat-tab>
+        <mat-tab label="Details">
+          <div class="tab-content">
+            <div class="detail-item">
+              <span class="label">ISBN:</span>
+              <span class="value">{{ book.isbn }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Category:</span>
+              <span class="value">{{ book.category }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Publish Date:</span>
+              <span class="value">{{ book.publishDate | date }}</span>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

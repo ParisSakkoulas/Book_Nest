@@ -1,37 +1,221 @@
-<mat-toolbar>
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <span>Book Nest</span>
-  <span class="example-spacer"></span>
+<div class="app-container">
 
-  <span *ngIf="!isAuthenticated">
-    <button mat-button [routerLink]="'/auth/login'">Log in</button>
-    <button mat-button [routerLink]="'/auth/register'">Register</button>
-  </span>
 
-  <span *ngIf="isAuthenticated">
-    <button mat-icon-button [matMenuTriggerFor]="userMenu">
-      <mat-icon>person</mat-icon>
-    </button>
-    <mat-menu #userMenu="matMenu">
-      <button mat-menu-item>
-        <mat-icon>dialpad</mat-icon>
-        <span>Dashboard</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon>notifications_off</mat-icon>
-        <span>View Profile</span>
-      </button>
 
-      <button mat-menu-item (click)="onLogout()">
-        <mat-icon>log_out</mat-icon>
-        <span>Log out</span>
-      </button>
-    </mat-menu>
-  </span>
-</mat-toolbar>
-<app-spinner></app-spinner>
-<router-outlet>
+  <mat-toolbar class="navbar">
+    <div class="navbar-container">
+      <!-- Logo and Brand -->
+      <div class="brand-section">
+        <button mat-icon-button class="menu-button" (click)="toggleMobileMenu()" aria-label="Toggle navigation menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <a routerLink="/public/home" class="brand-logo">
+          <mat-icon class="logo-icon">auto_stories</mat-icon>
+          <span class="brand-name">Book Nest</span>
+        </a>
+      </div>
 
-</router-outlet>
+      <!-- Navigation Links -->
+      <nav class="nav-links" [class.show-mobile]="showMobileMenu">
+        <ng-container *ngFor="let link of navLinks">
+          <a mat-button [routerLink]="link.path" routerLinkActive="active-link">
+            <mat-icon>{{link.icon}}</mat-icon>
+            <span>{{link.label}}</span>
+          </a>
+        </ng-container>
+      </nav>
+
+
+
+      <!-- Auth Section -->
+      <div class="auth-section">
+
+        <!-- Visitors Section -->
+        <ng-container *ngIf="!isAuthenticated">
+          <button mat-button class="login-btn" [routerLink]="'/auth/login'">
+            <mat-icon>login</mat-icon>
+            <span>Log in</span>
+          </button>
+          <button mat-raised-button color="primary" [routerLink]="'/auth/register'">
+            <span>Register</span>
+          </button>
+          <button mat-icon-button>
+            <mat-icon>shopping_cart</mat-icon>
+          </button>
+        </ng-container>
+
+        <!-- Admin Section -->
+        <ng-container *ngIf="isAuthenticated">
+
+          <button mat-icon-button [matMenuTriggerFor]="adminMenu" *ngIf="currentUserData.role === 'ADMIN'">
+            <div class="user-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+          </button>
+
+          <mat-menu #adminMenu="matMenu" class="user-menu">
+            <div class="user-menu-header">
+              <p class="user-email">{{currentUserData.email}}</p>
+            </div>
+            <mat-divider></mat-divider>
+            <button mat-menu-item routerLink="/admin/dashboard">
+              <mat-icon>dashboard</mat-icon>
+              <span>Dashboard</span>
+            </button>
+            <button mat-menu-item routerLink="/profile">
+              <mat-icon>library_books</mat-icon>
+              <span>Products</span>
+            </button>
+
+            <button mat-menu-item routerLink="/customers/list">
+              <mat-icon>groups</mat-icon>
+              <span>Customers</span>
+            </button>
+
+            <button mat-menu-item routerLink="/profile">
+              <mat-icon>orders</mat-icon>
+              <span>Orders</span>
+            </button>
+
+            <button mat-menu-item routerLink="/profile">
+              <mat-icon>person_outline</mat-icon>
+              <span>Users</span>
+            </button>
+
+            <button mat-menu-item routerLink="/settings">
+              <mat-icon>settings</mat-icon>
+              <span>Settings</span>
+            </button>
+
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="onLogout()" class="logout-item">
+              <mat-icon>logout</mat-icon>
+              <span>Log out</span>
+            </button>
+          </mat-menu>
+
+
+        </ng-container>
+
+        <ng-container *ngIf="isAuthenticated">
+          <button mat-icon-button [matMenuTriggerFor]="userMenu" *ngIf="currentUserData.role === 'USER'">
+            <div class="user-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+
+          </button>
+
+          <mat-menu #userMenu="matMenu" class="user-menu">
+            <div class="user-menu-header" *ngIf="currentUserData">
+              <p class="user-name">{{currentUserData.firstName}} {{currentUserData.lastName}}</p>
+              <p class="user-email">{{currentUserData.email}}</p>
+            </div>
+            <mat-divider></mat-divider>
+            <button mat-menu-item routerLink="/user/dashboard">
+              <mat-icon>dashboard</mat-icon>
+              <span>Dashboard</span>
+            </button>
+            <button mat-menu-item routerLink="/user/profile">
+              <mat-icon>person_outline</mat-icon>
+              <span>Profile</span>
+            </button>
+            <button mat-menu-item routerLink="/settings">
+              <mat-icon>settings</mat-icon>
+              <span>Settings</span>
+            </button>
+            <button mat-menu-item routerLink="/settings">
+              <mat-icon>settings</mat-icon>
+              <span>Orders</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="onLogout()" class="logout-item">
+              <mat-icon>logout</mat-icon>
+              <span>Log out</span>
+            </button>
+          </mat-menu>
+        </ng-container>
+      </div>
+    </div>
+  </mat-toolbar>
+  <app-spinner></app-spinner>
+  <router-outlet></router-outlet>
+
+
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <!-- Company Info Section -->
+        <div class="footer-section">
+          <div class="footer-brand">
+            <mat-icon class="footer-logo">auto_stories</mat-icon>
+            <h3>Book Nest</h3>
+          </div>
+          <p class="company-description">
+            Your ultimate destination for discovering, purchasing, and enjoying books of all genres.
+          </p>
+          <div class="social-links">
+            <a mat-icon-button href="#" aria-label="Facebook">
+              <mat-icon>facebook</mat-icon>
+            </a>
+            <a mat-icon-button href="#" aria-label="Twitter">
+              <mat-icon>twitter</mat-icon>
+            </a>
+            <a mat-icon-button href="#" aria-label="Instagram">
+              <mat-icon>instagram</mat-icon>
+            </a>
+            <a mat-icon-button href="#" aria-label="LinkedIn">
+              <mat-icon>linkedin</mat-icon>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links Section -->
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a routerLink="/about">About Us</a></li>
+            <li><a routerLink="/contact">Contact</a></li>
+            <li><a routerLink="/books">Browse Books</a></li>
+            <li><a routerLink="/categories">Categories</a></li>
+          </ul>
+        </div>
+
+        <!-- Customer Service Section -->
+        <div class="footer-section">
+          <h4>Customer Service</h4>
+          <ul>
+            <li><a routerLink="/faq">FAQ</a></li>
+            <li><a routerLink="/shipping">Shipping Info</a></li>
+            <li><a routerLink="/returns">Returns Policy</a></li>
+            <li><a routerLink="/privacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter Section -->
+        <div class="footer-section">
+          <h4>Stay Updated</h4>
+          <p>Subscribe to our newsletter for updates and exclusive offers!</p>
+          <mat-form-field appearance="outline" class="newsletter-input">
+            <input matInput placeholder="Enter your email" type="email">
+          </mat-form-field>
+          <button mat-raised-button color="primary">Subscribe</button>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom">
+        <p>&copy; 2025 Book Nest. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a routerLink="/terms">Terms of Service</a>
+          <span class="separator">|</span>
+          <a routerLink="/privacy">Privacy Policy</a>
+          <span class="separator">|</span>
+          <a routerLink="/cookies">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+</div>

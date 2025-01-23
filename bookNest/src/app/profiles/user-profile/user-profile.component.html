@@ -1,0 +1,76 @@
+<div class="profile-container">
+  <mat-card class="profile-card">
+    <div class="profile-header">
+      <div class="avatar-section">
+        <div class="avatar">{{getUserInitials()}}</div>
+        <div class="user-info">
+          <h2>{{user.email}}</h2>
+          <div class="badges">
+            <span class="status-chip" [ngClass]="user.status.toLowerCase()">
+              {{user.status}}
+            </span>
+            <span class="role-badge">{{user.role}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-buttons-section">
+
+      <button class="btn "
+        [ngClass]="{'btn-primary': activeButton === 'Account', 'btn-outline': activeButton !== 'Account'}"
+        (click)="showDiv('Account')">Account</button>
+      <button class="btn " [ngClass]="{'btn-primary': activeButton === 'Info', 'btn-outline': activeButton !== 'Info'}"
+        (click)="showDiv('Info')">Info</button>
+
+    </div>
+    <mat-divider></mat-divider>
+
+
+    <div class="profile-info" *ngIf="activeButton === 'Info'">
+
+    </div>
+
+
+    <div class="profile-info" *ngIf="activeButton === 'Account'">
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+        <div class="form-section">
+          <h3>Account Details</h3>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="email" type="email">
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="email?.errors?.['email']">
+              Please enter a valid email address
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-hint>Must contain uppercase, lowercase, number and special character</mat-hint>
+            <mat-error *ngIf="password?.errors">
+              <ul class="password-requirements">
+                <li *ngIf="password?.errors?.['minlength']">
+                  <mat-icon>close</mat-icon> At least 8 characters
+                </li>
+              </ul>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-outline" type="button">Cancel</button>
+          <button class="btn btn-primary" type="submit" [disabled]="!profileForm.valid">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </mat-card>
+</div>

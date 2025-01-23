@@ -1,0 +1,66 @@
+<div class="dashboard-container">
+  <div class="content">
+    <div class="stats-grid">
+      <mat-card>
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon>shopping_cart</mat-icon>
+            <h3>My Orders</h3>
+          </div>
+          <div class="stat-number">12</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon>favorite</mat-icon>
+            <h3>Wishlist</h3>
+          </div>
+          <div class="stat-number">5</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-content>
+          <div class="stat-header">
+            <mat-icon>library_books</mat-icon>
+            <h3>Books Read</h3>
+          </div>
+          <div class="stat-number">8</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="recent-section">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Recent Orders</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <table mat-table [dataSource]="recentOrders">
+            <ng-container matColumnDef="book">
+              <th mat-header-cell *matHeaderCellDef>Book</th>
+              <td mat-cell *matCellDef="let order">{{order.book}}</td>
+            </ng-container>
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let order">{{order.date}}</td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let order">
+                <span [class]="'status-badge ' + order.status.toLowerCase()">
+                  {{order.status}}
+                </span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

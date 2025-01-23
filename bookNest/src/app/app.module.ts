@@ -20,6 +20,30 @@ import { MatInputModule } from '@angular/material/input';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { CostumersComponent } from './customers/customers.component';
+import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { HomeComponent } from './home/home.component';
+import { CreateCustomerComponent } from './customers/create-customer/create-customer.component';
+import { MatSelectModule } from '@angular/material/select';
+import { ViewCustomerComponent } from './customers/view-customer/view-customer.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { BooksComponent } from './books/books/books.component';
+import { CreateBookComponent } from './books/create-book/create-book.component';
+import { AdminDashboardComponent } from './dashboads/admin-dashboard/admin-dashboard.component';
+
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatBadgeModule } from '@angular/material/badge';
+import { AdminDashboardOrverviewComponent } from './dashboads/admin-dashboard-orverview/admin-dashboard-orverview.component';
+import { UserDashboardComponent } from './dashboads/user-dashboard/user-dashboard.component';
+import { UserProfileComponent } from './profiles/user-profile/user-profile.component';
+import { BookComponent } from './books/book/book.component';
+
+
 
 @NgModule({
   declarations: [
@@ -28,6 +52,18 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     RegisterComponent,
     MessageDialogComponent,
     SpinnerComponent,
+    CostumersComponent,
+    HomeComponent,
+    CreateCustomerComponent,
+    ViewCustomerComponent,
+    BooksComponent,
+    CreateBookComponent,
+    AdminDashboardComponent,
+    AdminDashboardOrverviewComponent,
+    UserDashboardComponent,
+    UserProfileComponent,
+    BookComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -43,7 +79,17 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     HttpClientModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatMenuModule
+    MatMenuModule,
+    MatListModule,
+    MatPaginatorModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatExpansionModule,
+    MatDividerModule,
+    MatBadgeModule,
+    MatSidenavModule,
+    MatTableModule,
+    MatTabsModule
 
 
 

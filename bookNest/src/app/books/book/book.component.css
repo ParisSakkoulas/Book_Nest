@@ -1,0 +1,170 @@
+/* book-view.component.css */
+.book-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.breadcrumb {
+  margin-bottom: 24px;
+  color: #666;
+}
+
+.breadcrumb a {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.book-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+.book-image-section {
+  position: sticky;
+  top: 24px;
+}
+
+.main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.book-details-section {
+  padding: 24px 0;
+}
+
+.book-title {
+  font-size: 2.5rem;
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+
+.book-author {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+}
+
+.book-author span {
+  color: #1976d2;
+}
+
+.price-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.stock-badge {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.stock-badge.success {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+}
+
+.stock-badge.warning {
+  background-color: #FFF3E0;
+  color: #EF6C00;
+}
+
+.stock-badge.danger {
+  background-color: #FFEBEE;
+  color: #C62828;
+}
+
+.quantity-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-value {
+  min-width: 40px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.add-to-cart-btn,
+.wishlist-btn {
+  flex: 1;
+  padding: 8px 24px;
+  font-size: 1rem;
+}
+
+.add-to-cart-btn {
+  background-color: #1976d2;
+}
+
+.divider {
+  margin: 32px 0;
+}
+
+.tab-content {
+  padding: 24px 0;
+}
+
+.description {
+  line-height: 1.6;
+  color: #333;
+}
+
+.detail-item {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.detail-item .label {
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.detail-item .value {
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .book-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .book-image-section {
+    position: static;
+  }
+
+  .book-title {
+    font-size: 2rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}

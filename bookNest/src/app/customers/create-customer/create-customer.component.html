@@ -1,0 +1,103 @@
+<div class="dialog-content">
+  <h2 mat-dialog-title>{{title}}</h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="createCustomerForm" (ngSubmit)="onSubmit()">
+      <!-- Personal Information Section -->
+      <div class="form-section">
+        <h3 class="section-title">Personal Information</h3>
+
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" placeholder="Enter first name">
+          <mat-error *ngIf="createCustomerForm.get('firstName')?.errors?.['required']">
+            First name is required
+          </mat-error>
+          <mat-error *ngIf="createCustomerForm.get('firstName')?.errors?.['minlength']">
+            First name must be at least 2 characters
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" placeholder="Enter last name">
+          <mat-error *ngIf="createCustomerForm.get('lastName')?.errors?.['required']">
+            Last name is required
+          </mat-error>
+          <mat-error *ngIf="createCustomerForm.get('lastName')?.errors?.['minlength']">
+            Last name must be at least 2 characters
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Contact Information Section -->
+      <div class="form-section">
+        <h3 class="section-title">Contact Information</h3>
+        <p class="section-description">Please provide at least one contact method</p>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input matInput formControlName="email" placeholder="Enter email address">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="createCustomerForm.get('email')?.errors?.['email']">
+            Please enter a valid email address
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Phone Number</mat-label>
+          <input matInput formControlName="phoneNumber" placeholder="Enter phone number">
+          <mat-icon matSuffix>phone</mat-icon>
+          <mat-error *ngIf="createCustomerForm.get('phoneNumber')?.errors?.['pattern']">
+            Please enter a valid phone number
+          </mat-error>
+        </mat-form-field>
+
+        <mat-error *ngIf="createCustomerForm.errors?.['noContactMethod']" class="contact-error">
+          Please provide either an email address or phone number
+        </mat-error>
+      </div>
+
+      <!-- Address Information Section -->
+      <div class="form-section">
+        <h3 class="section-title">Address information</h3>
+
+
+        <mat-form-field appearance="outline">
+          <mat-label>Street</mat-label>
+          <input matInput formControlName="street" placeholder="Enter street address">
+          <mat-icon matSuffix>location_on</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput formControlName="city" placeholder="Enter city address">
+          <mat-icon matSuffix>location_city</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>State</mat-label>
+          <input matInput formControlName="state" placeholder="Enter state address">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Zip Code</mat-label>
+          <input matInput formControlName="zipCode" placeholder="Enter zipCode address">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Country</mat-label>
+          <input matInput formControlName="country" placeholder="Enter country address">
+          <mat-icon matSuffix>public</mat-icon>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!createCustomerForm.valid">
+      {{buttonText}}
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,108 @@
+<div class="customer-dashboard">
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filter-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Search Customers</mat-label>
+          <input matInput (input)="onSearch($event)" placeholder="Name, Email, Phone">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Customer Status</mat-label>
+          <mat-select [(ngModel)]="filters.customerStatus" (selectionChange)="applyFilters()">
+            <mat-option value="">All</mat-option>
+            <mat-option value="REGISTERED">Registered</mat-option>
+            <mat-option value="UNREGISTERED">Unregistered</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Activity Status</mat-label>
+          <mat-select [(ngModel)]="filters.isActive" (selectionChange)="applyFilters()">
+            <mat-option value="">All</mat-option>
+            <mat-option [value]="true">Active</mat-option>
+            <mat-option [value]="false">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="onCreateNewCustomer()">
+          <mat-icon>add</mat-icon>
+          Add Customer
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="customer-list">
+    <mat-card *ngFor="let customer of customers" class="customer-item">
+      <div class="customer-info">
+        <div class="customer-avatar" [routerLink]="'/customers/view/'+customer._id">
+          {{ customer.firstName[0] }}{{ customer.lastName[0] }}
+        </div>
+        <div class="customer-details">
+          <h3>{{ customer.firstName }} {{ customer.lastName }}</h3>
+          <p><mat-icon>email</mat-icon> {{ customer.user?.email }}</p>
+          <p><mat-icon>phone</mat-icon> {{ customer.phoneNumber || 'N/A' }}</p>
+        </div>
+      </div>
+      <div class="customer-status">
+        <!-- Customer Account Status -->
+        <p>
+          <mat-icon>person</mat-icon>
+          <span [ngClass]="{'status-registered': customer.customerStatus === 'REGISTERED',
+                            'status-unregistered': customer.customerStatus === 'UNREGISTERED'}">
+            {{ customer.customerStatus === 'Registered Customer' ? 'Customer with Account' : 'Guest Customer' }}
+          </span>
+        </p>
+
+        <!-- Account Access Status -->
+        <p>
+          <mat-icon>verified_user</mat-icon>
+          <span [ngClass]="{'status-active': customer.isActive,
+                            'status-inactive': !customer.isActive}">
+            {{ customer.isActive ? 'Active Account' : 'Inactive Account' }}
+          </span>
+        </p>
+
+        <!-- Email Verification Status -->
+        <p *ngIf="customer.user">
+          <mat-icon>mark_email_read</mat-icon>
+          <span [class]="customer.user.status.toLowerCase()">
+            {{ customer.user.status === 'PENDING_VERIFICATION' ? 'Email Verification Pending' :
+            customer.user.status === 'AUTO_CREATED_UNVERIFIED' ? 'New Account (Unverified)' :
+            customer.user.status === 'AUTO_CREATED_VERIFIED' ? 'New Account (Verified)' :
+            customer.user.status }}
+          </span>
+        </p>
+      </div>
+      <div class="customer-actions">
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Customer actions">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item [routerLink]="'/customers/view/'+customer._id">
+            <mat-icon>visibility</mat-icon>
+            <span>View</span>
+          </button>
+          <button mat-menu-item (click)="toggleActive(customer)">
+            <mat-icon>{{ customer.isActive ? 'toggle_off' : 'toggle_on' }}</mat-icon>
+            <span> {{ customer.isActive ? 'Deactivate' : 'Activate' }}</span>
+          </button>
+          <button mat-menu-item (click)="editCustomer(customer)">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <button mat-menu-item (click)="deleteCustomer(customer)">
+            <mat-icon>delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-card>
+  </div>
+
+  <mat-paginator [length]="pagination.total" [pageSize]="pagination.limit" [pageSizeOptions]="[5, 10, 25, 100]"
+    (page)="onPageChange($event)" aria-label="Select page">
+  </mat-paginator>
+</div>

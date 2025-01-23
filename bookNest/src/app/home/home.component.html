@@ -1,0 +1,44 @@
+<section class="hero-section">
+  <div class="hero-content">
+    <h1>Discover Your Next<br><span class="highlight">Favorite Book</span></h1>
+    <p>Explore our vast collection of books, from bestsellers to rare finds. Join our community of book lovers today!
+    </p>
+    <div class="hero-buttons">
+      <button mat-raised-button color="primary" routerLink="/books">
+        <mat-icon>book</mat-icon>
+        Browse Books
+      </button>
+      <button mat-stroked-button routerLink="/auth/register">
+        <mat-icon>person_add</mat-icon>
+        Join Now
+      </button>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="assets/images/hero-books1.jpg" alt="Books collection">
+  </div>
+</section>
+
+<section class="categories-section">
+  <div class="section-header">
+    <h2>Browse Categories</h2>
+    <p>Find your perfect read by category</p>
+  </div>
+
+  <div class="categories-grid">
+    <mat-card *ngFor="let category of categories" class="category-card">
+      <img mat-card-image [src]="category.image" [alt]="category.name" class="category-image">
+      <mat-card-header>
+        <mat-card-title>{{category.name}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{category.description}}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" [routerLink]="['/categories', category.name.toLowerCase()]">
+          View {{category.name}}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</section>

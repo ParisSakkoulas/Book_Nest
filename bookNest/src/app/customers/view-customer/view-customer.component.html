@@ -1,0 +1,173 @@
+<div class="customer-container">
+  <mat-card class="custom-card" *ngIf="customer">
+    <!-- Header Section -->
+    <div class="card-header">
+      <div class="avatar-wrapper">
+        <div class="avatar-section">
+          <div class="custom-avatar">
+            {{ customer.firstName[0] }}{{ customer.lastName[0] }}
+          </div>
+          <div class="status-badge" [class.active]="customer.isActive">
+            {{ customer.isActive ? 'Active' : 'Inactive' }}
+          </div>
+        </div>
+
+        <div class="customer-info">
+          <div class="name-section">
+            <h2 class="customer-name">{{ customer.firstName }} {{ customer.lastName }}</h2>
+          </div>
+
+          <div class="contact-info" *ngIf="customer.phoneNumber">
+            <mat-icon>phone</mat-icon>
+            <span>{{ customer.phoneNumber }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tab-container">
+      <div class="tab" [class.active]="activeTab === 'info'" (click)="activeTab = 'info'">
+        <mat-icon>person</mat-icon>
+        <span>Info</span>
+      </div>
+      <div class="tab" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">
+        <mat-icon>shopping_cart</mat-icon>
+        <span>Orders</span>
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content-section">
+      <!-- Info Tab Content -->
+      <div class="tab-content" *ngIf="activeTab === 'info'">
+
+
+
+        <div class="section-header">
+          <mat-icon>person</mat-icon>
+          <h3>Personal Information</h3>
+        </div>
+
+        <div class="personal-info-grid">
+          <div class="info-item">
+            <span class="label">Full Name</span>
+            <span class="value">{{customer.firstName}} {{customer.lastName}}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Email</span>
+            <span class="value">{{customer.user?.email || 'No email provided'}}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Phone</span>
+            <span class="value">{{customer.phoneNumber || 'No phone provided'}}</span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Customer Type</span>
+            <span class="value status-text" [ngClass]="customer.customerStatus.toLowerCase()">
+              {{ customer.customerStatus === 'Registered Customer' ? 'Customer with Account' : 'Guest Customer' }}
+            </span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Account Status</span>
+            <span class="value status-text" [ngClass]="customer.isActive ? 'active' : 'inactive'">
+              {{ customer.isActive ? 'Active Account' : 'Inactive Account' }}
+            </span>
+          </div>
+
+          <div class="info-item" *ngIf="customer.user">
+            <span class="label">Email Status</span>
+            <span class="value status-text" [ngClass]="customer.user.status.toLowerCase()">
+              {{ customer.user.status === 'PENDING_VERIFICATION' ? 'Email Verification Pending' :
+              customer.user.status === 'AUTO_CREATED_UNVERIFIED' ? 'New Account (Unverified)' :
+              customer.user.status === 'AUTO_CREATED_VERIFIED' ? 'New Account (Verified)' :
+              customer.user.status }}
+            </span>
+          </div>
+
+          <!-- Change Email Status -->
+          <mat-form-field *ngIf="customer.user" class="info-item change-status">
+            <mat-label>Change Email Status</mat-label>
+            <mat-select [(ngModel)]="selectedStatus" (selectionChange)="updateUserStatus()">
+              <mat-option *ngFor="let status of userStatuses" [value]="status">
+                {{status}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+
+
+
+        <div class="section-header">
+          <mat-icon>location_on</mat-icon>
+          <h3>Address Information</h3>
+        </div>
+
+        <div class="address-grid" *ngIf="customer.address">
+          <div class="address-item">
+            <span class="label">Street</span>
+            <span class="value">{{ customer.address.street }}</span>
+          </div>
+          <div class="address-item">
+            <span class="label">City</span>
+            <span class="value">{{ customer.address.city }}</span>
+          </div>
+          <div class="address-item">
+            <span class="label">State</span>
+            <span class="value">{{ customer.address.state }}</span>
+          </div>
+          <div class="address-item">
+            <span class="label">ZIP</span>
+            <span class="value">{{ customer.address.zipCode }}</span>
+          </div>
+          <div class="address-item">
+            <span class="label">Country</span>
+            <span class="value">{{ customer.address.country }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Tab Content -->
+      <div class="tab-content" *ngIf="activeTab === 'orders'">
+        <div class="section-header">
+          <mat-icon>shopping_cart</mat-icon>
+          <h3>Orders</h3>
+        </div>
+        <!-- Add your orders content here -->
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card-actions">
+
+
+
+
+      <!-- Email Verification Status (if registered) -->
+      <button *ngIf="customer.user" class="btn" (click)="resendVerification()">
+        <mat-icon>email</mat-icon>
+        Resend Verification
+      </button>
+
+      <!-- Convert to Registered (if unregistered) -->
+      <button *ngIf="customer.customerStatus === 'UNREGISTERED'" class="btn btn-primary"
+        (click)="convertToRegistered()">
+        <mat-icon>person_add</mat-icon>
+        Convert to Registered
+      </button>
+
+      <!-- Edit & Delete -->
+      <button class="btn btn-outline" (click)="editCustomer()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button class="btn btn-danger" (click)="deleteCustomer()">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+    </div>
+  </mat-card>
+</div>

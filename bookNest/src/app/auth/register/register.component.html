@@ -5,6 +5,26 @@
     </mat-card-header>
 
     <form [formGroup]="signUpForm" (ngSubmit)="onRegister()">
+
+
+
+      <mat-form-field appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input matInput type="firstName" formControlName="firstName" placeholder="Enter your firstName">
+        <mat-error *ngIf="signUpForm.get('firstName')?.invalid && signUpForm.get('firstName')?.touched">
+          {{ getErrorMessage('firstName') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input matInput type="lastName" formControlName="lastName" placeholder="Enter your lastName">
+        <mat-error *ngIf="signUpForm.get('lastName')?.invalid && signUpForm.get('lastName')?.touched">
+          {{ getErrorMessage('lastName') }}
+        </mat-error>
+      </mat-form-field>
+
+
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" placeholder="Enter your email">

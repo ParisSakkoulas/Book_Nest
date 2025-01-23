@@ -1,0 +1,139 @@
+/* books.component.css */
+.books-container {
+  padding: 24px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.books-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.search-field {
+  width: 300px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-group .mat-form-field {
+  width: 200px;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 70px;
+  margin-bottom: 24px;
+}
+
+.book-card {
+  width: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.book-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.book-image {
+  position: relative;
+  height: 320px;
+  overflow: hidden;
+}
+
+.book-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.book-info {
+  padding: 16px;
+}
+
+.book-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-author {
+  margin: 4px 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.book-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.book-price {
+  font-weight: 500;
+  color: #2196F3;
+}
+
+.book-category {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.stock-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.stock-badge.success {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+}
+
+.stock-badge.warning {
+  background-color: #FFF3E0;
+  color: #EF6C00;
+}
+
+.stock-badge.danger {
+  background-color: #FFEBEE;
+  color: #C62828;
+}
+
+@media (max-width: 768px) {
+  .books-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-field {
+    width: 100%;
+  }
+
+  .filter-group {
+    flex-direction: column;
+  }
+
+  .filter-group .mat-form-field {
+    width: 100%;
+  }
+}

@@ -1,0 +1,59 @@
+<div class="books-container">
+  <div class="books-header">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search books</mat-label>
+      <input matInput [(ngModel)]="filters.search" (keyup.enter)="onSearch()">
+      <button mat-icon-button matSuffix (click)="onSearch()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <div class="filter-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select [(ngModel)]="filters.category" (selectionChange)="onSearch()">
+          <mat-option value="">All</mat-option>
+          <mat-option value="fiction">Fiction</mat-option>
+          <mat-option value="non-fiction">Non-Fiction</mat-option>
+          <mat-option value="Self Developement">Self Developement</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Sort by</mat-label>
+        <mat-select [(ngModel)]="filters.sortBy" (selectionChange)="onSearch()">
+          <mat-option value="price:asc">Price: Low to High</mat-option>
+          <mat-option value="price:desc">Price: High to Low</mat-option>
+          <mat-option value="title:asc">Title: A-Z</mat-option>
+          <mat-option value="title:desc">Title: Z-A</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="books-grid">
+    <mat-card class="book-card" *ngFor="let book of books" (click)="onViewBook(book._id)">
+      <div class="book-image">
+        <img [src]="book.imageUrl || '/assets/default-book.png'" [alt]="book.title">
+      </div>
+
+      <mat-card-content>
+        <div class="book-info">
+          <h3 class="book-title">{{book.title}}</h3>
+          <p class="book-author">by {{book.author}}</p>
+          <div class="book-details">
+            <span class="book-price">${{book.price}}</span>
+            <span class="book-category">{{book.category}}</span>
+          </div>
+          <div class="stock-badge" [ngClass]="getStockStatus(book.stock).color">
+            {{getStockStatus(book.stock).text}}
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-paginator [length]="pagination.totalRecords" [pageSize]="filters.limit" [pageIndex]="pagination.current - 1"
+    (page)="onPageChange($event.pageIndex + 1)">
+  </mat-paginator>
+</div>
