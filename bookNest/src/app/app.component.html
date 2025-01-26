@@ -39,9 +39,26 @@
           <button mat-raised-button color="primary" [routerLink]="'/auth/register'">
             <span>Register</span>
           </button>
-          <button mat-icon-button>
+          <button mat-icon-button [matMenuTriggerFor]="shoppingCard" class="shopping-cart-button">
             <mat-icon>shopping_cart</mat-icon>
           </button>
+
+          <mat-menu #shoppingCard="matMenu" class="shopping-card-menu">
+            <div class="menu-header">
+              <p>Your Shopping Cart</p>
+            </div>
+            <div class="menu-content">
+              <p>Your cart is empty.</p>
+              <!-- Example of adding items dynamically -->
+              <!-- <div class="cart-item">
+                <span>Item Name</span>
+                <span>$10</span>
+              </div> -->
+            </div>
+            <div class="menu-footer">
+              <button mat-button color="primary" class="checkout-btn">Checkout</button>
+            </div>
+          </mat-menu>
         </ng-container>
 
         <!-- Admin Section -->
@@ -62,7 +79,7 @@
               <mat-icon>dashboard</mat-icon>
               <span>Dashboard</span>
             </button>
-            <button mat-menu-item routerLink="/profile">
+            <button mat-menu-item routerLink="/books">
               <mat-icon>library_books</mat-icon>
               <span>Products</span>
             </button>
@@ -103,6 +120,9 @@
               <mat-icon>person</mat-icon>
             </div>
 
+          </button>
+          <button mat-icon-button>
+            <mat-icon>shopping_cart</mat-icon>
           </button>
 
           <mat-menu #userMenu="matMenu" class="user-menu">

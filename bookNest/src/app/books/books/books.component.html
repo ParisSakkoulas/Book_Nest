@@ -8,6 +8,14 @@
       </button>
     </mat-form-field>
 
+    <button mat-raised-button color="primary" *ngIf="currentUserData && currentUserData.role==='ADMIN'"
+      routerLink="/books/create">
+      <mat-icon>add</mat-icon>
+      Add New Book
+    </button>
+
+
+
     <div class="filter-group">
       <mat-form-field appearance="outline">
         <mat-label>Category</mat-label>
@@ -34,7 +42,7 @@
   <div class="books-grid">
     <mat-card class="book-card" *ngFor="let book of books" (click)="onViewBook(book._id)">
       <div class="book-image">
-        <img [src]="book.imageUrl || '/assets/default-book.png'" [alt]="book.title">
+        <img [src]="book.imageUrl || '/assets/images/book-default.png'" [alt]="book.title">
       </div>
 
       <mat-card-content>

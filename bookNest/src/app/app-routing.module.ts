@@ -13,6 +13,7 @@ import { UserDashboardComponent } from './dashboads/user-dashboard/user-dashboar
 import { UserProfileComponent } from './profiles/user-profile/user-profile.component';
 import { BooksComponent } from './books/books/books.component';
 import { BookComponent } from './books/book/book.component';
+import { CreateBookComponent } from './books/create-book/create-book.component';
 
 
 const routes: Routes = [
@@ -54,9 +55,9 @@ const routes: Routes = [
     path: 'books',
     children: [
       { path: '', component: BooksComponent },
-      { path: ':bookId', component: BookComponent },
-
-
+      { path: 'create', component: CreateBookComponent, canActivate: [AuthGuard, IsAdminGuard] },
+      { path: 'create/:bookId', component: CreateBookComponent, canActivate: [AuthGuard, IsAdminGuard] },
+      { path: ':bookId', component: BookComponent }
     ]
   },
 

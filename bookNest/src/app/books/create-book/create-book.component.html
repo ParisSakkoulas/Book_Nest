@@ -1,1 +1,77 @@
-<p>create-book works!</p>
+<form [formGroup]="bookForm" (ngSubmit)="onSubmit()" class="book-form">
+  <h2 class="form-title">{{mode}} New Book</h2>
+
+  <div class="form-grid">
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" placeholder="Enter book title">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Author</mat-label>
+      <input matInput formControlName="author" placeholder="Enter author name">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>ISBN</mat-label>
+      <input matInput formControlName="isbn" placeholder="Enter ISBN">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Price</mat-label>
+      <input matInput type="number" formControlName="price" placeholder="Enter price">
+      <mat-icon matPrefix>attach_money</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field description">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" placeholder="Enter book description" rows="4"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Publish Date</mat-label>
+      <input matInput formControlName="publishDate" placeholder="DD/MM/YYYY">
+      <mat-error *ngIf="bookForm.get('publishDate')">
+        Please enter a valid date in DD/MM/YYYY format (year 0000-2099)
+      </mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Category</mat-label>
+      <input matInput formControlName="category" placeholder="Enter category">
+    </mat-form-field>
+
+    <div class="image-upload-container">
+      <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">
+        <input #fileInput type="file" hidden (change)="onFileSelected($event)" accept="image/*">
+
+        <div *ngIf="!imagePreview" class="upload-placeholder">
+          <mat-icon>cloud_upload</mat-icon>
+          <p>Click to upload book cover</p>
+        </div>
+        <img *ngIf="imagePreview" [src]="imagePreview" alt="Preview" class="preview-image">
+      </div>
+      <button mat-button type="button" (click)="removeImage()" *ngIf="selectedFile">Remove Image</button>
+    </div>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Stock</mat-label>
+      <input matInput type="number" formControlName="stock" placeholder="Enter stock quantity">
+      <mat-icon matPrefix>inventory_2</mat-icon>
+    </mat-form-field>
+
+
+  </div>
+
+  <div class="button-container">
+    <button mat-stroked-button *ngIf="mode==='Add'" type="button" routerLink="/books">Cancel</button>
+
+    <button *ngIf="mode==='Save'" mat-stroked-button type="button" [routerLink]="'/books/'+bookId">Back</button>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="!bookForm.valid">
+      <mat-icon>add</mat-icon>
+      {{mode}}
+    </button>
+  </div>
+</form>

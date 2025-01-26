@@ -14,8 +14,12 @@ export class AppComponent {
   isAuthenticated = false;
 
   currentUserData !: CurrentUserData;
-
   showMobileMenu = false;
+
+  userData$ = this.authService.getCurrentUser();
+  isAdmin$ = this.userData$.pipe(
+    map(user => user?.role === 'ADMIN')
+  );
 
   navLinks = [
     { path: '/books', label: 'Browse', icon: 'library_books' },
@@ -25,12 +29,13 @@ export class AppComponent {
 
   constructor(private authService: AuthService) { }
 
-  userData$ = this.authService.getCurrentUser();
-  isAdmin$ = this.userData$.pipe(
-    map(user => user?.role === 'ADMIN')
-  );
+
 
   ngOnInit() {
+
+
+
+
 
 
     this.authService.autoLogin();

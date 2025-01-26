@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Customer } from '../models/Customer.Model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MessageDialogService } from '../message.dialog/message-dialog.service';
 import { SpinnerService } from '../spinner/spinner.service';
 import { Book } from '../models/Book.Model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,8 @@ export class BookService {
   constructor(
     private http: HttpClient,
     private spinnerService: SpinnerService,
-    private messageService: MessageDialogService
+    private messageService: MessageDialogService,
+    private router: Router,
   ) { }
 
   getBooks(params: {
@@ -65,6 +67,8 @@ export class BookService {
     });
   }
 
+
+
   getCurrentBooks(): Observable<Book[]> {
     return this.booksSubject.asObservable();
   }
@@ -73,23 +77,14 @@ export class BookService {
     return this.paginationSubject.asObservable();
   }
 
-  createBook(bookData: Partial<Book>) {
+  createBook(bookData: FormData) {
     this.spinnerService.show();
+
+    console.log(bookData.get('image'))
     return this.http.post<{ success: boolean; data: Book }>(
-      'http://localhost:3000/api/books/create',
-      bookData
-    ).subscribe({
-      next: (response) => {
-        this.books.push(response.data);
-        this.booksSubject.next(this.books);
-        this.messageService.showSuccess('Book created successfully');
-        this.spinnerService.hide();
-      },
-      error: (error) => {
-        this.messageService.showError(error.error?.message || 'Failed to create book');
-        this.spinnerService.hide();
-      }
-    });
+      'http://localhost:3000/api/books',
+      bookData  // Send FormData instead of JSON
+    )
   }
 
   getBookById(bookId: string) {
@@ -98,43 +93,25 @@ export class BookService {
     );
   }
 
-  updateBook(bookId: string, bookData: Partial<Book>) {
-    this.spinnerService.show();
+  updateBook(bookId: string, bookData: FormData) {
     return this.http.put<{ message: string; updatedBook: Book }>(
       `http://localhost:3000/api/books/${bookId}`,
       bookData
-    ).subscribe({
-      next: (response) => {
-        this.books = this.books.map(book =>
-          book._id === bookId ? response.updatedBook : book
-        );
-        this.booksSubject.next(this.books);
-        this.messageService.showSuccess(response.message);
-        this.spinnerService.hide();
-      },
-      error: (error) => {
-        this.messageService.showError(error.error?.message || 'Failed to update book');
-        this.spinnerService.hide();
-      }
-    });
+    )
   }
 
   deleteBook(bookId: string) {
-    this.spinnerService.show();
     return this.http.delete<{ message: string; book: Book }>(
       `http://localhost:3000/api/books/${bookId}`
-    ).subscribe({
-      next: (response) => {
-        this.books = this.books.filter(book => book._id !== bookId);
-        this.booksSubject.next(this.books);
-        this.messageService.showSuccess(response.message);
-        this.spinnerService.hide();
-      },
-      error: (error) => {
-        this.messageService.showError(error.error?.message || 'Failed to delete book');
-        this.spinnerService.hide();
-      }
-    });
+    );
+  }
+
+
+  getImageUrl(url: string): string {
+    if (!url) {
+      return 'assets/default-book.png';
+    }
+    return url;
   }
 
 

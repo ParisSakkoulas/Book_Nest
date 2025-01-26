@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { MessageDialogService } from 'src/app/message.dialog/message-dialog.service';
 import { Book } from 'src/app/models/Book.Model';
 import { BookService } from '../book.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { CurrentUserData } from 'src/app/models/CurrentUser.Data';
 
 @Component({
   selector: 'app-books',
@@ -28,11 +30,16 @@ export class BooksComponent implements OnInit {
     limit: 12
   };
 
+  currentUserData !: CurrentUserData;
+
+
   constructor(
     private bookService: BookService,
     private router: Router,
     private dialog: MatDialog,
-    private messageService: MessageDialogService
+    private messageService: MessageDialogService,
+    private authService: AuthService
+
   ) { }
 
   ngOnInit() {
@@ -43,6 +50,18 @@ export class BooksComponent implements OnInit {
     this.bookService.getPagination().subscribe(pagination => {
       this.pagination = pagination;
     });
+
+    this.authService.getCurrentUser().subscribe(
+      user => {
+        if (user) {
+          console.log(user)
+          this.currentUserData = user;
+        }
+      }
+
+    )
+
+
   }
 
   loadBooks() {

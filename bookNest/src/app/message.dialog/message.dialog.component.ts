@@ -10,7 +10,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class MessageDialogComponent implements OnInit {
 
-  constructor(private dialogRef: MatDialogRef<MessageDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: MessageData) { }
+  constructor(
+    public dialogRef: MatDialogRef<MessageDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: MessageData
+  ) {
+    dialogRef.disableClose = true;
+  }
 
   ngOnInit(): void {
   }
@@ -27,15 +32,25 @@ export class MessageDialogComponent implements OnInit {
         return 'Information';
       case 'New':
         return 'New Notification';
+      case 'Warning':
+        return 'Warning';
       default:
         return 'Other';
     }
   }
 
 
+  onConfirm() {
+    this.dialogRef.close(true);
+  }
 
-  closeDialog() {
+  onCancel() {
+    this.dialogRef.close(false);
+  }
 
+
+  closeDialog(result?: boolean) {
+    console.log('Dialog closing with result:', result);
     this.dialogRef.close();
 
   }

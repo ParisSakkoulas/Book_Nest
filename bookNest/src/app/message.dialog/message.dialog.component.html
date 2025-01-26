@@ -10,20 +10,28 @@
     <i class="fa-regular fa-face-smile icon-success" *ngIf="getTitle() === 'Success'"></i>
     <i class="fa-regular fa-face-frown icon-error" *ngIf="getTitle() === 'Error'"></i>
     <i class="fa-solid fa-circle-info icon-info" *ngIf="getTitle() === 'Information'"></i>
-    <i class="fa-regular fa-comment icon-info" *ngIf="getTitle() === 'New Notification'"></i>
+    <i class="fa-solid fa-triangle-exclamation icon-error" *ngIf="getTitle() === 'Warning'"></i>
+    <i class="fa-solid fa-comment icon-info" *ngIf="getTitle() === 'New Notification'"></i>
+
   </div>
 
   <div class="dialog-content" [ngClass]="{
     'success': getTitle() === 'Success',
     'error': getTitle() === 'Error',
     'info': getTitle() === 'Information',
+    'warning': getTitle() === 'Warning',
     'new': getTitle() === 'New Notification'
+
   }">
     <h1>{{ getTitle() }}</h1>
     <p>{{ data.message }}</p>
   </div>
 
   <div class="dialog-actions">
-    <button class="dialog-button btn btn-primary" (click)="closeDialog()">OK</button>
+    <ng-container *ngIf="data.showConfirm">
+      <button class="dialog-button btn btn-secondary" (click)="onCancel()">Cancel</button>
+      <button class="dialog-button btn btn-danger" (click)="onConfirm()">Delete</button>
+    </ng-container>
+    <button *ngIf="!data.showConfirm" class="dialog-button btn btn-primary" (click)="onCancel()">OK</button>
   </div>
 </div>

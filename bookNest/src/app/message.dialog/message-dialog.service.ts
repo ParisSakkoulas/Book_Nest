@@ -18,6 +18,9 @@ export class MessageDialogService {
     this.closeExistingDialog();
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = data;
+    dialogConfig.autoFocus = 'dialog';
+    dialogConfig.restoreFocus = true;
+    dialogConfig.disableClose = true;
     //dialogConfig.panelClass = data.type === 'Success' ? 'success-dialog' : 'error-dialog';
     dialogConfig.panelClass = 'message-dialog';
     const dialogRef = this.dialog.open(MessageDialogComponent, dialogConfig);
@@ -68,6 +71,27 @@ export class MessageDialogService {
       message,
       type: 'New',
       duration
+    });
+  }
+
+  // MessageDialogService
+  showWarning(message: string, onConfirm: () => void): void {
+    this.closeExistingDialog();
+    const dialogRef = this.dialog.open(MessageDialogComponent, {
+      data: {
+        message,
+        type: 'Warning',
+        showConfirm: true
+      },
+      disableClose: true
+    });
+
+    this.dialogRef = dialogRef;
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        onConfirm();
+      }
     });
   }
 

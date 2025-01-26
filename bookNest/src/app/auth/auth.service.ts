@@ -227,6 +227,7 @@ export class AuthService {
     // Update authentication state
     this.isAuthenticated.next(false);
 
+
     // Clear logout timer
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);

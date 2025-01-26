@@ -162,6 +162,30 @@ mat-sidenav-container {
 
 
 
+
+/* Navigation active state */
+.mat-list-item.active-link {
+  background-color: rgba(92, 107, 192, 0.1);
+  color: #5c6bc0;
+}
+
+/* Add smooth transitions */
+.mat-list-item {
+  transition: background-color 0.3s ease;
+}
+
+/* Enhance card shadows */
+.mat-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.sidenav {
+  transition: all 0.3s ease;
+}
+
+
+
 @media (max-width: 768px) {
   .sidenav {
     width: 0;
@@ -188,27 +212,6 @@ mat-sidenav-container {
     left: 16px;
     z-index: 1000;
   }
-}
-
-/* Navigation active state */
-.mat-list-item.active-link {
-  background-color: rgba(92, 107, 192, 0.1);
-  color: #5c6bc0;
-}
-
-/* Add smooth transitions */
-.mat-list-item {
-  transition: background-color 0.3s ease;
-}
-
-/* Enhance card shadows */
-.mat-card {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.sidenav {
-  transition: all 0.3s ease;
 }
 
 @media (max-width: 500px) {

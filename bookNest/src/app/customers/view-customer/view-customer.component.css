@@ -55,12 +55,13 @@
   color: white;
   font-weight: 500;
   font-size: 14px;
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 
 .status-badge.active {
-  background: #4caf50;
-  color: #e0e0e0;
+  background: rgba(76, 175, 80, 0.9);
+  color: white;
 }
 
 .customer-info {

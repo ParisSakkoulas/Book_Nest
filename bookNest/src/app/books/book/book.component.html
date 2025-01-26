@@ -5,7 +5,7 @@
 
   <div class="book-content">
     <div class="book-image-section">
-      <img [src]="book.imageUrl || '/assets/default-book.png'" [alt]="book.title" class="main-image">
+      <img [src]="book.imageUrl ||'/assets/images/book-default.png'" [alt]="book.title" class="main-image">
     </div>
 
     <div class="book-details-section">
@@ -44,6 +44,18 @@
         </button>
       </div>
 
+      <div class="action-buttons" *ngIf="currentUserData && currentUserData.role === 'ADMIN'">
+        <button mat-raised-button color="primary" class="add-to-cart-btn" [disabled]="book.stock === 0"
+          [routerLink]="'/books/create/'+book._id">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+        <button mat-stroked-button color="primary" class="wishlist-btn" (click)="onDeleteBook()">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </div>
+
       <mat-divider class="divider"></mat-divider>
 
       <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" [(selectedIndex)]="selectedTab">
@@ -71,4 +83,7 @@
       </mat-tab-group>
     </div>
   </div>
+
+
+
 </div>

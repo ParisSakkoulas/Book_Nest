@@ -3,6 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageDialogService } from 'src/app/message.dialog/message-dialog.service';
 import { Book } from 'src/app/models/Book.Model';
 import { BookService } from '../book.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { CurrentUserData } from 'src/app/models/CurrentUser.Data';
+import { SpinnerService } from 'src/app/spinner/spinner.service';
 
 @Component({
   selector: 'app-book',
@@ -15,7 +18,11 @@ export class BookComponent implements OnInit {
   quantity = 1;
   selectedTab = 0;
 
-  constructor(private route: ActivatedRoute, private router: Router, private bookService: BookService, private messageService: MessageDialogService) { }
+  isAuthenticated = false;
+  currentUserData !: CurrentUserData;
+
+
+  constructor(private route: ActivatedRoute, private spinnerService: SpinnerService, private router: Router, private authService: AuthService, private bookService: BookService, private messageService: MessageDialogService) { }
 
   ngOnInit() {
 
@@ -24,6 +31,7 @@ export class BookComponent implements OnInit {
       this.bookService.getBookById(bookId).subscribe({
         next: (response) => {
           this.book = response.book;
+          console.log(this.book)
         },
         error: (error) => {
           this.messageService.showError('Error loading book details');
@@ -31,6 +39,23 @@ export class BookComponent implements OnInit {
         }
       });
     }
+
+
+    this.authService.isAuthenticated$().subscribe(
+      isAuth => this.isAuthenticated = isAuth
+    );
+
+    this.authService.getCurrentUser().subscribe(
+      user => {
+        if (user) {
+          console.log(user)
+          this.currentUserData = user;
+        }
+      }
+
+    )
+
+
   }
 
   increaseQuantity() {
@@ -57,6 +82,29 @@ export class BookComponent implements OnInit {
   addToCart() {
     // Implement cart functionality
     this.messageService.showSuccess('Added to cart successfully');
+
+    console.log(this.quantity);
+
+  }
+
+
+  onDeleteBook() {
+    console.log('Delete initiated');
+    this.messageService.showWarning(`Are you sure you want to delete ${this.book.title}?`, () => {
+      console.log('Confirmation callback triggered');
+      this.spinnerService.show();
+      this.bookService.deleteBook(this.book._id).subscribe({
+        next: (response) => {
+          this.messageService.showSuccess(response.message);
+          this.spinnerService.hide();
+          this.router.navigate(['/books']);
+        },
+        error: (error) => {
+          this.messageService.showError(error.error?.message || 'Failed to delete book');
+          this.spinnerService.hide();
+        }
+      });
+    });
   }
 
 }
