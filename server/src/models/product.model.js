@@ -35,8 +35,7 @@ const BookSchema = new Schema({
 
     description:
     {
-        type: String,
-        required: [true, 'Book description is required']
+        type: String
     },
 
     category:
@@ -68,6 +67,12 @@ const BookSchema = new Schema({
         type: String,
         enum: ['AVAILABLE', 'OUT_OF_STOCK', 'DISCONTINUED'],
         default: 'AVAILABLE'
+    },
+
+    imageUrl:
+    {
+        type: String,
+        required: false
     }
 
 }, {

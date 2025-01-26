@@ -1,5 +1,19 @@
 const Book = require('../models/product.model');
 const mongoose = require('mongoose');
+const multer = require('multer');
+//const { cloudinary_js_config } = require('../config/cloudinary.config');
+const fs = require('fs');
+
+const cloudinary = require('cloudinary').v2;
+
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: 'dbjabrvn8',
+    api_key: '816645494981941',
+    api_secret: 'Bd80OHGweqn2mYSpPlGqo_-XxhY'
+});
+
+
 
 
 exports.createBook = async (req, res) => {
@@ -16,6 +30,17 @@ exports.createBook = async (req, res) => {
             });
         }
 
+        let imageUrl = '';
+        if (req.file) {
+            // Upload to Cloudinary
+            const result = await cloudinary.uploader.upload(req.file.path);
+            imageUrl = result.secure_url;
+
+            // Delete file from local uploads folder
+            fs.unlinkSync(req.file.path);
+        }
+
+
         // Create new book
         const book = await Book.create({
             title,
@@ -25,16 +50,20 @@ exports.createBook = async (req, res) => {
             description,
             category,
             stock,
-            imageUrl: req.body.imageUrl,
+            imageUrl,
             publishDate: req.body.publishDate
         });
 
         return res.status(201).json({
+            message: 'Book added successfully!',
             success: true,
             data: book
         });
 
+
+
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             success: false,
             message: 'Error creating book',
@@ -183,55 +212,69 @@ exports.deleteBook = async (req, res) => {
 
 // Controller: Update book
 exports.updateBook = async (req, res) => {
-
     try {
-
         const bookToUpdateId = req.params.bookId;
-        const { title, author, isbn, price, description, category, stock } = req.body;
-
-
-        // Find book with this id
         const bookToUpdate = await Book.findById(bookToUpdateId);
-
         if (!bookToUpdate) {
             return res.status(404).json({ message: "Book not found" });
         }
 
-
-        // Check if ISBN exists but belongs to a different book
-        const existingBook = await Book.findOne({
-            isbn,
-            _id: { $ne: bookToUpdateId }
-        });
-
-        if (existingBook) {
-            return res.status(400).json({
-                message: "ISBN already exists for another book"
-            });
+        let imageUrl = bookToUpdate.imageUrl;
+        if (req.file) {
+            // Upload to Cloudinary
+            const result = await cloudinary.uploader.upload(req.file.path);
+            imageUrl = result.secure_url;
+            // Delete file from local uploads folder
+            fs.unlinkSync(req.file.path);
         }
 
+        // Convert publish date string to Date object if provided
+        let publishDate = bookToUpdate.publishDate;
+        if ('publishDate' in req.body) {
+            publishDate = req.body.publishDate ? new Date(req.body.publishDate) : null;
+        }
+
+        const updateFields = {
+            title: req.body.title ?? bookToUpdate.title,
+            author: req.body.author ?? bookToUpdate.author,
+            isbn: req.body.isbn ?? bookToUpdate.isbn,
+            price: req.body.price ?? bookToUpdate.price,
+            description: req.body.description ?? bookToUpdate.description,
+            category: req.body.category ?? bookToUpdate.category,
+            stock: req.body.stock ?? bookToUpdate.stock,
+            imageUrl: req.file ? imageUrl : ('imageUrl' in req.body ? req.body.imageUrl : bookToUpdate.imageUrl),
+            publishDate: publishDate
+        };
+
+        if (updateFields.isbn && updateFields.isbn !== bookToUpdate.isbn) {
+            const existingBook = await Book.findOne({
+                isbn: updateFields.isbn,
+                _id: { $ne: bookToUpdateId }
+            });
+
+            if (existingBook) {
+                return res.status(400).json({
+                    message: "ISBN already exists for another book"
+                });
+            }
+        }
 
         const updatedBook = await Book.findByIdAndUpdate(
             bookToUpdateId,
-            req.body,
+            updateFields,
             { new: true }
         );
-
 
         return res.json({
             message: "Book updated successfully",
             updatedBook: updatedBook
         });
 
-
-
-
     } catch (err) {
+        console.log(err);
         return res.status(500).json({
             message: "Error updating book",
             error: err.message
         });
-
     }
-
 }
