@@ -1,7 +1,7 @@
 
 # BookNest: Online Bookstore App
 
-BookNest is a full-stack online bookstore application built with **Node.js**, **MongoDB**, **Angular**, and **Prime NG** for the UI. The app provides a seamless platform for managing users, customers, products, and orders while offering a user-friendly shopping experience. It includes essential e-commerce features such as user authentication, CRUD functionality, a shopping cart, and order management.
+BookNest is a full-stack online bookstore application built with **Node.js**, **MongoDB**, **Angular**, and **Angular Material** for the UI. The app provides a seamless platform for managing users, customers, products, and orders while offering a user-friendly shopping experience. It includes essential e-commerce features such as user authentication, CRUD functionality, a shopping cart, and order management.
 
 
 # Features
