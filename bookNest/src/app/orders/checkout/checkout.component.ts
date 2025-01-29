@@ -15,6 +15,8 @@ import { CurrentUserData } from 'src/app/models/CurrentUser.Data';
 export class CheckoutComponent implements OnInit {
   cart: any = null;
   shippingForm: FormGroup;
+  shippingVisitorForm: FormGroup;
+
   loading = false;
   error = '';
   orderComplete = false;
@@ -40,6 +42,20 @@ export class CheckoutComponent implements OnInit {
       zipCode: ['', Validators.required],
       country: ['', Validators.required]
     });
+
+
+    this.shippingVisitorForm = this.fb.group({
+      email: ['', Validators.required],
+      firstName: [''],
+      lastName: [''],
+      street: ['', Validators.required],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      zipCode: ['', Validators.required],
+      country: ['', Validators.required]
+    });
+
+
   }
 
   ngOnInit(): void {
@@ -84,22 +100,63 @@ export class CheckoutComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.shippingForm.valid) {
-      this.loading = true;
-      this.error = '';
+    if (this.isAuthenticated) {
+      if (this.shippingForm.valid) {
+        this.loading = true;
+        this.error = '';
 
-      this.checkoutService.createOrder(this.shippingForm.value).subscribe({
-        next: (order) => {
-          this.orderId = order._id;
-          this.orderComplete = true;
-          console.log(order)
-        },
-        error: (err) => {
-          this.error = err.error?.error || 'Failed to create order';
+        this.checkoutService.createOrder({
+          shippingAddress: this.shippingForm.value
+        }).subscribe({
+          next: (order) => {
+            this.orderId = order._id;
+            this.orderComplete = true;
+          },
+          error: (err) => {
+            this.error = err.error?.error || 'Failed to create order';
+          },
+          complete: () => this.loading = false
+        });
+      }
+    } else {
+      // Handle visitor checkout
+      if (this.shippingVisitorForm.valid) {
+        this.loading = true;
+        this.error = '';
 
-        },
-        complete: () => this.loading = false
-      });
+        const formValue = this.shippingVisitorForm.value;
+
+        // Separate shipping address and visitor info
+        const orderData = {
+          shippingAddress: {
+            street: formValue.street,
+            city: formValue.city,
+            state: formValue.state,
+            zipCode: formValue.zipCode,
+            country: formValue.country
+          },
+          visitorInfo: {
+            email: formValue.email,
+            firstName: formValue.firstName,
+            lastName: formValue.lastName
+          }
+        };
+
+        this.checkoutService.createOrder(orderData).subscribe({
+          next: (order) => {
+            this.orderId = order._id;
+            this.orderComplete = true;
+
+            // Clear visitor session after successful order
+            this.cartService.clearVisitorSession();
+          },
+          error: (err) => {
+            this.error = err.error?.error || 'Failed to create order';
+            console.log(err)
+          },
+          complete: () => this.loading = false
+        });
+      }
     }
   }
 

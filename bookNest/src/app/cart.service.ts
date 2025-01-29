@@ -14,7 +14,7 @@ export class CartService {
   private cartSubject = new BehaviorSubject<any>(null);
   cart$ = this.cartSubject.asObservable();
 
-  private sessionId!: string;
+  private sessionId: string | null = null;
   private isAuthenticated = false
 
 
@@ -25,17 +25,20 @@ export class CartService {
     this.authService.isAuthenticated$().subscribe(isAuth => {
       if (!isAuth) {
         this.sessionId = this.getOrCreateSessionId();
+        console.log(this.sessionId)
       }
       this.updateCartState();
     });
 
+
   }
 
+  ///Method to get or create session for visitors only
   private getOrCreateSessionId(): string {
-    let sessionId = localStorage.getItem('sessionId');
+    let sessionId = localStorage.getItem('x-session-id');
     if (!sessionId) {
       sessionId = 'visitor_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('sessionId', sessionId);
+      localStorage.setItem('x-session-id', sessionId);
     }
     return sessionId;
   }
@@ -46,9 +49,11 @@ export class CartService {
     const token = this.authService.getToken();
     if (token) {
       // For authenticated users
-      headers = headers.set('Authorization', `Bearer ${token}`);
+
+      this.clearVisitorSession();
     } else if (this.sessionId) {
       // For visitors
+      console.log(this.sessionId)
       headers = headers.set('x-session-id', this.sessionId);
     }
 
@@ -63,15 +68,27 @@ export class CartService {
   }
 
   removeFromCart(bookId: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${bookId}`);
+    const headers = this.getHeaders();
+    return this.http.delete(`${this.baseUrl}/${bookId}`, { headers });
   }
 
   updateQuantity(bookId: string, quantity: number): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/${bookId}`, { quantity });
+    const headers = this.getHeaders();
+    return this.http.patch(`${this.baseUrl}/${bookId}`, { quantity }, { headers });
   }
 
   getCart(): Observable<any> {
-    return this.http.get('http://localhost:3000/api/cart');
+    const headers = this.getHeaders();
+    return this.http.get('http://localhost:3000/api/cart', { headers });
+  }
+
+
+  clearVisitorSession() {
+    localStorage.removeItem('x-session-id');
+    this.sessionId = null;
+    console.log(this.sessionId);
+    console.log(localStorage.getItem('x-session-id'));
+
   }
 
   updateCartState() {

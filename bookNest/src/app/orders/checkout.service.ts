@@ -18,16 +18,29 @@ export class CheckoutService {
   constructor(private http: HttpClient) { }
 
 
+  private getHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    const sessionId = localStorage.getItem('x-session-id');
+    if (sessionId) {
+      headers = headers.set('x-session-id', sessionId);
+
+    }
+
+    console.log(headers)
+    return headers;
+  }
+
+
+
   createOrder(shippingAddress: any): Observable<any> {
-    const sessionId = localStorage.getItem('sessionId');
-    const headers = new HttpHeaders().set('x-session-id', sessionId || '');
-    return this.http.post(`http://localhost:3000/api/orders/create`, { shippingAddress });
+
+    return this.http.post(`http://localhost:3000/api/orders/create`, { shippingAddress }, { headers: this.getHeaders() });
   }
 
   getOrder(orderId: any): Observable<any> {
     const sessionId = localStorage.getItem('sessionId');
     const headers = new HttpHeaders().set('x-session-id', sessionId || '');
-    return this.http.get<SingleOrderResponse>(`http://localhost:3000/api/orders/${orderId}`);
+    return this.http.get<SingleOrderResponse>(`http://localhost:3000/api/orders/${orderId}`, { headers });
   }
 
   getMyOrders(page: number = 1, limit: number = 10): Observable<PaginatedOrdersResponse> {
