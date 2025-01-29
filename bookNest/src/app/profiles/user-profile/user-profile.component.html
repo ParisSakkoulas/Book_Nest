@@ -24,23 +24,105 @@
       <button class="btn " [ngClass]="{'btn-primary': activeButton === 'Info', 'btn-outline': activeButton !== 'Info'}"
         (click)="showDiv('Info')">Info</button>
 
-      <button class="btn " [ngClass]="{'btn-primary': activeButton === 'Info', 'btn-outline': activeButton !== 'Info'}"
-        (click)="showDiv('Info')">Orders</button>
-
-      <button class="btn " [ngClass]="{'btn-primary': activeButton === 'Info', 'btn-outline': activeButton !== 'Info'}"
-        (click)="showDiv('Info')">Carts</button>
 
     </div>
     <mat-divider></mat-divider>
 
 
     <div class="profile-info" *ngIf="activeButton === 'Info'">
+      <form [formGroup]="customerInfoForm" (ngSubmit)="onSubmit()" class="profile-form">
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">Personal Information</h3>
+
+          <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" placeholder="Enter first name">
+            <mat-error *ngIf="customerInfoForm.get('firstName')?.errors?.['required']">
+              First name is required
+            </mat-error>
+            <mat-error *ngIf="customerInfoForm.get('firstName')?.errors?.['minlength']">
+              First name must be at least 2 characters
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" placeholder="Enter last name">
+            <mat-error *ngIf="customerInfoForm.get('lastName')?.errors?.['required']">
+              Last name is required
+            </mat-error>
+            <mat-error *ngIf="customerInfoForm.get('lastName')?.errors?.['minlength']">
+              Last name must be at least 2 characters
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Contact Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">Contact Information</h3>
+
+
+          <mat-form-field appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phoneNumber" placeholder="Enter phone number">
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-error *ngIf="customerInfoForm.get('phoneNumber')?.errors?.['pattern']">
+              Please enter a valid phone number
+            </mat-error>
+          </mat-form-field>
+
+          <mat-error *ngIf="customerInfoForm.errors?.['noContactMethod']" class="contact-error">
+            Please provide either an email address or phone number
+          </mat-error>
+        </div>
+
+        <!-- Address Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">Address information</h3>
+
+
+          <mat-form-field appearance="outline">
+            <mat-label>Street</mat-label>
+            <input matInput formControlName="street" placeholder="Enter street address">
+            <mat-icon matSuffix>location_on</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" placeholder="Enter city address">
+            <mat-icon matSuffix>location_city</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>State</mat-label>
+            <input matInput formControlName="state" placeholder="Enter state address">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Zip Code</mat-label>
+            <input matInput formControlName="zipCode" placeholder="Enter zipCode address">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" placeholder="Enter country address">
+            <mat-icon matSuffix>public</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-primary" type="submit" [disabled]="!customerInfoForm.valid">
+            Save Changes
+          </button>
+        </div>
+      </form>
 
     </div>
 
 
     <div class="profile-info" *ngIf="activeButton === 'Account'">
-      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+      <form [formGroup]="profileForm" (ngSubmit)="onChnageEmail()" class="profile-form">
         <div class="form-section">
           <h3>Account Details</h3>
 
@@ -53,29 +135,39 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Password</mat-label>
-            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
-            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
-              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            <mat-hint>Must contain uppercase, lowercase, number and special character</mat-hint>
-            <mat-error *ngIf="password?.errors">
-              <ul class="password-requirements">
-                <li *ngIf="password?.errors?.['minlength']">
-                  <mat-icon>close</mat-icon> At least 8 characters
-                </li>
-              </ul>
-            </mat-error>
-          </mat-form-field>
         </div>
 
         <div class="action-buttons">
-          <button class="btn btn-outline" type="button">Cancel</button>
           <button class="btn btn-primary" type="submit" [disabled]="!profileForm.valid">
             Save Changes
           </button>
         </div>
+      </form>
+
+      <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="profile-form">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput [type]="hidePassword ? 'text' : 'password'" formControlName="password"
+            placeholder="Enter your password">
+          <mat-icon matSuffix [attr.aria-label]="hidePassword ? 'Hide password' : 'Show password'">
+            {{hidePassword ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput [type]="hidePassword ? 'text' : 'password'" formControlName="confirm_password"
+            placeholder="Confirm your password">
+          <mat-icon matSuffix [attr.aria-label]="hidePassword ? 'Hide password' : 'Show password'">
+            {{hidePassword ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+        </mat-form-field>
+
+        <button class="btn btn-primary" type="submit" [disabled]="!passwordForm.valid">
+          Save Changes
+        </button>
+
       </form>
     </div>
 

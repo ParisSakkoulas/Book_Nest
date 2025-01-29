@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Order } from 'src/app/models/Order.Model';
 import { PaginatedOrdersResponse } from 'src/app/models/PaginatedOrderItems.Model';
 import { CheckoutService } from '../checkout.service';
+import { SpinnerComponent } from 'src/app/spinner/spinner.component';
+import { SpinnerService } from 'src/app/spinner/spinner.service';
 
 @Component({
   selector: 'app-my-orders',
@@ -18,7 +20,7 @@ export class MyOrdersComponent implements OnInit {
   };
   loading = false;
 
-  constructor(private orderService: CheckoutService) { }
+  constructor(private orderService: CheckoutService, private spinnerService: SpinnerService) { }
 
   ngOnInit() {
     this.loadOrders();
@@ -26,16 +28,20 @@ export class MyOrdersComponent implements OnInit {
 
   loadOrders(page: number = 1) {
     this.loading = true;
+    this.spinnerService.show();
     this.orderService.getMyOrders(page).subscribe({
       next: (response: PaginatedOrdersResponse) => {
         this.orders = response.orders;
         this.pagination = response.pagination;
         this.loading = false;
         console.log(response)
+        this.spinnerService.hide();
       },
       error: (error) => {
         console.error('Error fetching orders:', error);
         this.loading = false;
+        this.spinnerService.hide();
+
         // Handle error (show toast, notification, etc.)
       }
     });

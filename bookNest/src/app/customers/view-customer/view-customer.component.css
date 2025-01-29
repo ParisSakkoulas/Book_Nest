@@ -235,6 +235,191 @@
   font-size: 14px;
 }
 
+/* Add these styles to your existing CSS */
+
+/* Table Container */
+.orders-table {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
+}
+
+/* Table Header */
+.mat-header-cell {
+  background: #f8f9fa;
+  color: #4b5563;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 16px !important;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+/* Table Cells */
+.mat-cell {
+  padding: 16px !important;
+  color: #1f2937;
+  font-size: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Row Hover */
+.mat-row:hover {
+  background-color: #f9fafb;
+}
+
+/* Order ID Column */
+.mat-column-orderId {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+  color: #2563eb;
+}
+
+/* Status Column */
+.mat-column-status {
+  font-weight: 500;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.pending {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.status-badge.processing {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.status-badge.shipped {
+  background: #f5f3ff;
+  color: #5b21b6;
+}
+
+.status-badge.delivered {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.status-badge.cancelled {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+/* Date Columns */
+.mat-column-createDate,
+.mat-column-lastUpdate {
+  color: #6b7280;
+}
+
+/* Total Column */
+.mat-column-total {
+  font-weight: 500;
+  color: #111827;
+}
+
+.mat-column-total::before {
+  content: '$';
+  margin-right: 2px;
+  opacity: 0.5;
+}
+
+/* No Data Message */
+.no-orders-message {
+  padding: 48px;
+  text-align: center;
+  color: #9ca3af;
+}
+
+.no-orders-message mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.no-orders-message p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Paginator */
+.mat-paginator {
+  background: transparent;
+  border-top: 1px solid #f3f4f6;
+}
+
+::ng-deep .mat-paginator-container {
+  min-height: 48px !important;
+  padding: 0 8px !important;
+}
+
+::ng-deep .mat-paginator-page-size {
+  margin-right: 16px !important;
+}
+
+::ng-deep .mat-paginator-range-actions {
+  margin-left: 16px !important;
+}
+
+/* Loading State */
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+
+  .mat-header-cell,
+  .mat-cell {
+    padding: 12px !important;
+  }
+
+  .mat-column-createDate {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+
+  .mat-header-cell,
+  .mat-cell {
+    padding: 8px !important;
+    font-size: 13px;
+  }
+
+  .mat-column-lastUpdate {
+    display: none;
+  }
+
+  .status-badge {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
+
 
 
 /* Material Form Field Customization */

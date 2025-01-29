@@ -14,6 +14,7 @@ export class SpinnerComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading$ = this.spinnerService.isLoading$;
+
   }
 
 }

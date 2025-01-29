@@ -3,6 +3,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { CheckoutService } from '../checkout.service';
+import { MessageDialogService } from 'src/app/message.dialog/message-dialog.service';
+import { SpinnerService } from 'src/app/spinner/spinner.service';
 
 interface Order {
   _id: string;
@@ -38,7 +40,9 @@ export class AllOrdersComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private orderService: CheckoutService) {
+  validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+
+  constructor(private orderService: CheckoutService, private spinnerService: SpinnerService, private messageService: MessageDialogService,) {
     this.dataSource = new MatTableDataSource<Order>([]);
   }
 
@@ -85,4 +89,29 @@ export class AllOrdersComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  updateOrderStatus(orderId: string, newStatus: string): void {
+    this.orderService.updateOrderStatus(orderId, newStatus).subscribe({
+      next: (response) => {
+        // Update the order in the data source
+        const index = this.dataSource.data.findIndex(order => order._id === orderId);
+        if (index !== -1) {
+          this.dataSource.data[index].status = newStatus;
+          this.dataSource._updateChangeSubscription(); // Trigger update
+        }
+
+        this.messageService.showSuccess('Order status updated successfully');
+      },
+      error: (error) => {
+        this.messageService.showError(error);
+        console.error('Error updating order status:', error);
+      }
+    });
+  }
+
+  cancelOrder(orderId: any) {
+
+  }
+
+
 }

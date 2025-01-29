@@ -128,6 +128,36 @@
             <span class="value">{{ customer.address.country }}</span>
           </div>
         </div>
+
+        <!-- Actions -->
+        <div class="card-actions">
+
+
+
+
+          <!-- Email Verification Status (if registered) -->
+          <button *ngIf="customer.user" class="btn" (click)="resendVerification()">
+            <mat-icon>email</mat-icon>
+            Resend Verification
+          </button>
+
+          <!-- Convert to Registered (if unregistered) -->
+          <button *ngIf="customer.customerStatus === 'UNREGISTERED'" class="btn btn-primary"
+            (click)="convertToRegistered()">
+            <mat-icon>person_add</mat-icon>
+            Convert to Registered
+          </button>
+
+          <!-- Edit & Delete -->
+          <button class="btn btn-outline" (click)="editCustomer()">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+          <button class="btn btn-danger" (click)="deleteCustomer()">
+            <mat-icon>delete</mat-icon>
+            Delete
+          </button>
+        </div>
       </div>
 
       <!-- Orders Tab Content -->
@@ -136,38 +166,62 @@
           <mat-icon>shopping_cart</mat-icon>
           <h3>Orders</h3>
         </div>
-        <!-- Add your orders content here -->
+
+        <table mat-table [dataSource]="dataSource" matSort class="orders-table">
+          <!-- Order ID Column -->
+          <ng-container matColumnDef="orderId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Order ID </th>
+            <td mat-cell *matCellDef="let order"> #{{order._id.slice(-6)}} </td>
+          </ng-container>
+
+
+          <!-- Order Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td mat-cell *matCellDef="let order"> {{order.status}} </td>
+          </ng-container>
+
+          <!-- Order Date Column -->
+          <ng-container matColumnDef="createDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> CREATED </th>
+            <td mat-cell *matCellDef="let order"> {{order.createdAt| date: 'dd/MM/yyyy'}} </td>
+          </ng-container>
+
+
+          <!-- Order Date Column -->
+          <ng-container matColumnDef="lastUpdate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> UPDATED </th>
+            <td mat-cell *matCellDef="let order"> {{order.updatedAt| date: 'dd/MM/yyyy'}} </td>
+          </ng-container>
+
+          <!-- Order Date Column -->
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+            <td mat-cell *matCellDef="let order"> {{order.totalAmount}} </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- No Data Row -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="6">
+              <div class="no-orders-message">
+                <mat-icon>shopping_cart</mat-icon>
+                <p>No orders found for this customer</p>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator [length]="totalOrders" [pageSize]="10" [pageSizeOptions]="[5, 10, 25]">
+        </mat-paginator>
+
+
       </div>
     </div>
 
-    <!-- Actions -->
-    <div class="card-actions">
 
-
-
-
-      <!-- Email Verification Status (if registered) -->
-      <button *ngIf="customer.user" class="btn" (click)="resendVerification()">
-        <mat-icon>email</mat-icon>
-        Resend Verification
-      </button>
-
-      <!-- Convert to Registered (if unregistered) -->
-      <button *ngIf="customer.customerStatus === 'UNREGISTERED'" class="btn btn-primary"
-        (click)="convertToRegistered()">
-        <mat-icon>person_add</mat-icon>
-        Convert to Registered
-      </button>
-
-      <!-- Edit & Delete -->
-      <button class="btn btn-outline" (click)="editCustomer()">
-        <mat-icon>edit</mat-icon>
-        Edit
-      </button>
-      <button class="btn btn-danger" (click)="deleteCustomer()">
-        <mat-icon>delete</mat-icon>
-        Delete
-      </button>
-    </div>
   </mat-card>
 </div>

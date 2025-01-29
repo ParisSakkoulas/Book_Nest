@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Customer } from 'src/app/models/Customer.Model';
 import { CustomersService } from '../customer.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -9,6 +9,10 @@ import { MessageDialogService } from 'src/app/message.dialog/message-dialog.serv
 import { MatDialog } from '@angular/material/dialog';
 import { CreateCustomerComponent } from '../create-customer/create-customer.component';
 import { error } from 'console';
+import { CheckoutService } from 'src/app/orders/checkout.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-view-customer',
@@ -33,7 +37,19 @@ export class ViewCustomerComponent implements OnInit {
   ];
   selectedStatus !: string | undefined;
 
-  constructor(private dialog: MatDialog, private messageService: MessageDialogService, private customerService: CustomersService, public route: ActivatedRoute, private spinnerService: SpinnerService) { }
+  displayedColumns: string[] = ['orderId', 'status', 'createDate', 'lastUpdate', 'total'];
+  dataSource!: MatTableDataSource<any>;
+  totalOrders: number = 0;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  constructor(private orderService: CheckoutService, private dialog: MatDialog, private messageService: MessageDialogService, private customerService: CustomersService, public route: ActivatedRoute, private spinnerService: SpinnerService) {
+
+
+    this.dataSource = new MatTableDataSource;
+
+  }
 
 
 
@@ -68,7 +84,17 @@ export class ViewCustomerComponent implements OnInit {
 
           this.selectedStatus = this.customer.user?.status;
 
-          console.log(this.customer.user)
+          console.log(response)
+
+          this.orderService.getUserOrders(response.Customer.user._id).subscribe({
+            next: (response) => {
+              console.log(response)
+
+              this.dataSource.data = response.orders;
+              this.totalOrders = response.pagination.totalOrders;
+            }
+          })
+
         }
       },
       error: (error) => {
@@ -154,6 +180,8 @@ export class ViewCustomerComponent implements OnInit {
     })
 
   }
+
+
 
 
 

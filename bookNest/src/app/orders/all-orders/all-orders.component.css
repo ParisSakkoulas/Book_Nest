@@ -1,54 +1,89 @@
+/* Container Styles */
 .filters-container {
   display: flex;
-  gap: 20px;
-  padding: 20px;
+  gap: 16px;
+  padding: 16px;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
 .search-field {
   flex: 1;
+  min-width: 200px;
 }
 
 .orders-table-container {
   background: white;
-
+  border-radius: 8px;
   overflow: hidden;
+  margin: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-table {
+/* Table Styles */
+.mat-table {
   width: 100%;
 }
 
-.mat-mdc-row:hover {
-  background: #f5f5f5;
+.mat-header-cell {
+  font-weight: 600;
+  color: #374151;
+  background: #f9fafb;
+  padding: 12px 16px;
 }
 
+.mat-cell {
+  padding: 12px 16px;
+  color: #111827;
+}
+
+.mat-row {
+  transition: background-color 0.2s ease;
+}
+
+.mat-row:hover {
+  background-color: #f9fafb;
+}
+
+/* Status Badge Styles */
 .status-badge {
   padding: 6px 12px;
-  border-radius: 16px;
+  border-radius: 20px;
   font-size: 12px;
   font-weight: 500;
-  text-transform: capitalize;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  display: inline-block;
 }
 
 .status-badge.delivered {
-  background-color: #e6f4ea;
-  color: #1e8e3e;
+  background-color: #dcfce7;
+  color: #166534;
 }
 
 .status-badge.pending {
-  background-color: #fef7e0;
-  color: #b06000;
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.status-badge.processing {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-badge.shipped {
+  background-color: #f3e8ff;
+  color: #6b21a8;
 }
 
 .status-badge.cancelled {
-  background-color: #fce8e8;
-  color: #d93025;
+  background-color: #fee2e2;
+  color: #991b1b;
 }
 
+/* Customer Info Styles */
 .customer-info {
   display: flex;
   align-items: center;
@@ -58,44 +93,216 @@ table {
 .avatar {
   width: 32px;
   height: 32px;
-  background-color: #e0e0e0;
   border-radius: 50%;
+  background: #f3f4f6;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 500;
-  color: #5f6368;
+  color: #4b5563;
+  font-size: 14px;
 }
 
 .customer-details {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .customer-details .city {
   font-weight: 500;
-  color: rgba(0, 0, 0, 0.87);
+  color: #111827;
 }
 
 .customer-details .country {
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.54);
+  color: #6b7280;
 }
 
-/* Make sure the table headers stand out */
-.mat-mdc-header-cell {
+/* Form Field Styles */
+.mat-form-field {
+  width: 100%;
+}
+
+.mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+.status-select {
+  width: 140px;
+}
+
+.mat-cell .mat-form-field {
+  margin: -16px 0;
+}
+
+/* Action Button Styles */
+.action-cell {
+  width: 60px;
+  text-align: right;
+}
+
+button.mat-icon-button {
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+button.mat-icon-button:hover {
+  color: #111827;
+}
+
+/* Amount Column Styles */
+.amount-cell {
   font-weight: 500;
-  color: rgba(0, 0, 0, 0.87);
-  background: #fafafa;
+  color: #111827;
 }
 
-/* Adjust cell padding */
-.mat-mdc-cell,
-.mat-mdc-header-cell {
-  padding: 16px;
+/* Order ID Column Styles */
+.order-id {
+  font-family: monospace;
+  font-weight: 500;
+  color: #4b5563;
 }
 
-/* Style the paginator */
-.mat-mdc-paginator {
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
+/* Pagination Styles */
+.mat-paginator {
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Menu Styles */
+.mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mat-menu-item mat-icon {
+  margin-right: 0;
+}
+
+.mat-menu-item.warn {
+  color: #dc2626;
+}
+
+.mat-menu-item.warn mat-icon {
+  color: #dc2626;
+}
+
+/* Empty State Styles */
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.empty-state mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* Loading State Styles */
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 960px) {
+  .filters-container {
+    flex-direction: column;
+  }
+
+  .search-field {
+    width: 100%;
+  }
+
+  .mat-header-cell,
+  .mat-cell {
+    padding: 12px 8px;
+  }
+
+  .status-badge {
+    padding: 4px 8px;
+  }
+
+  .customer-info {
+    gap: 8px;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .customer-details .city {
+    font-size: 13px;
+  }
+
+  .customer-details .country {
+    font-size: 11px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .orders-table-container {
+    margin: 8px;
+  }
+
+  .mat-header-cell,
+  .mat-cell {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+
+  .status-select {
+    width: 100px;
+  }
+
+  .customer-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .avatar {
+    display: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+
+  .filters-container,
+  .mat-paginator,
+  .action-cell,
+  button.mat-icon-button {
+    display: none !important;
+  }
+
+  .orders-table-container {
+    box-shadow: none;
+    margin: 0;
+  }
+
+  .mat-header-cell,
+  .mat-cell {
+    padding: 8px;
+  }
+
+  .status-badge {
+    padding: 2px 6px;
+    border: 1px solid currentColor;
+  }
 }

@@ -37,9 +37,19 @@
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
       <td mat-cell *matCellDef="let order">
+        <mat-form-field appearance="outline" class="status-select">
+          <mat-select [(value)]="order.status" (selectionChange)="updateOrderStatus(order._id, $event.value)"
+            [disabled]="order.status === 'Cancelled'">
+            <mat-option *ngFor="let status of validStatuses" [value]="status">
+              {{status}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
         <span class="status-badge" [ngClass]="{
           'delivered': order.status === 'Delivered',
           'pending': order.status === 'Pending',
+          'processing': order.status === 'Processing',
+          'shipped': order.status === 'Shipped',
           'cancelled': order.status === 'Cancelled'
         }">
           {{order.status}}
@@ -74,22 +84,21 @@
           <mat-icon>more_vert</mat-icon>
         </button>
 
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item [routerLink]="'/orders/order/'+order._id">
+            <mat-icon>preview</mat-icon>
+            <span>View Order</span>
+          </button>
+          <button mat-menu-item [disabled]="order.status !== 'Pending' && order.status !== 'Processing'"
+            (click)="cancelOrder(order._id)">
+            <mat-icon>cancel</mat-icon>
+            <span>Cancel Order</span>
+          </button>
+        </mat-menu>
+
       </td>
 
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item>
-          <mat-icon>dialpad</mat-icon>
-          <span>View Order</span>
-        </button>
-        <button mat-menu-item>
-          <mat-icon>voicemail</mat-icon>
-          <span>Cancel Order</span>
-        </button>
-        <button mat-menu-item>
-          <mat-icon>notifications_off</mat-icon>
-          <span>View Customer</span>
-        </button>
-      </mat-menu>
+
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

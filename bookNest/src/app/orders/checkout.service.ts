@@ -53,4 +53,16 @@ export class CheckoutService {
     return this.http.get<PaginatedOrdersResponse>(`http://localhost:3000/api/orders/all`, { params: params });
   }
 
+  updateOrderStatus(orderId: string, status: string): Observable<any> {
+    return this.http.patch(`http://localhost:3000/api/orders/${orderId}/status`, { status });
+  }
+
+  getUserOrders(userId: string, page: number = 1, limit: number = 10): Observable<any> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    return this.http.get<{ orders: Order[], paginator: PaginatedOrdersResponse }>(`http://localhost:3000/api/orders/user/${userId}`, { params });
+  }
+
 }
