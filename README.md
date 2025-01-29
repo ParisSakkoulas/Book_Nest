@@ -14,7 +14,7 @@ BookNest is a full-stack online bookstore application built with **Node.js**, **
 7. **Backend API**: Well-documented RESTful API created with Node.js and MongoDB.
 
 # Technologies Used
-**Frontend**: Angular, Prime NG (UI template)
+**Frontend**: Angular, Angular Material (UI template)
 **Backend**: Node.js, Express.js, MongoDB
 **API Documentation**: Postman Documenter
 **Deployment**: 
