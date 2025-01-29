@@ -1,6 +1,6 @@
-/* Base Styles */
+/* Base */
 .customer-container {
-  padding: 32px;
+  padding: 2rem;
   max-width: 1000px;
   margin: 0 auto;
   min-height: 100vh;
@@ -8,27 +8,20 @@
 
 .custom-card {
   background: white;
-  border-radius: 16px;
+  border-radius: 1rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
 }
 
-/* Header Section */
+/* Header */
 .card-header {
-  padding: 32px;
+  padding: 2rem;
   background: linear-gradient(135deg, #0077ff, #003572);
   color: white;
 }
 
 .avatar-wrapper {
   display: flex;
-  gap: 32px;
-  align-items: center;
-}
-
-.avatar-section {
-  display: flex;
-  flex-direction: column;
+  gap: 2rem;
   align-items: center;
 }
 
@@ -41,71 +34,40 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  font-weight: 600;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  font-size: 2rem;
   border: 4px solid rgba(255, 255, 255, 0.2);
 }
 
 .status-badge {
-  margin-top: 12px;
-  padding: 8px 20px;
+  padding: 0.5rem 1.25rem;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
-  font-weight: 500;
-  font-size: 14px;
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
 }
 
 .status-badge.active {
   background: rgba(76, 175, 80, 0.9);
-  color: white;
-}
-
-.customer-info {
-  flex: 1;
-}
-
-.name-section {
-  margin-bottom: 16px;
 }
 
 .customer-name {
-  color: white;
-  margin: 0 0 8px 0;
-  font-size: 32px;
-  font-weight: 600;
+  font-size: 2rem;
+  margin: 0 0 0.5rem;
 }
 
-.contact-info {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Navigation Tabs */
+/* Content */
 .tab-container {
   display: flex;
-  padding: 0 32px;
+  padding: 0 2rem;
   background: #f8f9fa;
-  gap: 8px;
+  gap: 0.5rem;
   border-bottom: 1px solid #e0e0e0;
 }
 
 .tab {
-  padding: 20px 32px;
+  padding: 1.25rem 2rem;
   border-radius: 12px 12px 0 0;
-  transition: all 0.3s ease;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
-
 
 .tab.active {
   background: white;
@@ -113,378 +75,85 @@
   font-weight: 600;
 }
 
-/* Content Section */
 .content-section {
-  padding: 32px;
+  padding: 2rem;
 }
 
 .section-header {
-  margin-bottom: 24px;
-  padding-bottom: 16px;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
   border-bottom: 2px solid #f0f2f5;
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 
-.section-header h3 {
-  font-size: 24px;
-  color: #1a237e;
-  margin: 0;
-}
-
-.section-header mat-icon {
-  color: #0077ff;
-}
-
-/* Grid Layouts */
+/* Grid */
 .personal-info-grid,
 .address-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  gap: 1.5rem;
   background: #f8f9fa;
-  padding: 24px;
-  border-radius: 16px;
-  margin-bottom: 32px;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
 }
 
-.info-item,
-.address-item {
+.info-item {
   background: white;
-  padding: 20px;
+  padding: 1.25rem;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
 }
-
-.change-status {
-  width: 100%;
-}
-
 
 .label {
   color: #666;
-  font-size: 14px;
+  font-size: 0.875rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-  display: block;
+  margin-bottom: 0.5rem;
 }
 
 .value {
-  font-size: 16px;
+  font-size: 1rem;
   color: #2c3e50;
   font-weight: 500;
 }
 
-/* Status Styles */
-.status-text {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  display: inline-block;
-}
-
-.active {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-
-.inactive {
-  background: #ffebee;
-  color: #c62828;
-}
-
-.pending_verification {
-  background: #fff3e0;
-  color: #ef6c00;
-}
-
-.auto_created_unverified {
-  background: #fffde7;
-  color: #f57f17;
-}
-
-.auto_created_verified {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-
-/* Actions Section */
-.card-actions {
-  padding: 24px 32px;
-  background: #f8f9fa;
-  gap: 16px;
-  display: flex;
-  align-items: center;
-  border-top: 1px solid #e0e0e0;
-}
-
-.btn {
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-/* Add these styles to your existing CSS */
-
-/* Table Container */
+/* Table */
 .orders-table {
   width: 100%;
   background: white;
   border-radius: 12px;
-  overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  margin-bottom: 16px;
 }
 
-/* Table Header */
 .mat-header-cell {
   background: #f8f9fa;
   color: #4b5563;
+  padding: 1rem !important;
   font-weight: 600;
-  font-size: 13px;
-  padding: 16px !important;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  border-bottom: 2px solid #e5e7eb;
 }
 
-/* Table Cells */
 .mat-cell {
-  padding: 16px !important;
+  padding: 1rem !important;
   color: #1f2937;
-  font-size: 14px;
   border-bottom: 1px solid #f3f4f6;
 }
 
-/* Row Hover */
-.mat-row:hover {
-  background-color: #f9fafb;
-}
-
-/* Order ID Column */
-.mat-column-orderId {
-  font-family: 'Roboto Mono', monospace;
-  font-weight: 500;
-  color: #2563eb;
-}
-
-/* Status Column */
-.mat-column-status {
-  font-weight: 500;
-}
-
-.status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.status-badge.pending {
-  background: #fff7ed;
-  color: #9a3412;
-}
-
-.status-badge.processing {
-  background: #eff6ff;
-  color: #1e40af;
-}
-
-.status-badge.shipped {
-  background: #f5f3ff;
-  color: #5b21b6;
-}
-
-.status-badge.delivered {
-  background: #f0fdf4;
-  color: #166534;
-}
-
-.status-badge.cancelled {
-  background: #fef2f2;
-  color: #991b1b;
-}
-
-/* Date Columns */
-.mat-column-createDate,
-.mat-column-lastUpdate {
-  color: #6b7280;
-}
-
-/* Total Column */
-.mat-column-total {
-  font-weight: 500;
-  color: #111827;
-}
-
-.mat-column-total::before {
-  content: '$';
-  margin-right: 2px;
-  opacity: 0.5;
-}
-
-/* No Data Message */
-.no-orders-message {
-  padding: 48px;
-  text-align: center;
-  color: #9ca3af;
-}
-
-.no-orders-message mat-icon {
-  font-size: 48px;
-  width: 48px;
-  height: 48px;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
-
-.no-orders-message p {
-  font-size: 16px;
-  margin: 0;
-}
-
-/* Paginator */
-.mat-paginator {
-  background: transparent;
-  border-top: 1px solid #f3f4f6;
-}
-
-::ng-deep .mat-paginator-container {
-  min-height: 48px !important;
-  padding: 0 8px !important;
-}
-
-::ng-deep .mat-paginator-page-size {
-  margin-right: 16px !important;
-}
-
-::ng-deep .mat-paginator-range-actions {
-  margin-left: 16px !important;
-}
-
-/* Loading State */
-.loading-shade {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.8);
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Responsive Design */
-@media screen and (max-width: 768px) {
-
-  .mat-header-cell,
-  .mat-cell {
-    padding: 12px !important;
-  }
-
-  .mat-column-createDate {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 480px) {
-
-  .mat-header-cell,
-  .mat-cell {
-    padding: 8px !important;
-    font-size: 13px;
-  }
-
-  .mat-column-lastUpdate {
-    display: none;
-  }
-
-  .status-badge {
-    padding: 4px 8px;
-    font-size: 11px;
-  }
-}
-
-
-
-/* Material Form Field Customization */
-.mat-form-field {
-  width: 250px;
-}
-
-::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
-  background: white;
-  border-radius: 8px;
-  padding: 8px 12px;
-}
-
-::ng-deep .mat-form-field-appearance-fill .mat-form-field-underline {
-  display: none;
-}
-
-::ng-deep .mat-form-field-appearance-fill .mat-select-arrow {
-  color: #0077ff;
-}
-
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
   .customer-container {
-    padding: 16px;
-  }
-
-  .card-header {
-    padding: 24px;
+    padding: 1rem;
   }
 
   .avatar-wrapper {
     flex-direction: column;
-    text-align: center;
-  }
-
-  .customer-info {
-    text-align: center;
-  }
-
-  .contact-info {
-    justify-content: center;
-  }
-
-  .tab-container {
-    padding: 0 16px;
   }
 
   .tab {
-    padding: 16px;
+    padding: 1rem;
     flex: 1;
-    justify-content: center;
   }
 
   .content-section {
-    padding: 24px 16px;
-  }
-
-  .card-actions {
-    flex-direction: column;
-    padding: 16px;
-  }
-
-  .btn,
-  .mat-form-field {
-    width: 100%;
+    padding: 1.5rem 1rem;
   }
 }
