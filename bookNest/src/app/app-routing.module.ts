@@ -7,8 +7,6 @@ import { HomeComponent } from './home/home.component';
 import { ViewCustomerComponent } from './customers/view-customer/view-customer.component';
 import { AuthGuard } from './auth/auth.guard';
 import { IsAdminGuard } from './auth/is-admin.guard';
-import { AdminDashboardComponent } from './dashboads/admin-dashboard/admin-dashboard.component';
-import { AdminDashboardOrverviewComponent } from './dashboads/admin-dashboard-orverview/admin-dashboard-orverview.component';
 import { UserProfileComponent } from './profiles/user-profile/user-profile.component';
 import { BooksComponent } from './books/books/books.component';
 import { BookComponent } from './books/book/book.component';
@@ -21,21 +19,6 @@ import { AllOrdersComponent } from './orders/all-orders/all-orders.component';
 
 const routes: Routes = [
 
-
-
-  //DashBoard Routes
-  {
-    path: 'admin/dashboard',
-    component: AdminDashboardComponent,
-    children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: AdminDashboardOrverviewComponent },
-      //{ path: 'products', component: ProductsComponent },
-      { path: 'customers', component: CostumersComponent },
-      // Add other routes
-    ],
-    canActivate: [AuthGuard, IsAdminGuard]
-  },
 
 
 
