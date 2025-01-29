@@ -4,12 +4,13 @@
       <div class="avatar-section">
         <div class="avatar">{{getUserInitials()}}</div>
         <div class="user-info">
-          <h2>{{user.email}}</h2>
+          <h2>{{currentUserData.email}}</h2>
           <div class="badges">
-            <span class="status-chip" [ngClass]="user.status.toLowerCase()">
-              {{user.status}}
-            </span>
-            <span class="role-badge">{{user.role}}</span>
+            <!--
+            <span class="status-chip" [ngClass]="currentUserData..toLowerCase()">
+              {{currentUserData.status}}
+            </span>-->
+            <span class="role-badge">{{currentUserData.role}}</span>
           </div>
         </div>
       </div>
@@ -30,7 +31,7 @@
 
 
     <div class="profile-info" *ngIf="activeButton === 'Info'">
-      <form [formGroup]="customerInfoForm" (ngSubmit)="onSubmit()" class="profile-form">
+      <form [formGroup]="customerInfoForm" (ngSubmit)="onChangeCustomerInfo()" class="profile-form">
         <!-- Personal Information Section -->
         <div class="form-section">
           <h3 class="section-title">Personal Information</h3>
@@ -133,6 +134,9 @@
             <mat-error *ngIf="email?.errors?.['email']">
               Please enter a valid email address
             </mat-error>
+            <mat-error *ngIf="email?.errors?.['emailExists']">
+              This email is already in use by another account
+            </mat-error>
           </mat-form-field>
 
         </div>
@@ -148,20 +152,26 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
-          <input matInput [type]="hidePassword ? 'text' : 'password'" formControlName="password"
+          <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password"
             placeholder="Enter your password">
-          <mat-icon matSuffix [attr.aria-label]="hidePassword ? 'Hide password' : 'Show password'">
-            {{hidePassword ? 'visibility_off' : 'visibility'}}
-          </mat-icon>
+          <mat-icon (click)="togglePasswordVisibility()" matSuffix>
+            {{showPassword?'visibility_off':'visibility'}}</mat-icon>
+          <mat-error *ngIf="passwordForm.get('password')?.invalid && passwordForm.get('password')?.touched">
+            Password must contain 2 uppercase letters, 1 special character, 2 numbers, 3 lowercase letters, and be at
+            least 8 characters long
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Confirm Password</mat-label>
           <input matInput [type]="hidePassword ? 'text' : 'password'" formControlName="confirm_password"
             placeholder="Confirm your password">
-          <mat-icon matSuffix [attr.aria-label]="hidePassword ? 'Hide password' : 'Show password'">
-            {{hidePassword ? 'visibility_off' : 'visibility'}}
-          </mat-icon>
+          <mat-icon (click)="togglePasswordVisibility()" matSuffix>
+            {{showPassword?'visibility_off':'visibility'}}</mat-icon>
+          <mat-error
+            *ngIf="passwordForm.get('confirm_password')?.invalid && passwordForm.get('confirm_password')?.touched">
+            Passwords do not match
+          </mat-error>
         </mat-form-field>
 
         <button class="btn btn-primary" type="submit" [disabled]="!passwordForm.valid">

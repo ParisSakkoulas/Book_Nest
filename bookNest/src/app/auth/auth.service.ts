@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SpinnerService } from '../spinner/spinner.service';
 import { MessageDialogService } from '../message.dialog/message-dialog.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { RegisterModel } from '../models/Register.Model';
 
 @Injectable({
@@ -218,6 +218,42 @@ export class AuthService {
 
   isAuthenticated$() {
     return this.isAuthenticated.asObservable();
+  }
+
+  checkEmail(email: string, currentUserId?: string): Observable<any> {
+    return this.http.post(`http://localhost:3000/api/auth/checkEmail`, {
+      email,
+      currentUserId
+    });
+  }
+
+  updateEmail(userId: string, newEmail: string): Observable<any> {
+    return this.http.put(`http://localhost:3000/api/auth/updateEmail`, {
+      userId,
+      email: newEmail
+    }).pipe(
+      tap(response => {
+        // Get current user data from localStorage
+        const userData = this.getUserData();
+        if (userData) {
+          // Update only the email while keeping other data
+          const updatedUserData = {
+            ...userData,
+            email: newEmail
+          };
+
+          // Update localStorage
+          localStorage.setItem('userData', JSON.stringify(updatedUserData));
+
+          // Update currentUser BehaviorSubject
+          this.currentUser.next(updatedUserData);
+        }
+      })
+    );
+  }
+
+  updatePassword(userId: string, newPassword: string): Observable<any> {
+    return this.http.put(`http://localhost:3000/api/auth/updatePassword`, { userId, password: newPassword });
   }
 
   logout() {
