@@ -69,7 +69,7 @@ export class AuthService {
             this.autoLogout(response.expiresIn * 1000);
 
             // Navigate to home/dashboard
-            this.router.navigate(['/']);
+            this.router.navigate(['/books']);
 
             // Show success message
             this.messageService.showSuccess('Login successful!');

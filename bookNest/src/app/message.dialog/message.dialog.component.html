@@ -27,8 +27,8 @@
     <p>{{ data.message }}</p>
   </div>
 
-  <div class="dialog-actions">
-    <ng-container *ngIf="data.showConfirm">
+  <div class="simple-actions">
+    <ng-container *ngIf="data.showConfirm" class="dialog-actions">
       <button class="dialog-button btn btn-secondary" (click)="onCancel()">Cancel</button>
       <button class="dialog-button btn btn-danger" (click)="onConfirm()">Delete</button>
     </ng-container>

@@ -1,0 +1,81 @@
+<div class="checkout-container">
+  <mat-card *ngIf="orderComplete" class="order-success">
+    <mat-card-header>
+      <mat-card-title>Order Confirmed!</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Your order has been placed successfully.</p>
+      <p>Order ID: {{orderId}}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" routerLink="/">Return to Home</button>
+      <button mat-raised-button routerLink="/">View My Orders</button>
+
+    </mat-card-actions>
+  </mat-card>
+
+  <div *ngIf="!orderComplete" class="checkout-content">
+    <mat-card class="order-summary">
+      <mat-card-header>
+        <mat-card-title>Order Summary</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="cart-items" *ngIf="cart">
+          <div class="item" *ngFor="let item of cart.items">
+            <span>{{item.productId.title}} x {{item.quantity}}</span>
+            <span>${{item.price * item.quantity | number:'1.2-2'}}</span>
+          </div>
+          <div class="total">
+            <span>Total</span>
+            <span>${{cart.totalAmount | number:'1.2-2'}}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="shipping-form">
+      <mat-card-header>
+        <mat-card-title>Shipping Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="shippingForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline">
+            <mat-label>Street Address</mat-label>
+            <input matInput formControlName="street" required>
+          </mat-form-field>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>City</mat-label>
+              <input matInput formControlName="city" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>State</mat-label>
+              <input matInput formControlName="state" required>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>ZIP Code</mat-label>
+              <input matInput formControlName="zipCode" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Country</mat-label>
+              <input matInput formControlName="country" required>
+            </mat-form-field>
+          </div>
+
+          <mat-error *ngIf="error">{{error}}</mat-error>
+
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading || !shippingForm.valid"
+            class="submit-button">
+            {{loading ? 'Processing...' : 'Place Order'}}
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

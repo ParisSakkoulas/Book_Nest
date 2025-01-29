@@ -32,17 +32,19 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BooksComponent } from './books/books/books.component';
 import { CreateBookComponent } from './books/create-book/create-book.component';
-import { AdminDashboardComponent } from './dashboads/admin-dashboard/admin-dashboard.component';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatBadgeModule } from '@angular/material/badge';
-import { AdminDashboardOrverviewComponent } from './dashboads/admin-dashboard-orverview/admin-dashboard-orverview.component';
-import { UserDashboardComponent } from './dashboads/user-dashboard/user-dashboard.component';
 import { UserProfileComponent } from './profiles/user-profile/user-profile.component';
 import { BookComponent } from './books/book/book.component';
-
+import { CheckoutComponent } from './orders/checkout/checkout.component';
+import { MyOrdersComponent } from './orders/my-orders/my-orders.component';
+import { AllOrdersComponent } from './orders/all-orders/all-orders.component';
+import { FooterComponent } from './footer/footer.component';
+import { SingleOrderComponent } from './orders/single-order/single-order.component';
+import { MatStepperModule } from '@angular/material/stepper';
 
 
 @NgModule({
@@ -58,11 +60,14 @@ import { BookComponent } from './books/book/book.component';
     ViewCustomerComponent,
     BooksComponent,
     CreateBookComponent,
-    AdminDashboardComponent,
-    AdminDashboardOrverviewComponent,
-    UserDashboardComponent,
     UserProfileComponent,
     BookComponent,
+    CheckoutComponent,
+    MyOrdersComponent,
+    AllOrdersComponent,
+    FooterComponent,
+    SingleOrderComponent,
+
 
   ],
   imports: [
@@ -89,7 +94,8 @@ import { BookComponent } from './books/book/book.component';
     MatBadgeModule,
     MatSidenavModule,
     MatTableModule,
-    MatTabsModule
+    MatTabsModule,
+    MatStepperModule
 
 
 

@@ -6,6 +6,7 @@ import { BookService } from '../book.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { CurrentUserData } from 'src/app/models/CurrentUser.Data';
 import { SpinnerService } from 'src/app/spinner/spinner.service';
+import { CartService } from 'src/app/cart.service';
 
 @Component({
   selector: 'app-book',
@@ -22,7 +23,7 @@ export class BookComponent implements OnInit {
   currentUserData !: CurrentUserData;
 
 
-  constructor(private route: ActivatedRoute, private spinnerService: SpinnerService, private router: Router, private authService: AuthService, private bookService: BookService, private messageService: MessageDialogService) { }
+  constructor(private cartService: CartService, private route: ActivatedRoute, private spinnerService: SpinnerService, private router: Router, private authService: AuthService, private bookService: BookService, private messageService: MessageDialogService) { }
 
   ngOnInit() {
 
@@ -80,11 +81,28 @@ export class BookComponent implements OnInit {
   }
 
   addToCart() {
-    // Implement cart functionality
-    this.messageService.showSuccess('Added to cart successfully');
+    const items = [{
+      bookId: this.book._id,
+      quantity: this.quantity
+    }];
 
-    console.log(this.quantity);
+    console.log(items)
 
+
+    this.cartService.addToCart(items).subscribe({
+      next: (response) => {
+        console.log(response);
+
+        console.log(response)
+        this.cartService.updateCartState();
+        this.messageService.showSuccess('Added to cart successfully');
+      },
+      error: (error) => {
+        console.log(error);
+
+        this.messageService.showError(error.error?.message || 'Failed to add to cart');
+      }
+    });
   }
 
 

@@ -1,241 +1,170 @@
 <div class="app-container">
-
-
-
   <mat-toolbar class="navbar">
     <div class="navbar-container">
-      <!-- Logo and Brand -->
-      <div class="brand-section">
-        <button mat-icon-button class="menu-button" (click)="toggleMobileMenu()" aria-label="Toggle navigation menu">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <a routerLink="/public/home" class="brand-logo">
-          <mat-icon class="logo-icon">auto_stories</mat-icon>
-          <span class="brand-name">Book Nest</span>
-        </a>
-      </div>
+      <!-- Brand Logo (Left Section) -->
+      <a routerLink="/public/home" class="brand-logo">
+        <mat-icon class="logo-icon">auto_stories</mat-icon>
+        <span class="brand-name">Book Nest</span>
+      </a>
 
-      <!-- Navigation Links -->
-      <nav class="nav-links" [class.show-mobile]="showMobileMenu">
+      <!-- Main Navigation -->
+      <nav class="main-nav" [class.show-mobile]="showMobileMenu">
         <ng-container *ngFor="let link of navLinks">
-          <a mat-button [routerLink]="link.path" routerLinkActive="active-link">
+          <a [routerLink]="link.path" routerLinkActive="active-link">
             <mat-icon>{{link.icon}}</mat-icon>
             <span>{{link.label}}</span>
           </a>
         </ng-container>
       </nav>
 
+      <!-- Right Section -->
+      <div class="right-section">
+        <!-- Search -->
+        <div class="search-box">
+          <mat-icon>search</mat-icon>
+          <input type="text" placeholder="Search books...">
+        </div>
 
-
-      <!-- Auth Section -->
-      <div class="auth-section">
-
-        <!-- Visitors Section -->
+        <!-- Not Authenticated -->
         <ng-container *ngIf="!isAuthenticated">
-          <button mat-button class="login-btn" [routerLink]="'/auth/login'">
-            <mat-icon>login</mat-icon>
-            <span>Log in</span>
+          <button mat-icon-button [matMenuTriggerFor]="shoppingCart" class="cart-button">
+            <mat-icon [matBadge]="cartItemCount" [matBadgeHidden]="!cartItemCount"
+              matBadgeColor="warn">shopping_bag</mat-icon>
           </button>
-          <button mat-raised-button color="primary" [routerLink]="'/auth/register'">
-            <span>Register</span>
-          </button>
-          <button mat-icon-button [matMenuTriggerFor]="shoppingCard" class="shopping-cart-button">
-            <mat-icon>shopping_cart</mat-icon>
-          </button>
-
-          <mat-menu #shoppingCard="matMenu" class="shopping-card-menu">
-            <div class="menu-header">
-              <p>Your Shopping Cart</p>
-            </div>
-            <div class="menu-content">
-              <p>Your cart is empty.</p>
-              <!-- Example of adding items dynamically -->
-              <!-- <div class="cart-item">
-                <span>Item Name</span>
-                <span>$10</span>
-              </div> -->
-            </div>
-            <div class="menu-footer">
-              <button mat-button color="primary" class="checkout-btn">Checkout</button>
-            </div>
-          </mat-menu>
+          <button mat-button class="login-btn" [routerLink]="'/auth/login'">Sign in</button>
+          <button mat-flat-button color="primary" [routerLink]="'/auth/register'">Register</button>
         </ng-container>
 
-        <!-- Admin Section -->
+        <!-- Authenticated User -->
         <ng-container *ngIf="isAuthenticated">
+          <button mat-icon-button [matMenuTriggerFor]="shoppingCart" class="cart-button">
+            <mat-icon [matBadge]="cartItemCount" [matBadgeHidden]="!cartItemCount"
+              matBadgeColor="warn">shopping_bag</mat-icon>
+          </button>
 
-          <button mat-icon-button [matMenuTriggerFor]="adminMenu" *ngIf="currentUserData.role === 'ADMIN'">
+          <!-- Admin Menu -->
+          <button mat-icon-button [matMenuTriggerFor]="adminMenu" *ngIf="currentUserData?.role === 'ADMIN'">
             <div class="user-avatar">
-              <mat-icon>person</mat-icon>
+              <mat-icon>admin_panel_settings</mat-icon>
             </div>
           </button>
 
-          <mat-menu #adminMenu="matMenu" class="user-menu">
-            <div class="user-menu-header">
-              <p class="user-email">{{currentUserData.email}}</p>
-            </div>
-            <mat-divider></mat-divider>
-            <button mat-menu-item routerLink="/admin/dashboard">
-              <mat-icon>dashboard</mat-icon>
-              <span>Dashboard</span>
-            </button>
-            <button mat-menu-item routerLink="/books">
-              <mat-icon>library_books</mat-icon>
-              <span>Products</span>
-            </button>
-
-            <button mat-menu-item routerLink="/customers/list">
-              <mat-icon>groups</mat-icon>
-              <span>Customers</span>
-            </button>
-
-            <button mat-menu-item routerLink="/profile">
-              <mat-icon>orders</mat-icon>
-              <span>Orders</span>
-            </button>
-
-            <button mat-menu-item routerLink="/profile">
-              <mat-icon>person_outline</mat-icon>
-              <span>Users</span>
-            </button>
-
-            <button mat-menu-item routerLink="/settings">
-              <mat-icon>settings</mat-icon>
-              <span>Settings</span>
-            </button>
-
-            <mat-divider></mat-divider>
-            <button mat-menu-item (click)="onLogout()" class="logout-item">
-              <mat-icon>logout</mat-icon>
-              <span>Log out</span>
-            </button>
-          </mat-menu>
-
-
-        </ng-container>
-
-        <ng-container *ngIf="isAuthenticated">
-          <button mat-icon-button [matMenuTriggerFor]="userMenu" *ngIf="currentUserData.role === 'USER'">
+          <!-- User Menu -->
+          <button mat-icon-button [matMenuTriggerFor]="userMenu" *ngIf="currentUserData?.role === 'USER'">
             <div class="user-avatar">
-              <mat-icon>person</mat-icon>
-            </div>
-
-          </button>
-          <button mat-icon-button>
-            <mat-icon>shopping_cart</mat-icon>
-          </button>
-
-          <mat-menu #userMenu="matMenu" class="user-menu">
-            <div class="user-menu-header" *ngIf="currentUserData">
-              <p class="user-name">{{currentUserData.firstName}} {{currentUserData.lastName}}</p>
-              <p class="user-email">{{currentUserData.email}}</p>
-            </div>
-            <mat-divider></mat-divider>
-            <button mat-menu-item routerLink="/user/dashboard">
-              <mat-icon>dashboard</mat-icon>
-              <span>Dashboard</span>
-            </button>
-            <button mat-menu-item routerLink="/user/profile">
               <mat-icon>person_outline</mat-icon>
-              <span>Profile</span>
-            </button>
-            <button mat-menu-item routerLink="/settings">
-              <mat-icon>settings</mat-icon>
-              <span>Settings</span>
-            </button>
-            <button mat-menu-item routerLink="/settings">
-              <mat-icon>settings</mat-icon>
-              <span>Orders</span>
-            </button>
-            <mat-divider></mat-divider>
-            <button mat-menu-item (click)="onLogout()" class="logout-item">
-              <mat-icon>logout</mat-icon>
-              <span>Log out</span>
-            </button>
-          </mat-menu>
+            </div>
+          </button>
         </ng-container>
       </div>
     </div>
   </mat-toolbar>
-  <app-spinner></app-spinner>
-  <router-outlet></router-outlet>
 
-
-
-  <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-content">
-        <!-- Company Info Section -->
-        <div class="footer-section">
-          <div class="footer-brand">
-            <mat-icon class="footer-logo">auto_stories</mat-icon>
-            <h3>Book Nest</h3>
-          </div>
-          <p class="company-description">
-            Your ultimate destination for discovering, purchasing, and enjoying books of all genres.
-          </p>
-          <div class="social-links">
-            <a mat-icon-button href="#" aria-label="Facebook">
-              <mat-icon>facebook</mat-icon>
-            </a>
-            <a mat-icon-button href="#" aria-label="Twitter">
-              <mat-icon>twitter</mat-icon>
-            </a>
-            <a mat-icon-button href="#" aria-label="Instagram">
-              <mat-icon>instagram</mat-icon>
-            </a>
-            <a mat-icon-button href="#" aria-label="LinkedIn">
-              <mat-icon>linkedin</mat-icon>
-            </a>
-          </div>
-        </div>
-
-        <!-- Quick Links Section -->
-        <div class="footer-section">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a routerLink="/about">About Us</a></li>
-            <li><a routerLink="/contact">Contact</a></li>
-            <li><a routerLink="/books">Browse Books</a></li>
-            <li><a routerLink="/categories">Categories</a></li>
-          </ul>
-        </div>
-
-        <!-- Customer Service Section -->
-        <div class="footer-section">
-          <h4>Customer Service</h4>
-          <ul>
-            <li><a routerLink="/faq">FAQ</a></li>
-            <li><a routerLink="/shipping">Shipping Info</a></li>
-            <li><a routerLink="/returns">Returns Policy</a></li>
-            <li><a routerLink="/privacy">Privacy Policy</a></li>
-          </ul>
-        </div>
-
-        <!-- Newsletter Section -->
-        <div class="footer-section">
-          <h4>Stay Updated</h4>
-          <p>Subscribe to our newsletter for updates and exclusive offers!</p>
-          <mat-form-field appearance="outline" class="newsletter-input">
-            <input matInput placeholder="Enter your email" type="email">
-          </mat-form-field>
-          <button mat-raised-button color="primary">Subscribe</button>
-        </div>
+  <!-- Shopping Cart Menu -->
+  <mat-menu #shoppingCart="matMenu" class="shopping-card-menu">
+    <div class="menu-header">
+      <p>Shopping Cart ({{cartItemCount}})</p>
+    </div>
+    <div class="menu-content">
+      <div *ngIf="!cart?.items?.length" class="empty-cart">
+        <p>Your cart is empty.</p>
       </div>
-
-      <!-- Bottom Bar -->
-      <div class="footer-bottom">
-        <p>&copy; 2025 Book Nest. All rights reserved.</p>
-        <div class="footer-bottom-links">
-          <a routerLink="/terms">Terms of Service</a>
-          <span class="separator">|</span>
-          <a routerLink="/privacy">Privacy Policy</a>
-          <span class="separator">|</span>
-          <a routerLink="/cookies">Cookie Policy</a>
+      <div *ngIf="cart?.items?.length" class="cart-items">
+        <div *ngFor="let item of cart.items" class="cart-item">
+          <img [src]="item.productId.imageUrl || '/assets/images/book-default.png'" [alt]="item.productId.title">
+          <div class="item-details">
+            <span class="item-title">{{item.productId.title}}</span>
+            <span class="item-price">{{item.price | currency}}</span>
+            <div class="quantity-controls">
+              <button mat-icon-button
+                (click)="updateQuantity(item.productId._id, item.quantity - 1); $event.stopPropagation()">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span>{{item.quantity}}</span>
+              <button mat-icon-button
+                (click)="updateQuantity(item.productId._id, item.quantity + 1); $event.stopPropagation()">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <button mat-icon-button (click)="removeFromCart(item.productId._id)" class="remove-btn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="cart-total">
+          <span>Total:</span>
+          <span>{{cart.totalAmount | currency}}</span>
         </div>
       </div>
     </div>
-  </footer>
+    <div class="menu-footer">
+      <button mat-flat-button color="primary" class="checkout-btn" [disabled]="!cart?.items?.length"
+        (click)="checkout()">
+        Checkout
+      </button>
+    </div>
+  </mat-menu>
 
+  <!-- Admin Menu -->
+  <mat-menu #adminMenu="matMenu" class="user-menu">
+    <div class="menu-header">
+      <p class="user-email" *ngIf="currentUserData">{{currentUserData.email}}</p>
+      <p class="user-role">Administrator</p>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item routerLink="/admin/dashboard">
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </button>
+    <button mat-menu-item routerLink="/books">
+      <mat-icon>library_books</mat-icon>
+      <span>Products</span>
+    </button>
+    <button mat-menu-item routerLink="/customers/list">
+      <mat-icon>groups</mat-icon>
+      <span>Customers</span>
+    </button>
+    <button mat-menu-item routerLink="/orders/all">
+      <mat-icon>receipt_long</mat-icon>
+      <span>Orders</span>
+    </button>
+    <button mat-menu-item routerLink="/users">
+      <mat-icon>manage_accounts</mat-icon>
+      <span>Users</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="onLogout()" class="logout-item">
+      <mat-icon>logout</mat-icon>
+      <span>Sign out</span>
+    </button>
+  </mat-menu>
 
+  <!-- User Menu -->
+  <mat-menu #userMenu="matMenu" class="user-menu">
+    <div class="menu-header" *ngIf="currentUserData">
+      <p class="user-name">{{currentUserData.firstName}} {{currentUserData.lastName}}</p>
+      <p class="user-email">{{currentUserData.email}}</p>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item routerLink="/user/profile">
+      <mat-icon>person_outline</mat-icon>
+      <span>Profile</span>
+    </button>
+    <button mat-menu-item routerLink="/orders/myOrders">
+      <mat-icon>library_books</mat-icon>
+      <span>My Orders</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="onLogout()" class="logout-item">
+      <mat-icon>logout</mat-icon>
+      <span>Sign out</span>
+    </button>
+  </mat-menu>
+
+  <!-- Mobile Menu Button -->
+  <button mat-icon-button class="menu-button" (click)="toggleMobileMenu()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <router-outlet></router-outlet>
 </div>

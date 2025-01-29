@@ -1,0 +1,140 @@
+<!-- single-order.component.html -->
+<div class="order-details-container">
+
+  <div *ngIf="singleOrder" class="order-content">
+    <!-- Header Section -->
+    <div class="order-header">
+      <div class="header-left">
+        <div class="order-number">Order #{{singleOrder._id}}</div>
+        <div class="status-badge" [ngClass]="order.status.toLowerCase()">
+          {{singleOrder.status}}
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-danger"
+          [disabled]="singleOrder.status !== 'Pending' && singleOrder.status !== 'Processing'"
+          (click)="cancelOrder(singleOrder._id)">
+          Cancel Order
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Order Info Grid -->
+    <div class="order-info-grid">
+      <!-- Item Details -->
+      <div class="info-card">
+        <div class="info-title">Item</div>
+        <div class="book-info" *ngFor="let item of singleOrder.items">
+          <img [src]="item.productId.imageUrl || '/assets/images/book-default.png'" [alt]="item.productId.title"
+            class="book-thumbnail">
+          <div class="book-details">
+            <div class="book-title">{{item.productId.title}}</div>
+            <div class="book-author">by {{item.productId.author}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card order-summary">
+        <div class="summary-section">
+          <div class="info-title">Total Amount</div>
+          <div class="info-content amount">
+            ${{singleOrder.totalAmount}}
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="summary-section">
+          <div class="info-title">Start Time</div>
+          <div class="info-content">
+            {{singleOrder.createdAt | date:'medium'}}
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="summary-section">
+          <div class="info-title">Address</div>
+          <div class="info-content">
+            {{singleOrder.shippingAddress.street}}<br>
+            {{singleOrder.shippingAddress.city}}, {{singleOrder.shippingAddress.state}}<br>
+            {{singleOrder.shippingAddress.zipCode}}, {{singleOrder.shippingAddress.country}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Timeline -->
+    <div class="order-stepper-container">
+      <mat-stepper [selectedIndex]="getStepIndex()" class="custom-stepper" linear #stepper>
+        <!-- Pending Step -->
+        <mat-step [completed]="isStepComplete('Pending')" [editable]="isStepEditable('Pending')">
+          <ng-template matStepLabel>
+            <div class="step-content">
+              <span class="step-title">Order Placed</span>
+              <span class="step-date" *ngIf="singleOrder?.createdAt">
+                {{ singleOrder.createdAt | date:'MMM d, y, h:mm a' }}
+              </span>
+            </div>
+          </ng-template>
+          <div class="step-details" *ngIf="isCurrentStep('Pending')">
+            <p>Your order has been received and is being validated.</p>
+            <p>Order #{{ singleOrder._id }}</p>
+          </div>
+        </mat-step>
+
+        <!-- Processing Step -->
+        <mat-step [completed]="isStepComplete('Processing')" [editable]="isStepEditable('Processing')">
+          <ng-template matStepLabel>
+            <div class="step-content">
+              <span class="step-title">Processing</span>
+              <span class="step-date" *ngIf="isStepReached('Processing')">
+                {{ singleOrder.updatedAt | date:'MMM d, y, h:mm a' }}
+              </span>
+            </div>
+          </ng-template>
+          <div class="step-details" *ngIf="isCurrentStep('Processing')">
+            <p>Your order is being prepared for shipping.</p>
+          </div>
+        </mat-step>
+
+        <!-- Shipped Step -->
+        <mat-step [completed]="isStepComplete('Shipped')" [editable]="isStepEditable('Shipped')">
+          <ng-template matStepLabel>
+            <div class="step-content">
+              <span class="step-title">Shipped</span>
+              <span class="step-date" *ngIf="isStepReached('Shipped')">
+                {{ singleOrder.updatedAt | date:'MMM d, y, h:mm a' }}
+              </span>
+            </div>
+          </ng-template>
+          <div class="step-details" *ngIf="isCurrentStep('Shipped')">
+            <p>Your order is on its way!</p>
+            <p>Estimated delivery: {{ singleOrder.updatedAt | date:'MMM d, y' }}</p>
+          </div>
+        </mat-step>
+
+        <!-- Delivered Step -->
+        <mat-step [completed]="isStepComplete('Delivered')" [editable]="isStepEditable('Delivered')">
+          <ng-template matStepLabel>
+            <div class="step-content">
+              <span class="step-title">Delivered</span>
+              <span class="step-date" *ngIf="isStepReached('Delivered')">
+                {{ singleOrder.updatedAt | date:'MMM d, y, h:mm a' }}
+              </span>
+            </div>
+          </ng-template>
+          <div class="step-details" *ngIf="isCurrentStep('Delivered')">
+            <p>Your order has been delivered successfully!</p>
+          </div>
+        </mat-step>
+      </mat-stepper>
+
+      <!-- Cancelled Order Banner -->
+      <div *ngIf="singleOrder?.status === 'Cancelled'" class="cancelled-banner">
+        <mat-icon>error_outline</mat-icon>
+        <div class="cancelled-content">
+          <h3>Order Cancelled</h3>
+          <p>This order was cancelled on {{ singleOrder.updatedAt | date:'MMM d, y, h:mm a' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,100 @@
+<!-- my-orders.component.html -->
+<div class="orders-container">
+  <header class="orders-header">
+    <h1>My Orders</h1>
+    <div class="search-bar">
+      <input type="text" placeholder="Search orders..." class="form-control">
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && orders.length === 0" class="empty-state">
+    <img src="assets/empty-orders.svg" alt="No orders" class="empty-icon">
+    <h3>No Orders Yet</h3>
+    <p>When you place orders, they will appear here</p>
+    <a routerLink="/books" class="btn btn-primary">Start Shopping</a>
+  </div>
+
+  <!-- Orders List -->
+  <div *ngIf="!loading && orders.length > 0" class="orders-list">
+    <div *ngFor="let order of orders" class="order-card">
+      <div class="order-summary">
+        <div class="order-info-grid">
+          <div class="info-block">
+            <span class="info-label">ORDER PLACED</span>
+            <span class="info-value">{{ order.orderDate | date:'mediumDate' }}</span>
+          </div>
+          <div class="info-block">
+            <span class="info-label">TOTAL</span>
+            <span class="info-value price">${{ order.totalAmount.toFixed(2) }}</span>
+          </div>
+          <div class="info-block shipping">
+            <span class="info-label">SHIP TO</span>
+            <span class="info-value">{{ order.shippingAddress.street }}</span>
+          </div>
+          <div class="info-block order-number">
+            <span class="info-label">ORDER #{{ order._id }}</span>
+            <button class="btn btn-link" [routerLink]="'/orders/order/'+order._id">View Details</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-content">
+        <div *ngFor="let item of order.items" class="order-item">
+          <div class="item-image">
+            <img [src]="item.productId.imageUrl || 'assets/images/book-default.png'" [alt]="item.productId.title">
+          </div>
+          <div class="item-details">
+            <h4>{{ item.productId.title }}</h4>
+            <p class="author">by {{ item.productId.author }}</p>
+            <div class="item-meta">
+              <span class="quantity">Qty: {{ item.quantity }}</span>
+              <span class="price">${{ item.price.toFixed(2) }}</span>
+            </div>
+            <div class="delivery-info">
+              <span class="status {{ order.status.toLowerCase() }}">
+                {{ order.status }}
+              </span>
+              <span class="delivery-date">
+                Expected delivery: {{ getExpectedDeliveryDate(order.createdAt) | date:'mediumDate' }}
+              </span>
+            </div>
+            <div class="item-actions">
+              <button class="btn btn-sm btn-outline-secondary" [routerLink]="'/books/'+item.productId._id">View
+                Product</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="pagination.totalPages > 1" class="pagination-container">
+    <nav aria-label="Orders pagination">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="pagination.currentPage === 1">
+          <a class="page-link" (click)="loadOrders(pagination.currentPage - 1)">
+            <i class="bi bi-chevron-left"></i>
+          </a>
+        </li>
+        <li class="page-item" *ngFor="let page of [].constructor(pagination.totalPages); let i = index"
+          [class.active]="pagination.currentPage === i + 1">
+          <a class="page-link" (click)="loadOrders(i + 1)">{{ i + 1 }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="pagination.currentPage === pagination.totalPages">
+          <a class="page-link" (click)="loadOrders(pagination.currentPage + 1)">
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

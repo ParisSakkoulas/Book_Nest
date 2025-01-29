@@ -1,0 +1,101 @@
+<!-- Search and filter section -->
+<div class="filters-container">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search for order</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (input)="applyFilter()">
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilter()">
+      <mat-option value="">All</mat-option>
+      <mat-option value="Delivered">Delivered</mat-option>
+      <mat-option value="Pending">Pending</mat-option>
+      <mat-option value="Cancelled">Cancelled</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</div>
+
+<!-- Orders table -->
+<div class="mat-elevation-z8 orders-table-container">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <!-- Order ID Column -->
+    <ng-container matColumnDef="orderId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Order ID </th>
+      <td mat-cell *matCellDef="let order"> #{{order._id.slice(-4)}} </td>
+    </ng-container>
+
+    <!-- Date Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+      <td mat-cell *matCellDef="let order"> {{order.orderDate | date:'MMM d, yyyy'}} </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+      <td mat-cell *matCellDef="let order">
+        <span class="status-badge" [ngClass]="{
+          'delivered': order.status === 'Delivered',
+          'pending': order.status === 'Pending',
+          'cancelled': order.status === 'Cancelled'
+        }">
+          {{order.status}}
+        </span>
+      </td>
+    </ng-container>
+
+    <!-- Customer Column -->
+    <ng-container matColumnDef="customer">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer </th>
+      <td mat-cell *matCellDef="let order">
+        <div class="customer-info">
+          <div class="avatar">{{order.userId.slice(0,1).toUpperCase()}}</div>
+          <div class="customer-details">
+            <span class="city">{{order.shippingAddress.city}}</span>
+            <span class="country">{{order.shippingAddress.country}}</span>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Amount Column -->
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+      <td mat-cell *matCellDef="let order"> ${{order.totalAmount.toFixed(2)}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+      <td mat-cell *matCellDef="let order"><button mat-icon-button [matMenuTriggerFor]="menu"
+          aria-label="Example icon-button with a menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+
+      </td>
+
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>dialpad</mat-icon>
+          <span>View Order</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>voicemail</mat-icon>
+          <span>Cancel Order</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>notifications_off</mat-icon>
+          <span>View Customer</span>
+        </button>
+      </mat-menu>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [length]="totalOrders" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
+  </mat-paginator>
+</div>

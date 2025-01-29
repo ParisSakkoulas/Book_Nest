@@ -261,4 +261,10 @@ export class CustomersService {
   resentVerificationCode(customerId: any) {
     return this.http.get<{ message: string }>('http://localhost:3000/api/auth/sentLink/' + customerId);
   }
+
+
+  getCustomerFromUser(userId: any) {
+    return this.http.get<{ message: string, customerInfo: { phoneNumber?: string, street: string, city: string, state: string, zipCode: string, country: string } }>('http://localhost:3000/api/customers/customerFromUser/' + userId);
+
+  }
 }

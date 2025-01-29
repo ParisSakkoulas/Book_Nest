@@ -9,11 +9,14 @@ import { AuthGuard } from './auth/auth.guard';
 import { IsAdminGuard } from './auth/is-admin.guard';
 import { AdminDashboardComponent } from './dashboads/admin-dashboard/admin-dashboard.component';
 import { AdminDashboardOrverviewComponent } from './dashboads/admin-dashboard-orverview/admin-dashboard-orverview.component';
-import { UserDashboardComponent } from './dashboads/user-dashboard/user-dashboard.component';
 import { UserProfileComponent } from './profiles/user-profile/user-profile.component';
 import { BooksComponent } from './books/books/books.component';
 import { BookComponent } from './books/book/book.component';
 import { CreateBookComponent } from './books/create-book/create-book.component';
+import { CheckoutComponent } from './orders/checkout/checkout.component';
+import { MyOrdersComponent } from './orders/my-orders/my-orders.component';
+import { SingleOrderComponent } from './orders/single-order/single-order.component';
+import { AllOrdersComponent } from './orders/all-orders/all-orders.component';
 
 
 const routes: Routes = [
@@ -41,9 +44,7 @@ const routes: Routes = [
   {
     path: 'user',
     children: [
-      { path: 'dashboard', component: UserDashboardComponent },
       { path: 'profile', component: UserProfileComponent },
-
 
     ],
     canActivate: [AuthGuard]
@@ -84,6 +85,19 @@ const routes: Routes = [
     ]
   },
 
+
+  {
+    path: 'orders',
+    children: [
+
+      { path: 'checkout', component: CheckoutComponent },
+      { path: 'order/:orderId', component: SingleOrderComponent },
+      { path: 'myOrders', component: MyOrdersComponent, canActivate: [AuthGuard] },
+      { path: 'all', component: AllOrdersComponent, canActivate: [AuthGuard, IsAdminGuard] },
+
+
+    ]
+  },
 
   //Auth Routes
   {

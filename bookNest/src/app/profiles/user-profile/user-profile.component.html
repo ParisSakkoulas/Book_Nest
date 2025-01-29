@@ -20,8 +20,15 @@
       <button class="btn "
         [ngClass]="{'btn-primary': activeButton === 'Account', 'btn-outline': activeButton !== 'Account'}"
         (click)="showDiv('Account')">Account</button>
+
       <button class="btn " [ngClass]="{'btn-primary': activeButton === 'Info', 'btn-outline': activeButton !== 'Info'}"
         (click)="showDiv('Info')">Info</button>
+
+      <button class="btn " [ngClass]="{'btn-primary': activeButton === 'Info', 'btn-outline': activeButton !== 'Info'}"
+        (click)="showDiv('Info')">Orders</button>
+
+      <button class="btn " [ngClass]="{'btn-primary': activeButton === 'Info', 'btn-outline': activeButton !== 'Info'}"
+        (click)="showDiv('Info')">Carts</button>
 
     </div>
     <mat-divider></mat-divider>
