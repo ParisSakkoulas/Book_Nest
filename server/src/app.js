@@ -20,7 +20,7 @@ app.use(morgan('dev'));
 
 
 // All routes 
-app.use('https://book-nest-d3vf.onrender.com/api', routes);
+app.use('/api', routes);
 
 // Error handling middleware
 app.use(errorHandler);
