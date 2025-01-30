@@ -46,6 +46,7 @@ import { FooterComponent } from './footer/footer.component';
 import { SingleOrderComponent } from './orders/single-order/single-order.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { HeaderComponent } from './header/header.component';
 
 
 @NgModule({
@@ -69,6 +70,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     FooterComponent,
     SingleOrderComponent,
     NotFoundComponent,
+    HeaderComponent,
 
 
   ],

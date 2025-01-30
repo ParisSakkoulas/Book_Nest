@@ -1,3 +1,4 @@
+/* app.component.css */
 :root {
   --primary: #2563eb;
   --text-dark: #111;
@@ -14,227 +15,72 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: var(--nav-height);
 }
 
-/* Navbar */
-.navbar,
-.navbar-container {
-  height: var(--nav-height);
-}
-
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: #fff;
-  padding: 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.navbar-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1600px;
+.main-content {
+  flex: 1;
+  padding-top: 64px;
+  /* This should match your header height */
+  width: 100%;
+  max-width: 1440px;
+  /* Optional: matches header max-width */
   margin: 0 auto;
-  padding: 0 24px;
-  width: 100%;
-  gap: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 40px;
+  /* Space before footer */
 }
 
-/* Navigation */
-.main-nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  height: 100%;
-}
-
-.main-nav a {
-  color: var(--text-gray);
-  text-decoration: none;
-  font-size: .875rem;
-  font-weight: 500;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  padding: 0 8px;
-}
-
-.main-nav a:hover,
-.main-nav a.active-link {
-  color: var(--text-dark);
-}
-
-.main-nav a.active-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--text-dark);
-}
-
-/* Brand */
-.brand-logo {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  gap: 12px;
-  padding: 8px;
-}
-
-.logo-icon {
-  color: var(--primary);
-  transform: scale(1.1);
-}
-
-.brand-name {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-dark);
-  letter-spacing: -.02em;
-}
-
-/* Search */
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-gray);
-  padding: 8px 12px;
-  width: 240px;
-  transition: .2s;
-}
-
-.search-box:focus-within {
-  background: var(--border);
-}
-
-.search-box input {
-  border: 0;
-  background: 0;
-  outline: 0;
-  width: 100%;
-  font-size: .875rem;
-  color: var(--text-dark);
-}
-
-/* User sections */
-.right-section {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--bg-gray);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-gray);
-}
-
-/* Mobile styles */
-.menu-button {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .menu-button {
-    display: block;
-  }
-
-  .navbar-container {
-    padding: 0 16px;
-  }
-
-  .main-nav {
-    position: fixed;
-    top: var(--nav-height);
-    left: 0;
-    right: 0;
-    background: #fff;
-    flex-direction: column;
-    padding: 0;
-    transform: translateX(-100%);
-    transition: transform .3s;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1);
-    z-index: 999;
-  }
-
-  .main-nav.show-mobile {
-    transform: translateX(0);
-  }
-
-  .search-box {
-    display: none;
-  }
-
-  .brand-name {
-    display: none;
-  }
-}
-
-/* Utilities */
+/* Utility Classes */
 .flex-center {
   display: flex;
   align-items: center;
 }
 
 .gap-sm {
-  gap: 8px
+  gap: 8px;
 }
 
 .gap-md {
-  gap: 16px
+  gap: 16px;
 }
 
 .gap-lg {
-  gap: 24px
+  gap: 24px;
 }
 
 .rounded {
-  border-radius: 8px
+  border-radius: 8px;
 }
 
 .p-2 {
-  padding: 8px
+  padding: 8px;
 }
 
 .text-dark {
-  color: var(--text-dark)
+  color: var(--text-dark);
 }
 
 .text-gray {
-  color: var(--text-gray)
+  color: var(--text-gray);
 }
 
 .text-light {
-  color: var(--text-light)
+  color: var(--text-light);
 }
 
 .bg-gray-50 {
-  background: var(--bg-light)
+  background: var(--bg-light);
 }
 
 .bg-gray-100 {
-  background: var(--bg-gray)
+  background: var(--bg-gray);
 }
 
 .font-medium {
-  font-weight: 500
+  font-weight: 500;
 }
 
 .font-bold {
-  font-weight: 700
+  font-weight: 700;
 }

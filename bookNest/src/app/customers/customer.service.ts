@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { SpinnerService } from '../spinner/spinner.service';
 import { Customer } from '../models/Customer.Model';
 import { MessageDialogService } from '../message.dialog/message-dialog.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,9 @@ export class CustomersService {
   private customers: Customer[] = [];
   private customersSubject = new BehaviorSubject<Customer[]>([]);
   private paginationSubject = new BehaviorSubject<{ limit: number, page: number, pages: number, total: number }>({ limit: 10, page: 1, pages: 1, total: 0 });
+
+
+  private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient, private spinnerService: SpinnerService, private messageService: MessageDialogService
   ) { }
@@ -34,38 +38,46 @@ export class CustomersService {
     }
 
     this.spinnerService.show();
-    this.http.get<{ success: boolean, data: { customers: Customer[], pagination: { limit: number, page: number, pages: number, total: number } } }>("http://localhost:3000/api/customers/all", { params: httpParams }).subscribe({
-      next: (response) => {
-        this.spinnerService.hide();
-        console.log(response.data.customers)
-
-
-        this.customers = response.data.customers.map(customerItem => {
-          return {
-            _id: customerItem._id,
-            firstName: customerItem.firstName,
-            lastName: customerItem.lastName,
-            email: customerItem.user?.email,
-            phoneNumber: customerItem.phoneNumber,
-            customerStatus: customerItem.customerStatus,
-            isActive: customerItem.isActive,
-            address: customerItem.address,
-            createdAt: customerItem.createdAt,
-            updatedAt: customerItem.updatedAt,
-            user: customerItem.user,
-
-          }
-        })
-
-        this.customersSubject.next(this.customers);
-        this.paginationSubject.next(response.data.pagination);
-      },
-      error: (err) => {
-        console.log(err)
-        this.messageService.showError(err.error.message || 'Fetching customers failed. Please try again.');
-        this.spinnerService.hide();
+    this.http.get<{
+      success: boolean,
+      data: {
+        customers: Customer[],
+        pagination: { limit: number, page: number, pages: number, total: number }
       }
-    });
+    }>
+      (`${this.baseUrl}/customers/all`, { params: httpParams }).subscribe({
+
+        next: (response) => {
+          this.spinnerService.hide();
+          console.log(response.data.customers)
+
+
+          this.customers = response.data.customers.map(customerItem => {
+            return {
+              _id: customerItem._id,
+              firstName: customerItem.firstName,
+              lastName: customerItem.lastName,
+              email: customerItem.user?.email,
+              phoneNumber: customerItem.phoneNumber,
+              customerStatus: customerItem.customerStatus,
+              isActive: customerItem.isActive,
+              address: customerItem.address,
+              createdAt: customerItem.createdAt,
+              updatedAt: customerItem.updatedAt,
+              user: customerItem.user,
+
+            }
+          })
+
+          this.customersSubject.next(this.customers);
+          this.paginationSubject.next(response.data.pagination);
+        },
+        error: (err) => {
+          console.log(err)
+          this.messageService.showError(err.error.message || 'Fetching customers failed. Please try again.');
+          this.spinnerService.hide();
+        }
+      });
   }
 
   getCurrentCustomers(): Observable<Customer[]> {
@@ -101,7 +113,7 @@ export class CustomersService {
           isActive: boolean
         }
       }
-    }>('http://localhost:3000/api/customers/create', createCustomerData).subscribe({
+    }>(`${this.baseUrl}/customers/create`, createCustomerData).subscribe({
       next: (response) => {
 
         console.log(response)
@@ -168,7 +180,7 @@ export class CustomersService {
 
       }
     }>(
-      `http://localhost:3000/api/customers/${customerId}`);
+      `${this.baseUrl}/customers/${customerId}`);
   }
 
 
@@ -179,7 +191,7 @@ export class CustomersService {
 
 
     this.spinnerService.show();
-    this.http.delete<{ success: boolean, Customer: { _id: any }, message: string }>('http://localhost:3000/api/customers/' + customerId).subscribe({
+    this.http.delete<{ success: boolean, Customer: { _id: any }, message: string }>(`${this.baseUrl}/customers/${customerId}`).subscribe({
       next: (response) => {
 
 
@@ -219,7 +231,7 @@ export class CustomersService {
 
     console.log(customer)
     this.spinnerService.show();
-    this.http.put<{ message: string, status: boolean, data: { customer: Customer } }>('http://localhost:3000/api/customers/' + customerId, customer).subscribe({
+    this.http.put<{ message: string, status: boolean, data: { customer: Customer } }>(`${this.baseUrl}/customers/${customerId}`, customer).subscribe({
 
       next: (response) => {
 
@@ -260,12 +272,12 @@ export class CustomersService {
   }
 
   resentVerificationCode(customerId: any) {
-    return this.http.get<{ message: string }>('http://localhost:3000/api/auth/sentLink/' + customerId);
+    return this.http.get<{ message: string }>(`${this.baseUrl}/auth/sentLink/${customerId}`);
   }
 
 
   getCustomerFromUser(userId: any) {
-    return this.http.get<{ message: string, customerInfo: { _id?: any, phoneNumber?: string, street: string, city: string, state: string, zipCode: string, country: string } }>('http://localhost:3000/api/customers/customerFromUser/' + userId);
+    return this.http.get<{ message: string, customerInfo: { _id?: any, phoneNumber?: string, street: string, city: string, state: string, zipCode: string, country: string } }>(`${this.baseUrl}/customers/customerFromUser/${userId}`);
   }
 
 

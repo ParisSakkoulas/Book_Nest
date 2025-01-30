@@ -6,11 +6,15 @@ import { MessageDialogService } from '../message.dialog/message-dialog.service';
 import { SpinnerService } from '../spinner/spinner.service';
 import { Book } from '../models/Book.Model';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
+
+
+  private baseUrl = environment.baseUrl;
 
   private books: Book[] = [];
   private booksSubject = new BehaviorSubject<Book[]>([]);
@@ -51,7 +55,7 @@ export class BookService {
 
     this.spinnerService.show();
     this.http.get<{ success: boolean; data: Book[]; pagination: any }>(
-      'http://localhost:3000/api/books',
+      `${this.baseUrl}/books`,
       { params: httpParams }
     ).subscribe({
       next: (response) => {
@@ -82,27 +86,27 @@ export class BookService {
 
     console.log(bookData.get('image'))
     return this.http.post<{ success: boolean; data: Book }>(
-      'http://localhost:3000/api/books',
+      `${this.baseUrl}/books`,
       bookData  // Send FormData instead of JSON
     )
   }
 
   getBookById(bookId: string) {
     return this.http.get<{ success: boolean; book: Book; message: string }>(
-      `http://localhost:3000/api/books/${bookId}`
+      `${this.baseUrl}/books/${bookId}`
     );
   }
 
   updateBook(bookId: string, bookData: FormData) {
     return this.http.put<{ message: string; updatedBook: Book }>(
-      `http://localhost:3000/api/books/${bookId}`,
+      `${this.baseUrl}/${bookId}`,
       bookData
     )
   }
 
   deleteBook(bookId: string) {
     return this.http.delete<{ message: string; book: Book }>(
-      `http://localhost:3000/api/books/${bookId}`
+      `${this.baseUrl}/books/${bookId}`
     );
   }
 

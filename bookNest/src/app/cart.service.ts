@@ -10,7 +10,7 @@ import { AuthService } from './auth/auth.service';
 export class CartService {
 
   private cartItemsSubject = new BehaviorSubject<any[]>([]);
-  private baseUrl = `http://localhost:3000/api/cart/items`;
+  private baseUrl = environment.baseUrl;
   private cartSubject = new BehaviorSubject<any>(null);
   cart$ = this.cartSubject.asObservable();
 
@@ -64,27 +64,28 @@ export class CartService {
 
   addToCart(items: any[]): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.post(`http://localhost:3000/api/cart/items`, { items }, { headers });
+    return this.http.post(`${this.baseUrl}/cart/items`, { items }, { headers });
   }
 
   removeFromCart(bookId: string): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.delete(`${this.baseUrl}/${bookId}`, { headers });
+    return this.http.delete(`${this.baseUrl}/cart/items/${bookId}`, { headers });
   }
 
   updateQuantity(bookId: string, quantity: number): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.patch(`${this.baseUrl}/${bookId}`, { quantity }, { headers });
+    return this.http.patch(`${this.baseUrl}/cart/items/${bookId}`, { quantity }, { headers });
   }
 
   getCart(): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.get('http://localhost:3000/api/cart', { headers });
+    return this.http.get(`${this.baseUrl}/cart`, { headers });
   }
 
 
   clearVisitorSession() {
     localStorage.removeItem('x-session-id');
+
     this.sessionId = null;
     console.log(this.sessionId);
     console.log("clearing session", localStorage.getItem('x-session-id'));

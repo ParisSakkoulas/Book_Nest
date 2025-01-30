@@ -6,6 +6,7 @@ import { SpinnerService } from '../spinner/spinner.service';
 import { MessageDialogService } from '../message.dialog/message-dialog.service';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { RegisterModel } from '../models/Register.Model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,8 @@ export class AuthService {
   private currentUser = new BehaviorSubject<any>(null);
 
 
+  private baseUrl = environment.baseUrl;
+
   constructor(private router: Router, private spinnerService: SpinnerService, private http: HttpClient, private messageService: MessageDialogService) { }
 
 
@@ -38,7 +41,14 @@ export class AuthService {
   login(email: string, password: string) {
 
     this.spinnerService.show();
-    this.http.post<{ message: string, token: string, expiresIn: number, user: { user_id: string, firstName?: string, lastName?: string, email: string, role: string } }>('http://localhost:3000/api/auth/login', { email, password })
+    this.http.post<{
+      message: string,
+      token: string,
+      expiresIn: number,
+      user: {
+        user_id: string, firstName?: string, lastName?: string, email: string, role: string
+      }
+    }>(`${this.baseUrl}/auth/login`, { email, password })
       .subscribe({
         next: (response) => {
           if (response.token) {
@@ -92,24 +102,25 @@ export class AuthService {
 
 
     this.spinnerService.show();
-    this.http.post<{ message: string }>("http://localhost:3000/api/auth/register", newUserData).subscribe({
-      next: (registerResponse) => {
+    this.http.post<{ message: string }>
+      (`${this.baseUrl}/auth/register`, newUserData).subscribe({
+        next: (registerResponse) => {
 
-        console.log(registerResponse)
+          console.log(registerResponse)
 
-        this.spinnerService.hide();
-        this.messageService.showSuccess(registerResponse.message);
-
-
-      },
-      error: (registrationError) => {
-
-        this.messageService.showError(registrationError.error.message || 'Register failed');
-        this.spinnerService.hide();
+          this.spinnerService.hide();
+          this.messageService.showSuccess(registerResponse.message);
 
 
-      }
-    })
+        },
+        error: (registrationError) => {
+
+          this.messageService.showError(registrationError.error.message || 'Register failed');
+          this.spinnerService.hide();
+
+
+        }
+      })
 
 
   }
@@ -117,7 +128,7 @@ export class AuthService {
 
   verifyUser(verificationCode: any) {
 
-    this.http.get<{ message: string, type: string }>("http://localhost:3000/api/auth/verify/" + verificationCode).subscribe({
+    this.http.get<{ message: string, type: string }>(`${this.baseUrl}/auth/verify/${verificationCode}`).subscribe({
       next: (response) => {
         console.log(response);
         this.messageService.showSuccess(response.message);
@@ -224,14 +235,14 @@ export class AuthService {
   }
 
   checkEmail(email: string, currentUserId?: string): Observable<any> {
-    return this.http.post(`http://localhost:3000/api/auth/checkEmail`, {
+    return this.http.post(`${this.baseUrl}/auth/checkEmail`, {
       email,
       currentUserId
     });
   }
 
   updateEmail(userId: string, newEmail: string): Observable<any> {
-    return this.http.put(`http://localhost:3000/api/auth/updateEmail`, {
+    return this.http.put(`${this.baseUrl}/auth/updateEmail`, {
       userId,
       email: newEmail
     }).pipe(
@@ -256,7 +267,7 @@ export class AuthService {
   }
 
   updatePassword(userId: string, newPassword: string): Observable<any> {
-    return this.http.put(`http://localhost:3000/api/auth/updatePassword`, { userId, password: newPassword });
+    return this.http.put(`${this.baseUrl}/auth/updatePassword`, { userId, password: newPassword });
   }
 
   logout() {

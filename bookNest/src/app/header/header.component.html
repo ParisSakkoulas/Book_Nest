@@ -1,0 +1,190 @@
+<!-- Modern minimal header.component.html -->
+<header class="site-header">
+  <div class="header-container">
+    <!-- Left Section with Logo -->
+    <div class="header-left">
+      <a routerLink="/public/home" class="brand-logo">
+        <span class="brand-text">bookNest</span>
+      </a>
+    </div>
+
+    <!-- Center Navigation -->
+    <nav class="main-nav">
+      <a routerLink="/books" routerLinkActive="active">BOOKS</a>
+      <a routerLink="/about" routerLinkActive="active">ABOUT</a>
+    </nav>
+
+    <!-- Right Section with Icons -->
+    <div class="header-right">
+      <!-- Search Toggle -->
+      <button mat-icon-button class="icon-button" (click)="toggleSearch()">
+        <mat-icon>search</mat-icon>
+      </button>
+
+      <!-- Account -->
+      <button mat-icon-button class="icon-button" [matMenuTriggerFor]="accountMenu">
+        <mat-icon>person_outline</mat-icon>
+      </button>
+
+      <!-- Cart -->
+      <button mat-icon-button class="icon-button" [matMenuTriggerFor]="cartMenu">
+        <mat-icon matBadge={{cartItemCount}} *ngIf="cartItemCount">shopping_bag</mat-icon>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button mat-icon-button class="mobile-menu-button" (click)="toggleMobileMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" *ngIf="showSearch">
+    <div class="search-container">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input type="text" class="search-input" placeholder="Search for books, authors, or genres..."
+        (keyup.escape)="closeSearch()">
+      <button mat-icon-button class="close-search" (click)="closeSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <div class="mobile-menu" [class.active]="showMobileMenu">
+    <nav class="mobile-nav">
+      <a routerLink="/books" routerLinkActive="active">BOOKS</a>
+      <a routerLink="/new-arrivals" routerLinkActive="active">NEW ARRIVALS</a>
+      <a routerLink="/bestsellers" routerLinkActive="active">BESTSELLERS</a>
+      <a routerLink="/collections" routerLinkActive="active">COLLECTIONS</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Account Menu -->
+<mat-menu #accountMenu="matMenu" class="account-menu">
+  <div *ngIf="!isAuthenticated">
+    <button mat-menu-item routerLink="/auth/login">
+      <span>Sign In</span>
+    </button>
+    <button mat-menu-item routerLink="/auth/register">
+      <span>Create Account</span>
+    </button>
+  </div>
+
+  <div *ngIf="isAuthenticated">
+    <div class="menu-header" *ngIf="currentUserData">
+      <p class="user-name">{{currentUserData.firstName}} {{currentUserData.lastName}}</p>
+      <p class="user-email">{{currentUserData.email}}</p>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item routerLink="/user/profile">
+      <mat-icon>person_outline</mat-icon>
+      <span>Profile</span>
+    </button>
+    <button mat-menu-item routerLink="/orders/myOrders">
+      <mat-icon>library_books</mat-icon>
+      <span>Orders</span>
+    </button>
+    <button mat-menu-item (click)="onLogout()">
+      <mat-icon>logout</mat-icon>
+      <span>Sign Out</span>
+    </button>
+  </div>
+</mat-menu>
+
+<!-- Shopping Cart Menu
+<mat-menu #cartMenu="matMenu" class="cart-menu">
+  <div class="menu-header">
+    <h3>Shopping Cart ({{cartItemCount || 0}})</h3>
+  </div>
+
+  <div class="menu-content">
+    <div *ngIf="!cart?.items?.length" class="empty-cart">
+      <p>Your cart is empty</p>
+    </div>
+
+    <div *ngIf="cart?.items?.length" class="cart-items">
+      <div *ngFor="let item of cart.items" class="cart-item">
+        <img [src]="item.productId.imageUrl || '/assets/images/book-default.png'" [alt]="item.productId.title">
+        <div class="item-details">
+          <span class="item-title">{{item.productId.title}}</span>
+          <span class="item-price">{{item.price | currency}}</span>
+          <div class="quantity-controls">
+            <button mat-icon-button (click)="updateQuantity(item.productId._id, item.quantity - 1)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span>{{item.quantity}}</span>
+            <button mat-icon-button (click)="updateQuantity(item.productId._id, item.quantity + 1)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-footer">
+    <div class="cart-total" *ngIf="cart?.items?.length">
+      <span>Total:</span>
+      <span>{{cart.totalAmount | currency}}</span>
+    </div>
+    <button mat-flat-button class="checkout-button" [disabled]="!cart?.items?.length" (click)="checkout()">
+      Checkout
+    </button>
+  </div>
+</mat-menu>
+-->
+
+<mat-menu #cartMenu="matMenu" [hasBackdrop]="true" [overlapTrigger]="false">
+  <div class="cart-menu" (click)="$event.stopPropagation()">
+    <div class="cart-header">
+      <h3>Shopping Cart</h3>
+    </div>
+
+    <div class="cart-items">
+      <div class="cart-item" *ngFor="let item of cart.items">
+        <div class="item-image">
+          <img [src]="item.productId.imageUrl || '/assets/images/book-default.png'" [alt]="item.productId.title">
+        </div>
+        <div class="item-details">
+          <div class="item-title">{{item.productId.title}}</div>
+          <div class="item-variant" *ngIf="item.productId.variant">{{item.productId.variant}}</div>
+          <div class="item-stock">In Stock</div>
+          <div class="item-actions">
+            <button mat-button class="text-button"
+              (click)="$event.stopPropagation(); removeFromCart(item.productId._id)">
+              <mat-icon>delete_outline</mat-icon>
+              Remove
+            </button>
+          </div>
+        </div>
+        <div class="item-price-qty">
+          <div class="item-price">${{item.price}}</div>
+          <div class="quantity-controls">
+            <button mat-icon-button
+              (click)="$event.stopPropagation(); updateQuantity(item.productId._id, item.quantity - 1)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span>{{item.quantity}}</span>
+            <button mat-icon-button
+              (click)="$event.stopPropagation(); updateQuantity(item.productId._id, item.quantity + 1)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-summary">
+      <div class="summary-row total">
+        <span>Total</span>
+        <span>${{cart.totalAmount}}</span>
+      </div>
+    </div>
+
+    <button class="btn checkout-button" [disabled]="!cart?.items?.length" (click)="checkout()">
+      Checkout
+    </button>
+  </div>
+</mat-menu>

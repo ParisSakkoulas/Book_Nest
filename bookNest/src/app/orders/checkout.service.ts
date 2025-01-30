@@ -4,6 +4,7 @@ import { map, Observable } from 'rxjs';
 import { PaginatedOrdersResponse } from '../models/PaginatedOrderItems.Model';
 import { Order } from '../models/Order.Model';
 import { SingleOrderResponse } from '../models/SingleOrderResponse';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -14,6 +15,8 @@ import { SingleOrderResponse } from '../models/SingleOrderResponse';
 export class CheckoutService {
 
   private apiUrl = '/api';
+
+  private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -34,13 +37,13 @@ export class CheckoutService {
 
   createOrder(shippingAddress: any): Observable<any> {
 
-    return this.http.post(`http://localhost:3000/api/orders/create`, { shippingAddress }, { headers: this.getHeaders() });
+    return this.http.post(`${this.baseUrl}/orders/create`, { shippingAddress }, { headers: this.getHeaders() });
   }
 
   getOrder(orderId: any): Observable<any> {
     const sessionId = localStorage.getItem('sessionId');
     const headers = new HttpHeaders().set('x-session-id', sessionId || '');
-    return this.http.get<SingleOrderResponse>(`http://localhost:3000/api/orders/${orderId}`, { headers });
+    return this.http.get<SingleOrderResponse>(`${this.baseUrl}/orders/${orderId}`, { headers });
   }
 
   getMyOrders(page: number = 1, limit: number = 10): Observable<PaginatedOrdersResponse> {
@@ -48,13 +51,13 @@ export class CheckoutService {
       .set('page', page.toString())
       .set('limit', limit.toString());
 
-    return this.http.get<PaginatedOrdersResponse>(`http://localhost:3000/api/orders/myOrders`,);
+    return this.http.get<PaginatedOrdersResponse>(`${this.baseUrl}/orders/myOrders`,);
   }
 
   cancelOrder(orderId: any) {
     const sessionId = localStorage.getItem('sessionId');
     const headers = new HttpHeaders().set('x-session-id', sessionId || '');
-    return this.http.delete<{ order: SingleOrderResponse, message: string }>(`http://localhost:3000/api/orders/${orderId}`);
+    return this.http.delete<{ order: SingleOrderResponse, message: string }>(`${this.baseUrl}/orders/${orderId}`);
   }
 
 
@@ -63,11 +66,11 @@ export class CheckoutService {
       .set('page', page.toString())
       .set('limit', limit.toString());
 
-    return this.http.get<PaginatedOrdersResponse>(`http://localhost:3000/api/orders/all`, { params: params });
+    return this.http.get<PaginatedOrdersResponse>(`${this.baseUrl}/orders/all`, { params: params });
   }
 
   updateOrderStatus(orderId: string, status: string): Observable<any> {
-    return this.http.patch(`http://localhost:3000/api/orders/${orderId}/status`, { status });
+    return this.http.patch(`${this.baseUrl}/orders/${orderId}/status`, { status });
   }
 
   getUserOrders(userId: string, page: number = 1, limit: number = 10): Observable<any> {
@@ -75,7 +78,7 @@ export class CheckoutService {
       .set('page', page.toString())
       .set('limit', limit.toString());
 
-    return this.http.get<{ orders: Order[], paginator: PaginatedOrdersResponse }>(`http://localhost:3000/api/orders/user/${userId}`, { params });
+    return this.http.get<{ orders: Order[], paginator: PaginatedOrdersResponse }>(`h${this.baseUrl}/orders/user/${userId}`, { params });
   }
 
 }
