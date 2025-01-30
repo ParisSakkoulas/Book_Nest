@@ -13,7 +13,7 @@ const router = express.Router();
 router.post('/create', [cartAuthMiddleware, cartAuthMiddleware], createOrder);
 router.get('/myOrders', authenticateToken, getMyOrders);
 router.get('/all', [authenticateToken, requireAdmin], getAllOrders);
-router.get('/:orderId', [cartAuthMiddleware, cartAuthMiddleware], getOrderById);
+router.get('/:orderId', [cartAuthMiddleware], getOrderById);
 router.get('/user/:userId', [authenticateToken, requireAdmin], getUserOrders);
 router.patch('/:orderId/status', [authenticateToken, requireAdmin], updateOrderStatus);
 router.delete('/:orderId', [authenticateToken, cartAuthMiddleware], cancelOrder);

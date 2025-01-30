@@ -4,43 +4,37 @@ const jwt = require('jsonwebtoken');
 
 
 exports.cartAuthMiddleware = async (req, res, next) => {
-
-    // Check for session ID first
-    const sessionId = req.headers['x-session-id'];
-
-    // If there's a session ID, treat as guest user
-    if (sessionId) {
-        req.user = null;
-        next();
-        return;
-    }
-
-    // Otherwise, try to authenticate token
     const authHeader = req.headers['authorization'];
+    const sessionId = req.headers['x-session-id'];
     const token = authHeader && authHeader.split(' ')[1];
 
-
-    // If no token and no session ID, require at least a session ID
-    if (!token) {
-        return res.status(400).json({
-            message: 'Either authentication token or session ID is required',
-            required: 'x-session-id header for guest checkout or Bearer token for registered users'
-        });
+    //User has a valid token
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            req.user = decoded;
+            return next();
+        } catch (err) {
+            // Token is invalid, but we'll check for session ID before failing
+            if (!sessionId) {
+                return res.status(403).json({
+                    message: 'Invalid authentication token.',
+                    required: 'Valid Bearer token or x-session-id header required'
+                });
+            }
+        }
     }
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("DECODED TOKEN", decoded)
-        req.user = decoded;
-
-
-        next();
-    } catch (err) {
-        return res.status(403).json({
-            message: 'Invalid authentication token. Use session ID for guest checkout.',
-            required: 'x-session-id header for guest checkout or valid Bearer token for registered users'
-        });
+    //User has a session ID
+    if (sessionId) {
+        req.user = null;
+        req.sessionId = sessionId;
+        return next();
     }
 
 
+    return res.status(401).json({
+        message: 'Authentication required',
+        required: 'Please provide either a Bearer token or x-session-id header'
+    });
 };

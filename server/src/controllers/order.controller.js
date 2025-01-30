@@ -75,26 +75,97 @@ exports.createOrder = async (req, res) => {
 exports.getOrderById = async (req, res) => {
     try {
         const { orderId } = req.params;
-        const userId = req.userData?.userId;
+        const userId = req.user?.userId;
         const sessionId = req.headers['x-session-id'];
 
+        // Populate all required fields for the order
         const order = await Order.findById(orderId)
-            .populate('items.productId')
-            .populate('userId', 'name email');
+            .populate({
+                path: 'items.productId',
+                select: 'title author imageUrl price' // Select fields needed for book details
+            })
+            .populate({
+                path: 'userId',
+                select: 'firstName lastName email' // Select fields needed for user details
+            })
+            .lean(); // Use lean() for better performance
 
         if (!order) {
             return res.status(404).json({ error: 'Order not found' });
         }
 
-        // Verify order belongs to user/session
-        if ((userId && order.userId?.toString() !== userId) ||
-            (sessionId && order.sessionId !== sessionId)) {
-            return res.status(403).json({ error: 'Not authorized to view this order' });
+        // If user is admin, they can view any order
+        if (req.user?.role === 'ADMIN') {
+            return res.status(200).json({
+                ...order,
+                isEditable: true // Add flag for admin capabilities
+            });
         }
 
-        res.status(200).json(order);
+        // Authorization check for regular users
+        if (userId) {
+            if (order.userId?._id.toString() !== userId) {
+                return res.status(403).json({
+                    error: 'Not authorized to view this order',
+                    details: 'User ID mismatch'
+                });
+            }
+        } else if (sessionId) {
+            if (order.sessionId !== sessionId) {
+                return res.status(403).json({
+                    error: 'Not authorized to view this order',
+                    details: 'Session ID mismatch'
+                });
+            }
+        } else {
+            return res.status(403).json({
+                error: 'Not authorized to view this order',
+                details: 'No valid authorization method provided'
+            });
+        }
+
+        // Format the response with all necessary data
+        const formattedOrder = {
+            _id: order._id,
+            status: order.status,
+            totalAmount: order.totalAmount,
+            createdAt: order.createdAt,
+            updatedAt: order.updatedAt,
+            items: order.items.map(item => ({
+                productId: {
+                    _id: item.productId._id,
+                    title: item.productId.title,
+                    author: item.productId.author,
+                    imageUrl: item.productId.imageUrl || '/assets/images/book-default.png',
+                    price: item.productId.price
+                },
+                quantity: item.quantity,
+                price: item.price
+            })),
+            shippingAddress: {
+                street: order.shippingAddress.street,
+                city: order.shippingAddress.city,
+                state: order.shippingAddress.state,
+                zipCode: order.shippingAddress.zipCode,
+                country: order.shippingAddress.country
+            },
+            isEditable: order.status === 'Pending' || order.status === 'Processing',
+            userId: userId ? {
+                _id: order.userId?._id,
+                firstName: order.userId?.firstName,
+                lastName: order.userId?.lastName,
+                email: order.userId?.email
+            } : null
+        };
+
+        res.status(200).json(formattedOrder);
+
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error in getOrderById:', error);
+        res.status(500).json({
+            error: 'Internal server error',
+            details: error.message
+        });
     }
 };
 
@@ -129,6 +200,7 @@ exports.getUserOrders = async (req, res) => {
 
 exports.getMyOrders = async (req, res) => {
     try {
+
 
         const userId = req.user?.userId;
         const page = parseInt(req.query.page) || 1;
