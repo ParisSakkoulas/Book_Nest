@@ -8,9 +8,9 @@
       </button>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" *ngIf="currentUserData && currentUserData.role==='ADMIN'"
+
+    <button class="btn btn-outline" *ngIf="currentUserData && currentUserData.role==='ADMIN'"
       routerLink="/books/create">
-      <mat-icon>add</mat-icon>
       Add New Book
     </button>
 

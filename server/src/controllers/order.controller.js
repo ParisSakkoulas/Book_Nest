@@ -11,38 +11,65 @@ const Order = require('../models/order.model');
 
 
 exports.createOrder = async (req, res) => {
-
     try {
-        const userId = req.userData?.userId;
-        const sessionId = req.headers['x-session-id'];
-        const { shippingAddress } = req.body;
 
+        console.error('CREATE ORDER:', req.user);
+
+        const userId = req.user?.userId;
+        const sessionId = req.headers['x-session-id'];
+        const { shippingAddress, visitorInfo } = req.body;
+
+        // Find cart based on user type
         const cart = await Cart.findOne(userId ? { userId } : { sessionId })
             .populate('items.productId');
 
         if (!cart || cart.items.length === 0) {
             return res.status(400).send({ error: 'Cart is empty' });
         }
+        console.error('shippingAddress:', shippingAddress);
+        console.error('visitorInfo:', visitorInfo);
 
+        // Create order based on user type
         const order = new Order({
-            userId: cart.userId,
-            sessionId: cart.sessionId,
+            userId: userId || null,
+            sessionId: !userId ? sessionId : null,
             items: cart.items,
             totalAmount: cart.totalAmount,
-            shippingAddress
+            shippingAddress: shippingAddress.shippingAddress,
+            // Only include visitorInfo for non-authenticated users
+            visitorInfo: !userId ? visitorInfo : undefined,
+            status: 'Pending',
+            createdAt: new Date()
         });
 
+        // Validate stock levels before creating order
+        for (const item of cart.items) {
+            const book = await Book.findById(item.productId);
+            if (!book || book.stock < item.quantity) {
+                return res.status(400).send({
+                    error: `Insufficient stock for book: ${book ? book.title : 'Unknown'}`
+                });
+            }
+
+            // Decrease stock
+            await Book.findByIdAndUpdate(item.productId, {
+                $inc: { stock: -item.quantity }
+            });
+        }
+
         await order.save();
-
-
         await Cart.findByIdAndDelete(cart._id);
 
-        res.status(201).json(order);
+        // Return populated order
+        const populatedOrder = await Order.findById(order._id)
+            .populate('items.productId', 'title author price imageUrl');
+
+        res.status(201).json(populatedOrder);
     } catch (error) {
+        console.error('Order creation error:', error);
         res.status(500).json({ error: error.message });
     }
-
-}
+};
 
 
 exports.getOrderById = async (req, res) => {
@@ -188,7 +215,10 @@ exports.cancelOrder = async (req, res) => {
             });
         }
 
-        res.status(200).json(order);
+        res.status(200).json({
+            order: order,
+            message: 'Order canceled'
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

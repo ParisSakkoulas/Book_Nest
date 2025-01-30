@@ -249,6 +249,60 @@ exports.getSingleCustomer = async (req, res) => {
 
 }
 
+
+exports.getCustomerFromUser = async (req, res) => {
+
+    try {
+
+        const customer = await Customer.findOne({ user: req.params.userId });
+
+        if (!customer) {
+            return res.status(400).json({
+                success: false,
+                message: 'Customer not found'
+            });
+        }
+
+        console.log(customer)
+
+        if (customer.address) {
+
+            const customerInfo = {
+                firstName: customer.firstName,
+                lastName: customer.lastName,
+                _id: customer._id,
+
+                phoneNumber: customer.phoneNumber,
+                street: customer.address.street,
+                city: customer.address.city,
+                state: customer.address.state,
+                zipCode: customer.address.zipCode,
+                country: customer.address.country,
+            }
+
+
+            return res.status(200).json({
+                success: true,
+                message: 'Customer Found',
+                customerInfo: customerInfo,
+
+            });
+
+        }
+
+
+
+
+    } catch (err) {
+        console.log(err)
+        return res.status(400).json({
+            success: false,
+            message: 'Failed to get customer'
+        });
+    }
+
+}
+
 // Controller: Delete single costumer
 exports.deleteCustomer = async (req, res) => {
 

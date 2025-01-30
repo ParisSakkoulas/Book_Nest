@@ -21,6 +21,7 @@ export class AppComponent {
 
   cart: any = null;
   cartItemCount = 0;
+  isMobileView = false;
 
   userData$ = this.authService.getCurrentUser();
   isAdmin$ = this.userData$.pipe(
@@ -28,9 +29,7 @@ export class AppComponent {
   );
 
   navLinks = [
-    { path: '/books', label: 'Browse', icon: 'library_books' },
-    { path: '/categories', label: 'Categories', icon: 'category' },
-    { path: '/about', label: 'About', icon: 'info' }
+    { path: '/books', label: 'Browse', icon: 'library_books' }
   ];
 
 
@@ -50,6 +49,9 @@ export class AppComponent {
   ngOnInit() {
 
 
+    // Add window resize listener
+    this.checkScreenSize();
+    window.addEventListener('resize', () => this.checkScreenSize());
 
 
 
@@ -74,11 +76,25 @@ export class AppComponent {
   }
 
 
-
+  checkScreenSize() {
+    this.isMobileView = window.innerWidth <= 768;
+    if (!this.isMobileView) {
+      this.showMobileMenu = false;
+      document.body.classList.remove('mobile-menu-open');
+    }
+  }
 
   toggleMobileMenu(): void {
     this.showMobileMenu = !this.showMobileMenu;
+    if (this.showMobileMenu) {
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      document.body.classList.remove('mobile-menu-open');
+    }
+
+
   }
+
 
 
   initializeCart() {

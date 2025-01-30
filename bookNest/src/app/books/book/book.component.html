@@ -33,24 +33,25 @@
       </div>
 
       <div class="action-buttons">
-        <button mat-raised-button color="primary" class="add-to-cart-btn" [disabled]="book.stock === 0"
-          (click)="addToCart()">
+
+        <button class="btn btn-primary" [disabled]="book.stock === 0" (click)="addToCart()">
           <mat-icon>shopping_cart</mat-icon>
           Add to Cart
         </button>
-        <button mat-stroked-button color="primary" class="wishlist-btn">
+
+        <button class="btn btn-outline">
           <mat-icon>favorite_border</mat-icon>
           Add to Wishlist
         </button>
       </div>
 
       <div class="action-buttons" *ngIf="currentUserData && currentUserData.role === 'ADMIN'">
-        <button mat-raised-button color="primary" class="add-to-cart-btn" [disabled]="book.stock === 0"
+        <button color="primary" class="btn btn-primary" [disabled]="book.stock === 0"
           [routerLink]="'/books/create/'+book._id">
           <mat-icon>edit</mat-icon>
           Edit
         </button>
-        <button mat-stroked-button color="primary" class="wishlist-btn" (click)="onDeleteBook()">
+        <button class="btn btn-warning" (click)="onDeleteBook()">
           <mat-icon>delete</mat-icon>
           Delete
         </button>

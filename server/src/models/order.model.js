@@ -8,9 +8,7 @@ const OrderSchema = new mongoose.Schema({
     },
     sessionId: {
         type: String,
-        required: function () {
-            return !this.userId;
-        }
+        required: false
     },
     items: [{
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book', required: true },
@@ -23,13 +21,23 @@ const OrderSchema = new mongoose.Schema({
         enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
         default: 'Pending'
     },
-    shippingAddress: {
+
+    shippingAddress:
+    {
         street: String,
         city: String,
         state: String,
         zipCode: String,
         country: String
     },
+
+    visitorInfo:
+    {
+        email: { type: String },
+        firstName: { type: String },
+        lastName: { type: String }
+    },
+
     orderDate: {
         type: Date,
         default: Date.now

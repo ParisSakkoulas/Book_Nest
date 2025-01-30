@@ -1,11 +1,20 @@
 <div class="app-container">
   <mat-toolbar class="navbar">
     <div class="navbar-container">
+
+
+
+
       <!-- Brand Logo (Left Section) -->
       <a routerLink="/public/home" class="brand-logo">
         <mat-icon class="logo-icon">auto_stories</mat-icon>
         <span class="brand-name">Book Nest</span>
       </a>
+
+      <!-- Mobile Menu Button -->
+      <button mat-icon-button class="menu-button" (click)="toggleMobileMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
 
       <!-- Main Navigation -->
       <nav class="main-nav" [class.show-mobile]="showMobileMenu">
@@ -31,8 +40,8 @@
             <mat-icon [matBadge]="cartItemCount" [matBadgeHidden]="!cartItemCount"
               matBadgeColor="warn">shopping_bag</mat-icon>
           </button>
-          <button mat-button class="login-btn" [routerLink]="'/auth/login'">Sign in</button>
-          <button mat-flat-button color="primary" [routerLink]="'/auth/register'">Register</button>
+          <button class="btn btn-outline" [routerLink]="'/auth/login'">Sign in</button>
+          <button class="btn btn-primary" [routerLink]="'/auth/register'">Register</button>
         </ng-container>
 
         <!-- Authenticated User -->
@@ -157,12 +166,11 @@
     </button>
   </mat-menu>
 
-  <!-- Mobile Menu Button -->
-  <button mat-icon-button class="menu-button" (click)="toggleMobileMenu()">
-    <mat-icon>menu</mat-icon>
-  </button>
+
 
 
   <app-spinner></app-spinner>
   <router-outlet></router-outlet>
 </div>
+
+<app-footer></app-footer>

@@ -65,13 +65,15 @@
   </div>
 
   <div class="button-container">
-    <button mat-stroked-button *ngIf="mode==='Add'" type="button" routerLink="/books">Cancel</button>
 
-    <button *ngIf="mode==='Save'" mat-stroked-button type="button" [routerLink]="'/books/'+bookId">Back</button>
+    <button *ngIf="mode==='Add'" class="btn btn-outline" type="button" routerLink="/books">Cancel</button>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="!bookForm.valid">
-      <mat-icon>add</mat-icon>
+    <button *ngIf="mode==='Save'" class="btn btn-outline" [routerLink]="'/books/'+bookId">Back</button>
+
+
+    <button class="btn btn-primary" type="submit" [disabled]="!bookForm.valid">
       {{mode}}
     </button>
+
   </div>
 </form>

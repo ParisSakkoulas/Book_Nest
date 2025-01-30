@@ -445,3 +445,120 @@ exports.userStatusUpdate = async (req, res) => {
     }
 
 }
+
+
+exports.checkEmailInUse = async (req, res, next) => {
+
+
+    try {
+
+
+
+        const { email, currentUserId } = req.body;
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid email format'
+            });
+        }
+
+        // Check if email exists but exclude current user
+        const existingUser = await User.findOne({
+            email: email.toLowerCase().trim(),
+            _id: { $ne: currentUserId } // Exclude current user
+        });
+
+        return res.status(200).json({
+            success: true,
+            exists: !!existingUser,
+            message: existingUser ? 'Email already exists' : 'Email is available'
+        });
+
+
+    } catch (err) {
+        return res.status(400).json({
+            message: "Error on fetching user"
+        })
+    }
+
+
+}
+
+
+
+exports.updateEmail = async (req, res) => {
+    try {
+        const { userId, email } = req.body;
+
+        // Validate email format
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !re.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+
+        // Check if email is already in use
+        const existingUser = await User.findOne({
+            email: email.toLowerCase(),
+            _id: { $ne: userId }
+        });
+
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email is already in use' });
+        }
+
+        // Update user email
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { email: email.toLowerCase() },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.json({
+            message: 'Email updated successfully',
+            user: {
+                email: updatedUser.email
+            }
+        });
+    } catch (error) {
+        console.error('Update email error:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+exports.updatePassword = async (req, res) => {
+    try {
+        const { userId, password } = req.body;
+
+        // Validate password strength
+        if (!password) {
+            return res.status(400).json({
+                message: 'Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character'
+            });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, 12);
+
+        // Update user password
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { password: hashedPassword },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.json({ message: 'Password updated successfully' });
+    } catch (error) {
+        console.error('Update password error:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};

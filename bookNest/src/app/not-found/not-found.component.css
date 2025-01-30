@@ -1,0 +1,61 @@
+/* Center the container both vertically and horizontally */
+.container {
+  text-align: center;
+  padding: 2rem;
+  width: 700px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Centers content vertically */
+  margin: 0 auto;
+  /* Centers container horizontally */
+  box-sizing: border-box;
+}
+
+.error-code {
+  font-size: 8rem;
+  font-weight: bold;
+  color: #dc3545;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+
+.error-message {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #495057;
+}
+
+.error-description {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+.illustration {
+  margin: 2rem 0;
+}
+
+.illustration img {
+  max-width: 100%;
+  height: auto;
+}
+
+
+
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .error-code {
+    font-size: 6rem;
+  }
+
+  .error-message {
+    font-size: 1.5rem;
+  }
+}

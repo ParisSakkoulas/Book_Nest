@@ -87,7 +87,7 @@ export class CartService {
     localStorage.removeItem('x-session-id');
     this.sessionId = null;
     console.log(this.sessionId);
-    console.log(localStorage.getItem('x-session-id'));
+    console.log("clearing session", localStorage.getItem('x-session-id'));
 
   }
 

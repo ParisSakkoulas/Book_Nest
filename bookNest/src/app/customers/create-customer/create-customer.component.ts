@@ -108,10 +108,14 @@ export class CreateCustomerComponent implements OnInit {
       }
 
       if (!this.data) {
-        console.log(this.createCustomerForm.value)
+        console.log("CREATE USER INFO", this.createCustomerForm.value)
         this.customerService.createNewCustomer(registerUserData);
       }
       else {
+
+
+        console.log("UPDATE USER INFO", registerUserData)
+
         this.customerService.updateSingleCustomer(this.data.customer._id, registerUserData)
 
       }

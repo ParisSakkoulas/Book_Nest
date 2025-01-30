@@ -12,6 +12,7 @@ const bcrypt = require('bcrypt');
 
 exports.addToCart = async (req, res) => {
     try {
+
         const { items } = req.body;
         const userId = req.user?.userId;
         const sessionId = req.headers['x-session-id'];
@@ -72,6 +73,8 @@ exports.addToCart = async (req, res) => {
 
         res.status(200).json(populatedCart);
     } catch (error) {
+        console.log(error)
+
         res.status(500).json({ error: error.message });
     }
 };

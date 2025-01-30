@@ -25,9 +25,16 @@
   align-items: center;
 }
 
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
 .custom-avatar {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: white;
   color: #0077ff;
@@ -39,7 +46,8 @@
 }
 
 .status-badge {
-  padding: 0.5rem 1.25rem;
+  margin-top: 5px;
+  padding: 0.2rem 1.05rem;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.2);
   color: white;

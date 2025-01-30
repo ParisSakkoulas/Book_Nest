@@ -87,6 +87,7 @@ export class CheckoutComponent implements OnInit {
                 zipCode: response.customerInfo.zipCode,
                 country: response.customerInfo.country,
               })
+              console.log(response)
 
             },
             error: (err) => {

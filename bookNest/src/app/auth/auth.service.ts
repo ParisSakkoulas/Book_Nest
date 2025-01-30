@@ -75,6 +75,9 @@ export class AuthService {
             this.messageService.showSuccess('Login successful!');
             this.spinnerService.hide();
 
+            localStorage.removeItem('x-session-id');
+
+
           }
         },
         error: (error) => {

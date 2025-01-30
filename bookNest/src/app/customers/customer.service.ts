@@ -217,10 +217,8 @@ export class CustomersService {
   updateSingleCustomer(customerId: string, customer: any) {
 
 
+    console.log(customer)
     this.spinnerService.show();
-    console.log(customerId, customer)
-
-
     this.http.put<{ message: string, status: boolean, data: { customer: Customer } }>('http://localhost:3000/api/customers/' + customerId, customer).subscribe({
 
       next: (response) => {
@@ -268,6 +266,11 @@ export class CustomersService {
 
   getCustomerFromUser(userId: any) {
     return this.http.get<{ message: string, customerInfo: { _id?: any, phoneNumber?: string, street: string, city: string, state: string, zipCode: string, country: string } }>('http://localhost:3000/api/customers/customerFromUser/' + userId);
+  }
+
+
+  updateAddressInfoCustomer(customerId: string, customerAddressInfo: any) {
 
   }
+
 }

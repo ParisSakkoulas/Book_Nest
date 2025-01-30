@@ -15,12 +15,13 @@ import { CheckoutComponent } from './orders/checkout/checkout.component';
 import { MyOrdersComponent } from './orders/my-orders/my-orders.component';
 import { SingleOrderComponent } from './orders/single-order/single-order.component';
 import { AllOrdersComponent } from './orders/all-orders/all-orders.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 const routes: Routes = [
 
 
-
+  { path: '', redirectTo: '/public/home', pathMatch: 'full' },
 
 
   //DashBoard Routes
@@ -63,7 +64,7 @@ const routes: Routes = [
   {
     path: 'public',
     children: [
-
+      { path: '', redirectTo: '/public/home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
     ]
   },
@@ -93,6 +94,11 @@ const routes: Routes = [
 
     ]
   },
+
+
+  { path: '**', component: NotFoundComponent }
+
+
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
 // costumer routes
 const express = require('express');
-const { createCustomer, getCustomers, getSingleCustomer, deleteCustomer, updateCustomer } = require('../controllers/customer.controller');
+const { createCustomer, getCustomers, getSingleCustomer, deleteCustomer, updateCustomer, getCustomerFromUser } = require('../controllers/customer.controller');
 const { authenticateToken } = require('../middlewares/auth.middleware');
 const { requireAdmin } = require('../middlewares/admin.middleware');
 
@@ -13,9 +13,12 @@ router.post('/create', authenticateToken, requireAdmin, createCustomer);
 // Route: get customers
 router.get('/all', authenticateToken, requireAdmin, getCustomers);
 
+router.get('/customerFromUser/:userId', authenticateToken, getCustomerFromUser);
+
 
 // Route: get single customer
 router.get('/:customerId', authenticateToken, requireAdmin, getSingleCustomer);
+
 
 
 // Route: delete single customer

@@ -111,7 +111,7 @@ export class UserProfileComponent implements OnInit {
 
 
 
-    // Subscribe to email changes
+
     this.profileForm.get('email')?.valueChanges.pipe(
       debounceTime(500), // Wait 500ms after last keystroke
       distinctUntilChanged() // Only check if value changed
@@ -144,7 +144,7 @@ export class UserProfileComponent implements OnInit {
   }
 
 
-  // This method sets the active button
+
   showDiv(buttonName: string): void {
     this.activeButton = buttonName;
   }
@@ -154,7 +154,21 @@ export class UserProfileComponent implements OnInit {
       return;
     }
 
-    this.customerService.updateSingleCustomer(this.customerId, this.customerInfoForm.value);
+    const registerUserData = {
+      firstName: this.customerInfoForm.value.firstName,
+      lastName: this.customerInfoForm.value.lastName,
+      email: this.customerInfoForm.value.email,
+      phoneNumber: this.customerInfoForm.value.phoneNumber || undefined,
+      address: {
+        street: this.customerInfoForm.value.street,
+        city: this.customerInfoForm.value.city,
+        state: this.customerInfoForm.value.state,
+        zipCode: this.customerInfoForm.value.zipCode,
+        country: this.customerInfoForm.value.country,
+      }
+    }
+
+    this.customerService.updateSingleCustomer(this.customerId, registerUserData);
   }
 
   onChnageEmail() {

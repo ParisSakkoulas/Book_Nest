@@ -26,16 +26,17 @@ async function run() {
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(MONGO_URI);
+        await mongoose.connect(MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
 
-        // Start server
         app.listen(PORT, () => {
             console.log(`Server running on http://localhost:${PORT}`);
         });
 
         setupInitialAdmin();
-
-        console.log('Connected to MongoDB');
+        console.log('Connected to MongoDB Atlas');
 
     } catch (error) {
         console.error('MongoDB connection error:', error);

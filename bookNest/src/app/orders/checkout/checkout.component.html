@@ -8,8 +8,8 @@
       <p>Order ID: {{orderId}}</p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary" routerLink="/">Return to Home</button>
-      <button mat-raised-button routerLink="/">View My Orders</button>
+      <button class="btn btn-primary" routerLink="/">Return to Home</button>
+      <button class="btn btn-outline" routerLink="/orders/myOrders">View My Orders</button>
 
     </mat-card-actions>
   </mat-card>
@@ -70,8 +70,8 @@
 
           <mat-error *ngIf="error">{{error}}</mat-error>
 
-          <button mat-raised-button color="primary" type="submit" [disabled]="loading || !shippingForm.valid"
-            class="submit-button">
+
+          <button class="btn btn-primary" type="submit" [disabled]="loading || !shippingForm.valid">
             {{loading ? 'Processing...' : 'Place Order'}}
           </button>
         </form>
@@ -154,10 +154,11 @@
 
           <mat-error *ngIf="error">{{error}}</mat-error>
 
-          <button mat-raised-button color="primary" type="submit" [disabled]="loading || !shippingVisitorForm.valid"
-            class="submit-button">
+
+          <button class="btn btn-primary" type="submit" [disabled]="loading || !shippingVisitorForm.valid">
             {{loading ? 'Processing...' : 'Place Order'}}
           </button>
+
         </form>
       </mat-card-content>
     </mat-card>
