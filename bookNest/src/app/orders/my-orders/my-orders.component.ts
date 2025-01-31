@@ -12,12 +12,17 @@ import { SpinnerService } from 'src/app/spinner/spinner.service';
 })
 export class MyOrdersComponent implements OnInit {
 
+  // Array to save all orders
   orders: Order[] = [];
+
+  // Paginator object
   pagination = {
     currentPage: 1,
     totalPages: 0,
     totalOrders: 0
   };
+
+  //If fetching orders is loading
   loading = false;
 
   constructor(private orderService: CheckoutService, private spinnerService: SpinnerService) { }
@@ -26,6 +31,7 @@ export class MyOrdersComponent implements OnInit {
     this.loadOrders();
   }
 
+  //Get all orders
   loadOrders(page: number = 1) {
     this.loading = true;
     this.spinnerService.show();
@@ -47,9 +53,10 @@ export class MyOrdersComponent implements OnInit {
     });
   }
 
+  //Estimate the delivery day from now to 5 days
   getExpectedDeliveryDate(createdDate: string): Date {
     const date = new Date(createdDate);
-    date.setDate(date.getDate() + 5); // Add 5 days
+    date.setDate(date.getDate() + 5);
     return date;
   }
 

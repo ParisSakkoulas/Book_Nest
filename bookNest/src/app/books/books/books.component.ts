@@ -14,13 +14,18 @@ import { CurrentUserData } from 'src/app/models/CurrentUser.Data';
 })
 export class BooksComponent implements OnInit {
 
+  // Array to store book data
   books: Book[] = [];
+
+  // Pagination state object
   pagination = {
     current: 1,
     total: 1,
     count: 0,
     totalRecords: 0
   };
+
+  // Filter options for book search/filtering
   filters = {
     search: '',
     category: '',
@@ -30,6 +35,7 @@ export class BooksComponent implements OnInit {
     limit: 12
   };
 
+  // Store current user information
   currentUserData !: CurrentUserData;
 
 
@@ -64,6 +70,7 @@ export class BooksComponent implements OnInit {
 
   }
 
+  // Fetch books with current filters and pagination
   loadBooks() {
     this.bookService.getBooks({
       page: this.pagination.current,
@@ -76,21 +83,24 @@ export class BooksComponent implements OnInit {
     });
   }
 
+  // Handle search button click
   onSearch() {
     this.pagination.current = 1;
     this.loadBooks();
   }
 
+  // Handle pagination changes
   onPageChange(page: number) {
     this.pagination.current = page;
     this.loadBooks();
   }
 
+  // Navigate to edit book form
   onEditBook(book: Book, event: Event) {
     event.stopPropagation();
-    // Implement edit dialog
   }
 
+  // Show delete confirmation
   onDeleteBook(bookId: string, event: Event) {
     event.stopPropagation();
     this.messageService.showInfo(
@@ -98,10 +108,12 @@ export class BooksComponent implements OnInit {
     );
   }
 
+  // Navigate to book details page
   onViewBook(bookId: string) {
     this.router.navigate(['/books', bookId]);
   }
 
+  // Get stock level indicator
   getStockStatus(stock: number): { color: string; text: string } {
     if (stock > 10) {
       return { color: 'success', text: 'In Stock' };

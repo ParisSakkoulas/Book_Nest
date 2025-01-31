@@ -115,6 +115,13 @@
   padding: 20px;
 }
 
+::ng-deep.account-menu {
+  width: 300px;
+  background-color: white;
+  padding: 20px;
+}
+
+
 
 .cart-menu {
   width: 400px;
@@ -364,6 +371,7 @@
 
   .mobile-menu a {
     display: block;
+    text-decoration: none;
     padding: 10px 0;
     color: #333;
   }

@@ -14,16 +14,20 @@ import { SpinnerService } from 'src/app/spinner/spinner.service';
 })
 export class UserProfileComponent implements OnInit {
 
+  // Track active profile section
   activeButton: string = 'Info';
+
+  // Store current user data
   currentUserData !: CurrentUserData;
 
+  // Form groups for different profile sections
   passwordForm !: FormGroup;
   customerInfoForm!: FormGroup;
   profileForm: FormGroup;
   hidePassword = true;
-
   customerId = '';
-  ///Toogle password visibility
+
+  // Password visibility flags
   public showPassword: boolean = false;
 
 
@@ -75,6 +79,7 @@ export class UserProfileComponent implements OnInit {
 
   }
 
+  // Initialize component and load user data
   ngOnInit() {
 
 
@@ -139,16 +144,17 @@ export class UserProfileComponent implements OnInit {
 
   }
 
+  // Get user initials for user image
   getUserInitials(): string {
     return this.currentUserData.email[0].toUpperCase();
   }
 
-
-
+  // Switch between profile sections
   showDiv(buttonName: string): void {
     this.activeButton = buttonName;
   }
 
+  // Update customer profile information
   onChangeCustomerInfo() {
     if (!this.profileForm.valid) {
       return;
@@ -171,6 +177,7 @@ export class UserProfileComponent implements OnInit {
     this.customerService.updateSingleCustomer(this.customerId, registerUserData);
   }
 
+  // Update email address
   onChnageEmail() {
     this.spinnerService.show();
 
@@ -191,10 +198,12 @@ export class UserProfileComponent implements OnInit {
 
   }
 
+  // Toggle password visibility
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
 
+  // Update password
   onChangePassword() {
 
     this.spinnerService.show();
@@ -216,6 +225,8 @@ export class UserProfileComponent implements OnInit {
 
   }
 
+
+  //Custome validator for check password with confirm password
   private passwordMatchValidator() {
     return () => {
       if (!this.passwordForm) return null;
@@ -231,6 +242,7 @@ export class UserProfileComponent implements OnInit {
     };
   }
 
+  // Private helper methods
   private emailExistsValidator() {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       return this.authService

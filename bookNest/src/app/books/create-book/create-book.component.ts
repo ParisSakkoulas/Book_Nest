@@ -12,12 +12,19 @@ import { SpinnerService } from 'src/app/spinner/spinner.service';
 })
 export class CreateBookComponent implements OnInit, OnDestroy {
 
+  // Track if adding or editing book
   mode = 'Add'
 
+  // Store book ID when editing
   bookId = '';
 
+  // Form group for book data
   bookForm!: FormGroup;
+
+  // Image preview URL
   imagePreview: string | null = null;
+
+  // Selected image file
   selectedFile: File | null = null;
   constructor(
     private route: ActivatedRoute,
@@ -28,6 +35,7 @@ export class CreateBookComponent implements OnInit, OnDestroy {
     private spinnerService: SpinnerService,
   ) { }
 
+  // Initialize form and check for edit mode
   ngOnInit(): void {
 
 
@@ -105,6 +113,7 @@ export class CreateBookComponent implements OnInit, OnDestroy {
 
   }
 
+  // Handle image file selection
   onFileSelected(event: any) {
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files[0]) {
@@ -119,12 +128,14 @@ export class CreateBookComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Clear selected image
   removeImage() {
     this.imagePreview = null;
     this.selectedFile = null;
   }
 
 
+  // Handle form submission for create/update
   onSubmit() {
     if (!this.bookForm.valid) {
       return;
@@ -223,6 +234,7 @@ export class CreateBookComponent implements OnInit, OnDestroy {
 
 
 
+  // Cleanup on component destroy
   ngOnDestroy(): void {
     this.imagePreview = null;
     this.selectedFile = null;

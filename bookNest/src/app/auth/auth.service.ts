@@ -35,9 +35,11 @@ export class AuthService {
 
   ngOnInit() {
 
+    // Attempts auto-login on initialization
     this.autoLogin();
   }
 
+  // Handles user login process
   login(email: string, password: string) {
 
     this.spinnerService.show();
@@ -98,6 +100,7 @@ export class AuthService {
       });
   }
 
+  // Registers new user account
   registerNewUser(newUserData: RegisterModel) {
 
 
@@ -125,7 +128,7 @@ export class AuthService {
 
   }
 
-
+  // Verifies user email
   verifyUser(verificationCode: any) {
 
     this.http.get<{ message: string, type: string }>(`${this.baseUrl}/auth/verify/${verificationCode}`).subscribe({
@@ -138,7 +141,7 @@ export class AuthService {
 
   }
 
-
+  // Stores authentication data in localStorage
   private saveAuthData(token: string, expirationDate: Date) {
 
     // Store the JWT token in localStorage
@@ -148,6 +151,7 @@ export class AuthService {
     localStorage.setItem(this.expirationKey, expirationDate.toISOString());
   }
 
+  // Retrieves stored auth data
   private getAuthData() {
     const token = localStorage.getItem(this.tokenKey);
     const expirationDate = localStorage.getItem(this.expirationKey);
@@ -162,6 +166,7 @@ export class AuthService {
     };
   }
 
+  // Sets timer for automatic logout
   private autoLogout(duration: number) {
 
     // Clear any existing timer to prevent multiple timers
@@ -202,6 +207,7 @@ export class AuthService {
     }
   }
 
+  // Removes all auth data from storage
   private clearAuthData() {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.expirationKey);
@@ -209,31 +215,36 @@ export class AuthService {
     this.currentUser.next(null);
   }
 
+  // Gets current authentication token
   getToken(): string | null {
     const authData = this.getAuthData();
     return authData ? authData.token : null;
   }
 
 
+  // Returns current user as observable
   getCurrentUser() {
     return this.currentUser.asObservable();
   }
 
+  // Gets stored user data
   getUserData() {
     return JSON.parse(localStorage.getItem('userData') || 'null');
   }
 
+  // Checks if current user is admin
   isAdmin(): boolean {
     const userData = this.getUserData();
     return userData?.role === 'ADMIN';
   }
 
 
-
+  //Returns authentication state as observable
   isAuthenticated$() {
     return this.isAuthenticated.asObservable();
   }
 
+  // Validates email availability
   checkEmail(email: string, currentUserId?: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/checkEmail`, {
       email,
@@ -241,6 +252,7 @@ export class AuthService {
     });
   }
 
+  // Updates user email address
   updateEmail(userId: string, newEmail: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/auth/updateEmail`, {
       userId,
@@ -266,10 +278,12 @@ export class AuthService {
     );
   }
 
+  // Updates user password
   updatePassword(userId: string, newPassword: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/auth/updatePassword`, { userId, password: newPassword });
   }
 
+  // Handles user logout
   logout() {
     // Clear auth data
     this.clearAuthData();

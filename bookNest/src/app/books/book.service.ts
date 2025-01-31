@@ -14,10 +14,16 @@ import { environment } from 'src/environments/environment';
 export class BookService {
 
 
+  // API base URL from environment
   private baseUrl = environment.baseUrl;
 
+  // Store books data
   private books: Book[] = [];
+
+  // Observable source for books data
   private booksSubject = new BehaviorSubject<Book[]>([]);
+
+  // Track pagination state
   private paginationSubject = new BehaviorSubject<{
     current: number;
     total: number;
@@ -32,6 +38,7 @@ export class BookService {
     private router: Router,
   ) { }
 
+  // Fetch books with optional filtering parameters
   getBooks(params: {
     page?: number;
     limit?: number;
@@ -73,14 +80,17 @@ export class BookService {
 
 
 
+  // Get current books as observable
   getCurrentBooks(): Observable<Book[]> {
     return this.booksSubject.asObservable();
   }
 
+  // Get pagination data as observable
   getPagination(): Observable<{ current: number; total: number; count: number; totalRecords: number }> {
     return this.paginationSubject.asObservable();
   }
 
+  // Create new book with
   createBook(bookData: FormData) {
     this.spinnerService.show();
 
@@ -91,12 +101,14 @@ export class BookService {
     )
   }
 
+  // Get single book by ID
   getBookById(bookId: string) {
     return this.http.get<{ success: boolean; book: Book; message: string }>(
       `${this.baseUrl}/books/${bookId}`
     );
   }
 
+  //Update existing book
   updateBook(bookId: string, bookData: FormData) {
     return this.http.put<{ message: string; updatedBook: Book }>(
       `${this.baseUrl}/${bookId}`,
@@ -104,6 +116,7 @@ export class BookService {
     )
   }
 
+  // Delete book by ID
   deleteBook(bookId: string) {
     return this.http.delete<{ message: string; book: Book }>(
       `${this.baseUrl}/books/${bookId}`
@@ -111,6 +124,7 @@ export class BookService {
   }
 
 
+  // Get image URL
   getImageUrl(url: string): string {
     if (!url) {
       return 'assets/default-book.png';

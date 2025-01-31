@@ -15,11 +15,19 @@ import { CartService } from 'src/app/cart.service';
 })
 export class BookComponent implements OnInit {
 
+  // Store book details
   book!: Book;
+
+  // Track quantity selected for cart
   quantity = 1;
+
+  // Active tab index
   selectedTab = 0;
 
+  // Track user authentication state
   isAuthenticated = false;
+
+  // Store current user data
   currentUserData !: CurrentUserData;
 
 
@@ -59,18 +67,21 @@ export class BookComponent implements OnInit {
 
   }
 
+  // Increment quantity if stock available
   increaseQuantity() {
     if (this.quantity < this.book.stock) {
       this.quantity++;
     }
   }
 
+  // Decrement quantity if above 1
   decreaseQuantity() {
     if (this.quantity > 1) {
       this.quantity--;
     }
   }
 
+  // Get stock level indicator and message
   getStockStatus(): { color: string; text: string } {
     if (this.book.stock > 10) {
       return { color: 'success', text: 'In Stock' };
@@ -80,6 +91,7 @@ export class BookComponent implements OnInit {
     return { color: 'danger', text: 'Out of Stock' };
   }
 
+  // Add current book to cart with selected quantity
   addToCart() {
     const items = [{
       bookId: this.book._id,
@@ -105,7 +117,7 @@ export class BookComponent implements OnInit {
     });
   }
 
-
+  // Handle book deletion with confirmation
   onDeleteBook() {
     console.log('Delete initiated');
     this.messageService.showWarning(`Are you sure you want to delete ${this.book.title}?`, () => {

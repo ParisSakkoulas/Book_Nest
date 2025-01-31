@@ -12,9 +12,10 @@ import { title } from 'process';
 export class CreateCustomerComponent implements OnInit {
 
 
-  //The registration form
+  // Form group for customer creation/editing
   createCustomerForm: any;
 
+  // Dialog title and button text that changes based on mode
   title = 'Create Customer';
   buttonText = 'Create';
 
@@ -79,6 +80,7 @@ export class CreateCustomerComponent implements OnInit {
   }
 
 
+  // Custom validator to require either email or phone
   private atLeastOneContactMethod(): ValidatorFn {
     return (formGroup: AbstractControl): ValidationErrors | null => {
       const email = formGroup.get('email')?.value;
@@ -88,7 +90,7 @@ export class CreateCustomerComponent implements OnInit {
     };
   }
 
-
+  // Handle form submission for create/update
   onSubmit() {
 
     if (this.createCustomerForm.valid) {
@@ -108,16 +110,10 @@ export class CreateCustomerComponent implements OnInit {
       }
 
       if (!this.data) {
-        console.log("CREATE USER INFO", this.createCustomerForm.value)
         this.customerService.createNewCustomer(registerUserData);
       }
       else {
-
-
-        console.log("UPDATE USER INFO", registerUserData)
-
         this.customerService.updateSingleCustomer(this.data.customer._id, registerUserData)
-
       }
 
 
@@ -133,6 +129,7 @@ export class CreateCustomerComponent implements OnInit {
 
   }
 
+  // Close dialog without saving
   onCancel() {
     this.dialogRef.close();
   }

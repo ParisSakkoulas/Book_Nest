@@ -22,12 +22,16 @@ import { MatTableDataSource } from '@angular/material/table';
 export class ViewCustomerComponent implements OnInit {
 
 
+  // Store detailed customer information
   customer !: { _id: string, firstName: string, user?: { email: string; status: string }, lastName: string, phoneNumber: string, address?: { street: string, city: string, state: string, zipCode: string, country: string }, customerStatus: string, isActive: boolean, createdAt: string, updatedAt: string };
+
+  /// Store subscription for cleanup
   private paramMapSubscription!: Subscription;
 
+  // Track active tab between info and orders
   activeTab: 'info' | 'orders' = 'info';
 
-  //For the status
+  // Available user account statuses
   userStatuses: string[] = [
     'Active',
     'Inactive',
@@ -35,12 +39,16 @@ export class ViewCustomerComponent implements OnInit {
     'New Customer Account (Unverified)',
     'New Customer Account (Verified)'
   ];
+
+  // Currently selected user status
   selectedStatus !: string | undefined;
 
+  // Table configuration
   displayedColumns: string[] = ['orderId', 'status', 'createDate', 'lastUpdate', 'total'];
   dataSource!: MatTableDataSource<any>;
   totalOrders: number = 0;
 
+  // Material table references
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -107,12 +115,13 @@ export class ViewCustomerComponent implements OnInit {
 
   }
 
-
+  // Get status indicator color
   getStatusColor(): string {
     return this.customer.customerStatus === 'REGISTERED' ? '#4CAF50' : '#FF9800';
   }
 
 
+  // Resend verification email
   resendVerification() {
 
     this.spinnerService.show();
@@ -126,7 +135,7 @@ export class ViewCustomerComponent implements OnInit {
 
   }
 
-
+  // Update customer account status
   updateUserStatus() {
 
     console.log(this.selectedStatus)
@@ -150,13 +159,17 @@ export class ViewCustomerComponent implements OnInit {
 
   }
 
+  // Toggle active/inactive status
   toggleAccountStatus() {
 
   }
+
+  // Convert to registered customer
   convertToRegistered() {
 
   }
 
+  // Open edit customer dialog
   editCustomer() {
 
     const customer = this.customer
@@ -184,7 +197,7 @@ export class ViewCustomerComponent implements OnInit {
 
 
 
-
+  // Delete customer with confirmation
   deleteCustomer() {
 
     this.customerService.deleteSingleCustomer(String(this.customer._id));

@@ -13,16 +13,22 @@ import { CurrentUserData } from 'src/app/models/CurrentUser.Data';
   styleUrls: ['./checkout.component.css']
 })
 export class CheckoutComponent implements OnInit {
-  cart: any = null;
-  shippingForm: FormGroup;
-  shippingVisitorForm: FormGroup;
 
+
+  // Cart data
+  cart: any = null;
+
+  // Form groups for shipping addresses
+  shippingForm: FormGroup;// For authenticated users
+  shippingVisitorForm: FormGroup; // For visitors
+
+  // State flags
   loading = false;
   error = '';
   orderComplete = false;
   orderId: string | null = null;
 
-
+  // Current user information
   isAuthenticated = false;
   currentUserData !: CurrentUserData;
 
@@ -58,6 +64,7 @@ export class CheckoutComponent implements OnInit {
 
   }
 
+  // Initialize component and check authentication
   ngOnInit(): void {
     this.fetchCart();
 
@@ -69,6 +76,7 @@ export class CheckoutComponent implements OnInit {
 
   }
 
+  // Load cart data and pre-fill address if authenticated
   fetchCart(): void {
     this.cartService.getCart().subscribe({
       next: (data) => {
@@ -100,6 +108,7 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  // Submit order with appropriate form data
   onSubmit(): void {
     if (this.isAuthenticated) {
       if (this.shippingForm.valid) {

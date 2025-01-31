@@ -72,7 +72,7 @@
     </button>
   </div>
 
-  <div *ngIf="isAuthenticated">
+  <div *ngIf="isAuthenticated && currentUserData.role ==='USER'">
     <div class="menu-header" *ngIf="currentUserData">
       <p class="user-name">{{currentUserData.firstName}} {{currentUserData.lastName}}</p>
       <p class="user-email">{{currentUserData.email}}</p>
@@ -91,51 +91,39 @@
       <span>Sign Out</span>
     </button>
   </div>
-</mat-menu>
 
-<!-- Shopping Cart Menu
-<mat-menu #cartMenu="matMenu" class="cart-menu">
-  <div class="menu-header">
-    <h3>Shopping Cart ({{cartItemCount || 0}})</h3>
-  </div>
-
-  <div class="menu-content">
-    <div *ngIf="!cart?.items?.length" class="empty-cart">
-      <p>Your cart is empty</p>
+  <div *ngIf="isAuthenticated && currentUserData.role ==='ADMIN'">
+    <div class="menu-header" *ngIf="currentUserData">
+      <p class="user-email">{{currentUserData.email}}</p>
     </div>
+    <mat-divider></mat-divider>
 
-    <div *ngIf="cart?.items?.length" class="cart-items">
-      <div *ngFor="let item of cart.items" class="cart-item">
-        <img [src]="item.productId.imageUrl || '/assets/images/book-default.png'" [alt]="item.productId.title">
-        <div class="item-details">
-          <span class="item-title">{{item.productId.title}}</span>
-          <span class="item-price">{{item.price | currency}}</span>
-          <div class="quantity-controls">
-            <button mat-icon-button (click)="updateQuantity(item.productId._id, item.quantity - 1)">
-              <mat-icon>remove</mat-icon>
-            </button>
-            <span>{{item.quantity}}</span>
-            <button mat-icon-button (click)="updateQuantity(item.productId._id, item.quantity + 1)">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <button mat-menu-item routerLink="/books/">
+      <mat-icon>books</mat-icon>
+      <span>Products</span>
+    </button>
 
-  <div class="cart-footer">
-    <div class="cart-total" *ngIf="cart?.items?.length">
-      <span>Total:</span>
-      <span>{{cart.totalAmount | currency}}</span>
-    </div>
-    <button mat-flat-button class="checkout-button" [disabled]="!cart?.items?.length" (click)="checkout()">
-      Checkout
+    <button mat-menu-item routerLink="/orders/all">
+      <mat-icon>library_books</mat-icon>
+      <span>Orders</span>
+    </button>
+
+    <button mat-menu-item routerLink="/customers/list">
+      <mat-icon>group</mat-icon>
+      <span>Customers</span>
+    </button>
+
+    <button mat-menu-item (click)="onLogout()">
+      <mat-icon>logout</mat-icon>
+      <span>Sign Out</span>
     </button>
   </div>
-</mat-menu>
--->
 
+
+
+</mat-menu>
+
+<!-- Shopping Cart Menu -->
 <mat-menu #cartMenu="matMenu" [hasBackdrop]="true" [overlapTrigger]="false">
   <div class="cart-menu" (click)="$event.stopPropagation()">
     <div class="cart-header">

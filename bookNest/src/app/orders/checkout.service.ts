@@ -14,13 +14,12 @@ import { environment } from 'src/environments/environment';
 })
 export class CheckoutService {
 
-  private apiUrl = '/api';
-
+  //Base url from enviroment
   private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) { }
 
-
+  // Get headers with session ID if available
   private getHeaders(): HttpHeaders {
     let headers = new HttpHeaders();
     const sessionId = localStorage.getItem('x-session-id');
@@ -34,18 +33,20 @@ export class CheckoutService {
   }
 
 
-
+  // Create new order with shipping address
   createOrder(shippingAddress: any): Observable<any> {
 
     return this.http.post(`${this.baseUrl}/orders/create`, { shippingAddress }, { headers: this.getHeaders() });
   }
 
+  // Get single order by ID
   getOrder(orderId: any): Observable<any> {
     const sessionId = localStorage.getItem('sessionId');
     const headers = new HttpHeaders().set('x-session-id', sessionId || '');
     return this.http.get<SingleOrderResponse>(`${this.baseUrl}/orders/${orderId}`, { headers });
   }
 
+  // Get orders for current user with pagination
   getMyOrders(page: number = 1, limit: number = 10): Observable<PaginatedOrdersResponse> {
     const params = new HttpParams()
       .set('page', page.toString())
@@ -54,6 +55,7 @@ export class CheckoutService {
     return this.http.get<PaginatedOrdersResponse>(`${this.baseUrl}/orders/myOrders`,);
   }
 
+  // Cancel order by ID
   cancelOrder(orderId: any) {
     const sessionId = localStorage.getItem('sessionId');
     const headers = new HttpHeaders().set('x-session-id', sessionId || '');
@@ -61,6 +63,7 @@ export class CheckoutService {
   }
 
 
+  // Get all orders
   getOrders(page: number = 1, limit: number = 10): Observable<PaginatedOrdersResponse> {
     const params = new HttpParams()
       .set('page', page.toString())
@@ -69,10 +72,12 @@ export class CheckoutService {
     return this.http.get<PaginatedOrdersResponse>(`${this.baseUrl}/orders/all`, { params: params });
   }
 
+  // Update order status
   updateOrderStatus(orderId: string, status: string): Observable<any> {
     return this.http.patch(`${this.baseUrl}/orders/${orderId}/status`, { status });
   }
 
+  // Get orders for specific user
   getUserOrders(userId: string, page: number = 1, limit: number = 10): Observable<any> {
     const params = new HttpParams()
       .set('page', page.toString())
