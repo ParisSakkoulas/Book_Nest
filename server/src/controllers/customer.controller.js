@@ -249,7 +249,7 @@ exports.getSingleCustomer = async (req, res) => {
 
 }
 
-
+// Controller: Get single costumer based on user data
 exports.getCustomerFromUser = async (req, res) => {
 
     try {
@@ -271,7 +271,6 @@ exports.getCustomerFromUser = async (req, res) => {
                 firstName: customer.firstName,
                 lastName: customer.lastName,
                 _id: customer._id,
-
                 phoneNumber: customer.phoneNumber,
                 street: customer.address.street,
                 city: customer.address.city,
@@ -369,6 +368,8 @@ exports.updateCustomer = async (req, res) => {
             customerStatus,
             isActive
         } = req.body;
+
+
 
         // Find existing customer
         const existingCustomer = await Customer.findById(customerId).populate('user');

@@ -9,25 +9,26 @@ const { requireAdmin } = require('../middlewares/admin.middleware');
 const router = express.Router();
 
 
-
+// Route: create order
 router.post('/create', [cartAuthMiddleware, cartAuthMiddleware], createOrder);
+
+// Route: get my orders (users)
 router.get('/myOrders', authenticateToken, getMyOrders);
+
+// Route: get all orders (admin)
 router.get('/all', [authenticateToken, requireAdmin], getAllOrders);
+
+// Route: get single order
 router.get('/:orderId', [cartAuthMiddleware], getOrderById);
+
+// Route: get user orders
 router.get('/user/:userId', [authenticateToken, requireAdmin], getUserOrders);
+
+// Route: change order status
 router.patch('/:orderId/status', [authenticateToken, requireAdmin], updateOrderStatus);
+
+// Route: cancel order status
 router.delete('/:orderId', [authenticateToken, cartAuthMiddleware], cancelOrder);
-
-
-
-/*
-router.get('/orders', [authenticateToken, cartAuthMiddleware], getAllOrders);
-router.get('/orders/:orderId', [authenticateToken, cartAuthMiddleware], getOrderById);
-router.get('/orders/user/:userId', [authenticateToken, cartAuthMiddleware], getUserOrders);
-router.get('/orders/my-orders', authenticateToken, getMyOrders);
-router.patch('/orders/:orderId/status', [authenticateToken, cartAuthMiddleware], updateOrderStatus);
-router.delete('/orders/:orderId', [authenticateToken, cartAuthMiddleware], cancelOrder);
-*/
 
 
 

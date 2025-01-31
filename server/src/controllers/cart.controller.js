@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 
 
 
-
+// Controller: add item to cart
 exports.addToCart = async (req, res) => {
     try {
 
@@ -79,7 +79,7 @@ exports.addToCart = async (req, res) => {
     }
 };
 
-
+// Controller: remove item from cart
 exports.removeFromCart = async (req, res) => {
     try {
         const { bookId } = req.params;
@@ -108,7 +108,7 @@ exports.removeFromCart = async (req, res) => {
     }
 }
 
-
+// Controller: update item quantity cart
 exports.changeItemQuantity = async (req, res) => {
 
     try {
@@ -155,6 +155,7 @@ exports.changeItemQuantity = async (req, res) => {
 
 }
 
+// Controller: get single cart
 exports.getCart = async (req, res) => {
     try {
         const userId = req.user?.userId;

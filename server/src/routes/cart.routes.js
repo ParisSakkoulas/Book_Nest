@@ -11,10 +11,15 @@ const router = express.Router();
 
 // Route: add item to cart
 router.post('/items', [cartAuthMiddleware], addToCart);
-router.delete('/items/:bookId', [cartAuthMiddleware], removeFromCart);
-router.patch('/items/:bookId', [cartAuthMiddleware], changeItemQuantity);
-router.get('/', [cartAuthMiddleware], getCart);
 
+// Route: remove item from cart
+router.delete('/items/:bookId', [cartAuthMiddleware], removeFromCart);
+
+// Route: change item quantity
+router.patch('/items/:bookId', [cartAuthMiddleware], changeItemQuantity);
+
+// Route: get single cartt
+router.get('/', [cartAuthMiddleware], getCart);
 
 
 module.exports = router;

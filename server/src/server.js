@@ -11,19 +11,10 @@ dotenv.config();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
 
-async function run() {
-    try {
-        // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
-        // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-    }
-}
-
+/**
+* Connects to MongoDB and starts the Express server
+* Also sets up initial admin user if needed
+*/
 const connectDB = async () => {
     try {
         await mongoose.connect(MONGO_URI, {
@@ -35,6 +26,7 @@ const connectDB = async () => {
             console.log(`Server running on http://localhost:${PORT}`);
         });
 
+        // Create admin user if it doesn't exist
         setupInitialAdmin();
         console.log('Connected to MongoDB Atlas');
 
@@ -44,4 +36,5 @@ const connectDB = async () => {
     }
 };
 
+// Initialize database connection and server
 connectDB();

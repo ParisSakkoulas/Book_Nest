@@ -13,6 +13,7 @@ router.post('/create', authenticateToken, requireAdmin, createCustomer);
 // Route: get customers
 router.get('/all', authenticateToken, requireAdmin, getCustomers);
 
+// Route: get from user data
 router.get('/customerFromUser/:userId', authenticateToken, getCustomerFromUser);
 
 

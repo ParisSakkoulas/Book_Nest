@@ -9,7 +9,7 @@ const Order = require('../models/order.model');
 
 
 
-
+// Controller: create order
 exports.createOrder = async (req, res) => {
     try {
 
@@ -71,7 +71,7 @@ exports.createOrder = async (req, res) => {
     }
 };
 
-
+// Controller: get order
 exports.getOrderById = async (req, res) => {
     try {
         const { orderId } = req.params;
@@ -82,13 +82,13 @@ exports.getOrderById = async (req, res) => {
         const order = await Order.findById(orderId)
             .populate({
                 path: 'items.productId',
-                select: 'title author imageUrl price' // Select fields needed for book details
+                select: 'title author imageUrl price'
             })
             .populate({
                 path: 'userId',
-                select: 'firstName lastName email' // Select fields needed for user details
+                select: 'firstName lastName email'
             })
-            .lean(); // Use lean() for better performance
+            .lean();
 
         if (!order) {
             return res.status(404).json({ error: 'Order not found' });
@@ -98,7 +98,7 @@ exports.getOrderById = async (req, res) => {
         if (req.user?.role === 'ADMIN') {
             return res.status(200).json({
                 ...order,
-                isEditable: true // Add flag for admin capabilities
+                isEditable: true
             });
         }
 
@@ -169,7 +169,7 @@ exports.getOrderById = async (req, res) => {
     }
 };
 
-
+// Controller: get user s order 
 exports.getUserOrders = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -197,7 +197,7 @@ exports.getUserOrders = async (req, res) => {
     }
 };
 
-
+// Controller: get my orders for users
 exports.getMyOrders = async (req, res) => {
     try {
 
@@ -227,8 +227,7 @@ exports.getMyOrders = async (req, res) => {
     }
 };
 
-
-
+// Controller: change order status (admin)
 exports.updateOrderStatus = async (req, res) => {
     try {
         const { orderId } = req.params;
@@ -254,8 +253,7 @@ exports.updateOrderStatus = async (req, res) => {
     }
 };
 
-
-
+// Controller: cancel order status (admin)
 exports.cancelOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
@@ -296,7 +294,7 @@ exports.cancelOrder = async (req, res) => {
     }
 };
 
-
+// Controller: get all orders (admin)
 exports.getAllOrders = async (req, res) => {
 
     try {

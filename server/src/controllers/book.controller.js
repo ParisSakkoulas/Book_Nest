@@ -1,7 +1,4 @@
 const Book = require('../models/product.model');
-const mongoose = require('mongoose');
-const multer = require('multer');
-//const { cloudinary_js_config } = require('../config/cloudinary.config');
 const fs = require('fs');
 
 const cloudinary = require('cloudinary').v2;

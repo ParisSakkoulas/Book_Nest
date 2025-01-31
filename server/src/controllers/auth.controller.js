@@ -352,7 +352,7 @@ exports.setupInitialAdmin = async () => {
     }
 };
 
-
+// Controller: resent email verification
 exports.resentVerificationEmail = async (req, res) => {
 
     try {
@@ -395,6 +395,7 @@ exports.resentVerificationEmail = async (req, res) => {
 
 }
 
+// Controller: change user status
 exports.userStatusUpdate = async (req, res) => {
 
     try {
@@ -446,7 +447,7 @@ exports.userStatusUpdate = async (req, res) => {
 
 }
 
-
+// Controller: check email already in use
 exports.checkEmailInUse = async (req, res, next) => {
 
 
@@ -485,8 +486,7 @@ exports.checkEmailInUse = async (req, res, next) => {
 
 }
 
-
-
+// Controller: update user email
 exports.updateEmail = async (req, res) => {
     try {
         const { userId, email } = req.body;
@@ -530,7 +530,7 @@ exports.updateEmail = async (req, res) => {
     }
 };
 
-
+// Controller: update user password
 exports.updatePassword = async (req, res) => {
     try {
         const { userId, password } = req.body;

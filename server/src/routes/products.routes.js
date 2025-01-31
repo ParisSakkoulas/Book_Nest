@@ -23,17 +23,20 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 
-
-
-
-//Admin routes
+// Route: add book (admin)
 router.post('/', authenticateToken, requireAdmin, upload.single('image'), bookController.createBook);
+
+// Route: delete book (admin)
 router.delete('/:bookId', authenticateToken, requireAdmin, bookController.deleteBook);
+
+// Route: change book (admin)
 router.put('/:bookId', authenticateToken, upload.single('image'), requireAdmin, bookController.updateBook);
 
 
-// Public routes
+// Route: get book
 router.get('/:bookId', bookController.getBookById);
+
+// Route: get books
 router.get('/', bookController.getBooks);
 
 
