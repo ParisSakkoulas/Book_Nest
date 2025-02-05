@@ -295,7 +295,7 @@ exports.cancelOrder = async (req, res) => {
     }
 };
 
-// Controller: get all orders (admin)
+// Controller: get all orderss (admin)
 exports.getAllOrders = async (req, res) => {
 
     try {
