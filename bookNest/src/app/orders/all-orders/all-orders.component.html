@@ -1,9 +1,14 @@
 <!-- Search and filter section -->
 <div class="filters-container">
+
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>Search for order</mat-label>
-    <input matInput [(ngModel)]="searchTerm" (input)="applyFilter()">
+    <input #searchInput matInput placeholder="Enter order id, user email or customer phone" [(ngModel)]="searchTerm"
+      (keyup)="onSearchEnter($event)">
     <mat-icon matPrefix>search</mat-icon>
+    <button mat-icon-button matSuffix (click)="applyFilter()">
+      <mat-icon>search</mat-icon>
+    </button>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
@@ -62,10 +67,10 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer </th>
       <td mat-cell *matCellDef="let order">
         <div class="customer-info">
-          <div class="avatar">{{order.userId.slice(0,1).toUpperCase()}}</div>
+          <div class="avatar">{{order.userId ? order.userId.email.slice(0,1).toUpperCase() : 'US'}}</div>
           <div class="customer-details">
-            <span class="city">{{order.shippingAddress.city}}</span>
-            <span class="country">{{order.shippingAddress.country}}</span>
+            <span class="city">{{order.shippingAddress?.city || 'N/A'}}</span>
+            <span class="country">{{order.shippingAddress?.country || 'N/A'}}</span>
           </div>
         </div>
       </td>

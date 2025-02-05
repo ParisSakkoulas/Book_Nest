@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
 
+    //Sign up form initialize
     this.signUpForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -33,6 +34,7 @@ export class RegisterComponent implements OnInit {
   }
 
 
+  //Method to call the service for register users
   onRegister() {
 
     if (this.signUpForm.valid) {
@@ -58,6 +60,7 @@ export class RegisterComponent implements OnInit {
   }
 
 
+  // Validator to test password and confirm password
   private passwordMatchValidator() {
     return () => {
       if (!this.signUpForm) return null;

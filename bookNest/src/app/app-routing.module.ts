@@ -16,6 +16,7 @@ import { MyOrdersComponent } from './orders/my-orders/my-orders.component';
 import { SingleOrderComponent } from './orders/single-order/single-order.component';
 import { AllOrdersComponent } from './orders/all-orders/all-orders.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { AboutComponent } from './about/about.component';
 
 
 const routes: Routes = [
@@ -66,6 +67,8 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: '/public/home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
+      { path: 'about', component: AboutComponent },
+
     ]
   },
 

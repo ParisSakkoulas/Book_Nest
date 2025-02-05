@@ -17,6 +17,9 @@ export class CheckoutService {
   //Base url from enviroment
   private baseUrl = environment.baseUrl;
 
+  private productionUrl = environment.productionUrl;
+
+
   constructor(private http: HttpClient) { }
 
   // Get headers with session ID if available
@@ -64,12 +67,27 @@ export class CheckoutService {
 
 
   // Get all orders
-  getOrders(page: number = 1, limit: number = 10): Observable<PaginatedOrdersResponse> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString());
+  getOrders(params?: { searchTerm?: string; page?: number; limit?: number }): Observable<PaginatedOrdersResponse> {
 
-    return this.http.get<PaginatedOrdersResponse>(`${this.baseUrl}/orders/all`, { params: params });
+    let queryParams = new HttpParams();
+
+    if (params?.searchTerm) {
+      if (params.searchTerm.includes('@')) {
+        queryParams = queryParams.append('email', params.searchTerm);
+      } else {
+        queryParams = queryParams.append('phone', params.searchTerm);
+      }
+    }
+    if (params?.page) {
+      queryParams = queryParams.append('page', params.page.toString());
+    }
+    if (params?.limit) {
+      queryParams = queryParams.append('limit', params.limit.toString());
+    }
+
+    console.log(queryParams)
+
+    return this.http.get<PaginatedOrdersResponse>(`${this.baseUrl}/orders/all`, { params: queryParams });
   }
 
   // Update order status

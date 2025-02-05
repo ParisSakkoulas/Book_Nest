@@ -9,13 +9,12 @@ import { AuthService } from './auth/auth.service';
 })
 export class CartService {
 
-  private cartItemsSubject = new BehaviorSubject<any[]>([]);
   private baseUrl = environment.baseUrl;
   private cartSubject = new BehaviorSubject<any>(null);
   cart$ = this.cartSubject.asObservable();
 
   private sessionId: string | null = null;
-  private isAuthenticated = false
+
 
 
 

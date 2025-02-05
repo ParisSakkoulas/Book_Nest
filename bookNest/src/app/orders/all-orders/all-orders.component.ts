@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { CheckoutService } from '../checkout.service';
 import { MessageDialogService } from 'src/app/message.dialog/message-dialog.service';
 import { SpinnerService } from 'src/app/spinner/spinner.service';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 interface Order {
   _id: string;
@@ -37,8 +38,16 @@ export class AllOrdersComponent implements OnInit {
   categoryFilter: string = '';
   totalOrders: number = 0;
 
+  emailFilter: string = '';
+  phoneFilter: string = '';
+  currentPage: number = 1;
+  pageSize: number = 10;
+
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+  private searchSubject = new Subject<string>();
 
   validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
 
@@ -49,6 +58,8 @@ export class AllOrdersComponent implements OnInit {
   ngOnInit(): void {
     this.loadOrders();
     this.extractCategories();
+
+
   }
 
   ngAfterViewInit() {
@@ -60,6 +71,7 @@ export class AllOrdersComponent implements OnInit {
     this.orderService.getOrders().subscribe({
       next: (response: any) => {
         this.dataSource.data = response.orders;
+        console.log(response.orders)
         this.totalOrders = response.pagination.totalOrders;
       },
       error: (error) => {
@@ -69,7 +81,6 @@ export class AllOrdersComponent implements OnInit {
   }
 
   extractCategories(): void {
-    // Extract unique categories from orders
     const allCategories = new Set<string>();
     this.dataSource.data.forEach(order => {
       order.items.forEach(item => {
@@ -82,12 +93,30 @@ export class AllOrdersComponent implements OnInit {
   }
 
   applyFilter(): void {
-    const filterValue = this.searchTerm.trim().toLowerCase();
-    this.dataSource.filter = filterValue;
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    if (!this.searchTerm.trim()) {
+      this.loadOrders();
+      return;
     }
+
+    const params = {
+      searchTerm: this.searchTerm.trim(),
+      page: this.paginator?.pageIndex + 1 || 1,
+      limit: this.paginator?.pageSize || 10
+    };
+
+    this.spinnerService.show();
+    this.orderService.getOrders(params).subscribe({
+      next: (response: any) => {
+        this.dataSource.data = response.orders;
+        this.totalOrders = response.pagination.totalOrders;
+        this.spinnerService.hide();
+      },
+      error: (error) => {
+        console.error('Error loading orders:', error);
+        this.messageService.showError('Error loading orders');
+        this.spinnerService.hide();
+      }
+    });
   }
 
   updateOrderStatus(orderId: string, newStatus: string): void {
@@ -111,6 +140,10 @@ export class AllOrdersComponent implements OnInit {
 
   cancelOrder(orderId: any) {
 
+  }
+
+  onSearchEnter(event: KeyboardEvent) {
+    this.applyFilter();
   }
 
 

@@ -11,15 +11,11 @@
     <!-- Center Navigation -->
     <nav class="main-nav">
       <a routerLink="/books" routerLinkActive="active">BOOKS</a>
-      <a routerLink="/about" routerLinkActive="active">ABOUT</a>
+      <a routerLink="/public/about" routerLinkActive="active">ABOUT</a>
     </nav>
 
     <!-- Right Section with Icons -->
     <div class="header-right">
-      <!-- Search Toggle -->
-      <button mat-icon-button class="icon-button" (click)="toggleSearch()">
-        <mat-icon>search</mat-icon>
-      </button>
 
       <!-- Account -->
       <button mat-icon-button class="icon-button" [matMenuTriggerFor]="accountMenu">
@@ -38,17 +34,7 @@
     </button>
   </div>
 
-  <!-- Search Overlay -->
-  <div class="search-overlay" *ngIf="showSearch">
-    <div class="search-container">
-      <mat-icon class="search-icon">search</mat-icon>
-      <input type="text" class="search-input" placeholder="Search for books, authors, or genres..."
-        (keyup.escape)="closeSearch()">
-      <button mat-icon-button class="close-search" (click)="closeSearch()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-  </div>
+
 
   <!-- Mobile Navigation Menu -->
   <div class="mobile-menu" [class.active]="showMobileMenu">
@@ -131,7 +117,7 @@
     </div>
 
     <div class="cart-items">
-      <div class="cart-item" *ngFor="let item of cart.items">
+      <div class="cart-item" *ngFor="let item of cart?.items">
         <div class="item-image">
           <img [src]="item.productId.imageUrl || '/assets/images/book-default.png'" [alt]="item.productId.title">
         </div>
@@ -167,7 +153,7 @@
     <div class="cart-summary">
       <div class="summary-row total">
         <span>Total</span>
-        <span>${{cart.totalAmount}}</span>
+        <span>${{cart?.totalAmount}}</span>
       </div>
     </div>
 

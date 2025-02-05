@@ -39,8 +39,15 @@
 
     <mat-form-field appearance="outline" class="form-field">
       <mat-label>Category</mat-label>
-      <input matInput formControlName="category" placeholder="Enter category">
+      <mat-select formControlName="category">
+        <mat-option *ngFor="let category of bookCategories" [value]="category">{{category}}</mat-option>
+      </mat-select>
     </mat-form-field>
+
+
+
+
+
 
     <div class="image-upload-container">
       <div class="upload-area" (click)="fileInput.click()" [class.has-image]="imagePreview">

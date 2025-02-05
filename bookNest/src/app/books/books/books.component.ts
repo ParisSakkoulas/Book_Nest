@@ -6,6 +6,7 @@ import { Book } from 'src/app/models/Book.Model';
 import { BookService } from '../book.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { CurrentUserData } from 'src/app/models/CurrentUser.Data';
+import bookCategories from 'src/app/models/Book.Categories';
 
 @Component({
   selector: 'app-books',
@@ -24,6 +25,8 @@ export class BooksComponent implements OnInit {
     count: 0,
     totalRecords: 0
   };
+
+  categories: string[] = ["All", ...bookCategories];
 
   // Filter options for book search/filtering
   filters = {
@@ -76,7 +79,7 @@ export class BooksComponent implements OnInit {
       page: this.pagination.current,
       limit: this.filters.limit,
       search: this.filters.search,
-      category: this.filters.category,
+      category: this.filters.category === "All" ? undefined : this.filters.category,
       minPrice: this.filters.minPrice || undefined,
       maxPrice: this.filters.maxPrice || undefined,
       sortBy: this.filters.sortBy

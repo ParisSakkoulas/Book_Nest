@@ -20,10 +20,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Category</mat-label>
         <mat-select [(ngModel)]="filters.category" (selectionChange)="onSearch()">
-          <mat-option value="">All</mat-option>
-          <mat-option value="fiction">Fiction</mat-option>
-          <mat-option value="non-fiction">Non-Fiction</mat-option>
-          <mat-option value="Self Developement">Self Developement</mat-option>
+          <mat-option *ngFor="let category of categories" [value]="category">{{category}}</mat-option>
         </mat-select>
       </mat-form-field>
 

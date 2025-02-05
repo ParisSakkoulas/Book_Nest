@@ -196,7 +196,6 @@ export class ViewCustomerComponent implements OnInit {
 
 
 
-
   // Delete customer with confirmation
   deleteCustomer() {
 

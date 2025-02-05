@@ -50,7 +50,6 @@ export class MessageDialogComponent implements OnInit {
 
 
   closeDialog(result?: boolean) {
-    console.log('Dialog closing with result:', result);
     this.dialogRef.close();
 
   }

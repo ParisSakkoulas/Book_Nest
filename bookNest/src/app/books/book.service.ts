@@ -17,6 +17,8 @@ export class BookService {
   // API base URL from environment
   private baseUrl = environment.baseUrl;
 
+  private productionUrl = environment.productionUrl;
+
   // Store books data
   private books: Book[] = [];
 

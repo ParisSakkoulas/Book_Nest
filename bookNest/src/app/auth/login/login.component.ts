@@ -26,8 +26,6 @@ export class LoginComponent implements OnInit {
     //Check if token exitst on the URL and saves it on verificationCode variable
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       this.verificationCode = paramMap.get('token');
-
-      console.log('TOKEN GET')
     });
 
     //Calls verification method from auth service to verify the acount on the back
@@ -37,19 +35,18 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  // Form to submit the data of user for login
   onLogin(form: NgForm) {
-
 
     if (form.invalid) {
       return;
     }
 
-
     const userLogin = {
       email: form.value.email,
       password: form.value.password,
     }
-
+    
     this.authService.login(userLogin.email, userLogin.password);
 
   }
@@ -63,7 +60,6 @@ export class LoginComponent implements OnInit {
     dialogCreateConfig.disableClose = true;
     dialogCreateConfig.autoFocus = true;
     dialogCreateConfig.width = '800px';
-    //this.dialog.open(ForgotPasswordComponent, dialogCreateConfig)
   }
 
 }

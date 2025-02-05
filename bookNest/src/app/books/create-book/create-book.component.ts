@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookService } from '../book.service';
 import { MessageDialogService } from 'src/app/message.dialog/message-dialog.service';
 import { SpinnerService } from 'src/app/spinner/spinner.service';
+import bookCategories from 'src/app/models/Book.Categories';
 
 @Component({
   selector: 'app-create-book',
@@ -23,6 +24,8 @@ export class CreateBookComponent implements OnInit, OnDestroy {
 
   // Image preview URL
   imagePreview: string | null = null;
+
+  bookCategories: string[] = bookCategories;
 
   // Selected image file
   selectedFile: File | null = null;
@@ -47,10 +50,10 @@ export class CreateBookComponent implements OnInit, OnDestroy {
       isbn: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0.01)]],
       description: [''],
-      category: ['', Validators.required],
       stock: ['', [Validators.required, Validators.min(0)]],
       publishDate: ['', [Validators.pattern(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/(0|1|2)\d\d\d$/)]],
-      imageUrl: [null]
+      imageUrl: [null],
+      category: ['', Validators.required]
     });
 
 
@@ -74,7 +77,6 @@ export class CreateBookComponent implements OnInit, OnDestroy {
             const day = String(newDate.getDate()).padStart(2, '0'); // Get the day and pad it
             const month = String(newDate.getMonth() + 1).padStart(2, '0'); // Get the month (0-based) and pad it
             const year = newDate.getFullYear(); // Get the year
-
             formattedDate = `${day}/${month}/${year}`; // Combine into DD/MM/YYYY format
 
           }
@@ -151,7 +153,6 @@ export class CreateBookComponent implements OnInit, OnDestroy {
     formData.append('category', this.bookForm.get('category')?.value);
     formData.append('stock', this.bookForm.get('stock')?.value);
     formData.append('publishDate', this.bookForm.get('publishDate')?.value);
-
 
 
     if (this.selectedFile) {
@@ -231,7 +232,6 @@ export class CreateBookComponent implements OnInit, OnDestroy {
 
 
   }
-
 
 
   // Cleanup on component destroy

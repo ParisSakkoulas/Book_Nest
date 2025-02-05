@@ -16,9 +16,6 @@
 }
 
 
-
-
-
 .log-in-body {
   height: 100%;
   width: 100%;
@@ -99,7 +96,6 @@ p:hover {
   width: 100%;
 }
 
-/* Card Styles */
 .log-in-card {
   margin-top: 10%;
   width: 45%;
@@ -124,7 +120,6 @@ form {
 
 }
 
-/* Form Styles */
 .form-field {
   width: 100%;
   margin-bottom: 1rem;
@@ -145,16 +140,6 @@ form {
     transform: translateY(0);
   }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 @media(max-width: 1000px) {

@@ -1,6 +1,6 @@
 <div class="book-container" *ngIf="book">
   <div class="breadcrumb">
-    <a routerLink="/books/">Books</a> / {{ book._id }}
+    <a routerLink="/books/">Books</a> / {{ book.title }}
   </div>
 
   <div class="book-content">
@@ -46,8 +46,7 @@
       </div>
 
       <div class="action-buttons" *ngIf="currentUserData && currentUserData.role === 'ADMIN'">
-        <button color="primary" class="btn btn-primary" [disabled]="book.stock === 0"
-          [routerLink]="'/books/create/'+book._id">
+        <button color="primary" class="btn btn-primary" [routerLink]="'/books/create/'+book._id">
           <mat-icon>edit</mat-icon>
           Edit
         </button>
