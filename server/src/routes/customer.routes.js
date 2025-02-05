@@ -21,7 +21,6 @@ router.get('/customerFromUser/:userId', authenticateToken, getCustomerFromUser);
 router.get('/:customerId', authenticateToken, requireAdmin, getSingleCustomer);
 
 
-
 // Route: delete single customer
 router.delete('/:customerId', authenticateToken, requireAdmin, deleteCustomer);
 

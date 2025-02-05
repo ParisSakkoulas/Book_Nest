@@ -4,6 +4,7 @@ const User = require('../models/user.model');
 const Cart = require('../models/cart.models');
 const Book = require('../models/product.model');
 const Order = require('../models/order.model');
+const Customer = require('../models/customer.model');
 
 
 
@@ -299,11 +300,43 @@ exports.getAllOrders = async (req, res) => {
 
     try {
 
+
+        const { email, phone } = req.query;
+
+        let userIds = [];
+        let query = {};
+
+        // If email filter is provided,
+        if (email) {
+            const users = await User.find({
+                email: { $regex: email, $options: 'i' }
+            }).select('_id');
+            userIds = users.map(user => user._id);
+            query.userId = { $in: userIds };
+        }
+
+
+        //If phone is provide
+        if (phone) {
+            const customers = await Customer.find({
+                phoneNumber: { $regex: phone, $options: 'i' }
+            }).select('user');
+            const customerUserIds = customers.map(customer => customer.user);
+
+
+            if (email) {
+                query.userId = { $in: userIds.filter(id => customerUserIds.includes(id)) };
+            } else {
+                query.userId = { $in: customerUserIds };
+            }
+        }
+
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        const orders = await Order.find()
+        const orders = await Order.find(query)
+            .populate('userId', 'email')
             .populate('items.productId')
             .sort({ createdAt: -1 })
             .skip((page - 1) * limit)

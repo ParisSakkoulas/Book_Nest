@@ -13,10 +13,13 @@ router.post('/register', registerUser);
 // Route: Login user
 router.post('/login', loginUser);
 
+// Route: check email in use
 router.post('/checkEmail', checkEmailInUse);
 
+// Route: change email
 router.put('/updateEmail', authenticateToken, updateEmail);
 
+// Route: change password
 router.put('/updatePassword', authenticateToken, updatePassword);
 
 // Route : sent verificaiton link

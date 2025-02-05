@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const { USER_STATUS } = require('./user.status.constants');
 const { Schema } = mongoose;
 
-
-
-
-
-
 const userSchema = new Schema({
 
 

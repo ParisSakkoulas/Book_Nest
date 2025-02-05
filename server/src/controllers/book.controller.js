@@ -11,8 +11,7 @@ cloudinary.config({
 });
 
 
-
-
+// Controller: add new book
 exports.createBook = async (req, res) => {
 
     try {
@@ -69,6 +68,7 @@ exports.createBook = async (req, res) => {
     }
 };
 
+// Controller: get book
 exports.getBookById = async (req, res) => {
 
 
@@ -101,7 +101,7 @@ exports.getBookById = async (req, res) => {
 
 }
 
-
+// Controller: get books
 exports.getBooks = async (req, res) => {
 
 
@@ -209,6 +209,7 @@ exports.deleteBook = async (req, res) => {
 
 // Controller: Update book
 exports.updateBook = async (req, res) => {
+
     try {
         const bookToUpdateId = req.params.bookId;
         const bookToUpdate = await Book.findById(bookToUpdateId);
@@ -221,7 +222,7 @@ exports.updateBook = async (req, res) => {
             // Upload to Cloudinary
             const result = await cloudinary.uploader.upload(req.file.path);
             imageUrl = result.secure_url;
-            // Delete file from local uploads folder
+            // Delete file local
             fs.unlinkSync(req.file.path);
         }
 
