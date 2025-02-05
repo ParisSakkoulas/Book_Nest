@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: ' https://book-nest-d3vf.onrender.com/api',
+  baseUrl: ' https://book-nest-d3vf.onrender.com/api/',
   productionUrl: 'http://localhost:3000/api/'
 };
 
