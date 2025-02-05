@@ -29,7 +29,6 @@ export class AuthService {
 
 
   private baseUrl = environment.baseUrl;
-  private productionUrl = environment.productionUrl;
 
 
   constructor(private router: Router, private spinnerService: SpinnerService, private http: HttpClient, private messageService: MessageDialogService) { }

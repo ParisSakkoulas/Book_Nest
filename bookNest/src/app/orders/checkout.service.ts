@@ -17,7 +17,6 @@ export class CheckoutService {
   //Base url from enviroment
   private baseUrl = environment.baseUrl;
 
-  private productionUrl = environment.productionUrl;
 
 
   constructor(private http: HttpClient) { }
