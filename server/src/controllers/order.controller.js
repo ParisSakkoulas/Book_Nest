@@ -7,6 +7,9 @@ const Order = require('../models/order.model');
 const Customer = require('../models/customer.model');
 
 
+const mongoose = require('mongoose');
+const transporter = require('../config/email.config');
+
 
 
 
@@ -239,17 +242,24 @@ exports.updateOrderStatus = async (req, res) => {
             return res.status(400).json({ error: 'Invalid status' });
         }
 
-        const order = await Order.findById(orderId);
+        const order = await Order.findById(orderId)
+            .populate('userId', 'email')
+            .populate('items.productId', 'title')
+
         if (!order) {
             return res.status(404).json({ error: 'Order not found' });
         }
 
+        console.log(order);
         // Only admin can update any order status
         order.status = status;
         await order.save();
 
+        await exports.sendEmailForStatusOrder({ email: order.userId.email, order });
+
         res.status(200).json(order);
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error: error.message });
     }
 };
@@ -297,16 +307,12 @@ exports.cancelOrder = async (req, res) => {
 
 // Controller: get all orderss (admin)
 exports.getAllOrders = async (req, res) => {
-
     try {
-
-
-        const { email, phone } = req.query;
-
+        const { email, phone, status, orderId, searchText } = req.query;
         let userIds = [];
         let query = {};
 
-        // If email filter is provided,
+        // If email filter is provided
         if (email) {
             const users = await User.find({
                 email: { $regex: email, $options: 'i' }
@@ -315,20 +321,48 @@ exports.getAllOrders = async (req, res) => {
             query.userId = { $in: userIds };
         }
 
-
-        //If phone is provide
+        // If phone is provided
         if (phone) {
             const customers = await Customer.find({
                 phoneNumber: { $regex: phone, $options: 'i' }
             }).select('user');
             const customerUserIds = customers.map(customer => customer.user);
 
-
             if (email) {
                 query.userId = { $in: userIds.filter(id => customerUserIds.includes(id)) };
             } else {
                 query.userId = { $in: customerUserIds };
             }
+        }
+
+        // Search text handling
+        if (searchText) {
+            if (mongoose.Types.ObjectId.isValid(searchText)) {
+                query._id = new mongoose.Types.ObjectId(searchText);
+            }
+            else {
+
+                // Search for name
+                const customers = await Customer.find({
+                    $or: [
+                        { firstName: { $regex: searchText, $options: 'i' } },
+                        { lastName: { $regex: searchText, $options: 'i' } }
+                    ]
+                }).select('user');
+
+                const customerUserIds = customers.map(customer => customer.user);
+
+                if (query.userId) {
+                    query.userId = { $in: userIds.filter(id => customerUserIds.includes(id)) };
+                } else {
+                    query.userId = { $in: customerUserIds };
+                }
+            }
+        }
+
+        // Add status filter if provided
+        if (status) {
+            query.status = status;
         }
 
         const page = parseInt(req.query.page) || 1;
@@ -339,13 +373,30 @@ exports.getAllOrders = async (req, res) => {
             .populate('userId', 'email')
             .populate('items.productId')
             .sort({ createdAt: -1 })
-            .skip((page - 1) * limit)
+            .skip(skip)
             .limit(limit);
 
-        const total = await Order.countDocuments();
+        // Get customer info for orders
+        const ordersWithCustomerInfo = await Promise.all(orders.map(async (order) => {
+            const orderObj = order.toObject();
+            if (orderObj.userId) {
+                const customer = await Customer.findOne({ user: orderObj.userId })
+                    .select('firstName lastName');
+                if (customer) {
+                    orderObj.customerName = {
+                        firstName: customer.firstName,
+                        lastName: customer.lastName
+                    };
+                }
+            }
+            return orderObj;
+        }));
+
+        // Count documents with the same query for accurate pagination
+        const total = await Order.countDocuments(query);
 
         res.status(200).json({
-            orders,
+            orders: ordersWithCustomerInfo,
             pagination: {
                 currentPage: page,
                 totalPages: Math.ceil(total / limit),
@@ -354,9 +405,119 @@ exports.getAllOrders = async (req, res) => {
         });
 
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             error: error.message
         });
     }
+};
 
-}
+//Method for user about order status change
+exports.sendEmailForStatusOrder = async ({ email, order }) => {
+    try {
+
+
+        console.log(email)
+        const statusStyles = {
+            'Pending': { color: '#FFA500', message: 'Your order has been received and is being reviewed.' },
+            'Processing': { color: '#3498db', message: 'Your order is being processed and prepared for shipment.' },
+            'Shipped': { color: '#2ecc71', message: 'Your order is on its way to you!' },
+            'Delivered': { color: '#27ae60', message: 'Your order has been delivered successfully.' },
+            'Cancelled': { color: '#e74c3c', message: 'Your order has been cancelled.' }
+        };
+
+        const statusInfo = statusStyles[order.status];
+
+        const mailOptions = {
+            from: process.env.EMAIL_FROM,
+            to: email,
+            subject: `Order Status Update - ${order.status} - BookNest`,
+            html: `
+                <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif;">
+                    <tr>
+                        <td align="center">
+                            <table width="600px" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                                <!-- Header -->
+                                <tr>
+                                    <td align="center" style="padding: 30px; background-color: #86CBFC; border-radius: 10px 10px 0 0;">
+                                        <h1 style="color: white; margin: 0;">BookNest</h1>
+                                    </td>
+                                </tr>
+
+                                <!-- Status Update -->
+                                <tr>
+                                    <td align="center" style="padding: 30px;">
+                                        <h2>Order Status Update</h2>
+                                        <div style="background-color: ${statusInfo.color}; color: white; padding: 10px 20px; border-radius: 5px; margin: 20px 0;">
+                                            <h3 style="margin: 0;">Status: ${order.status}</h3>
+                                        </div>
+                                        <p style="color: #666; line-height: 1.6;">${statusInfo.message}</p>
+                                    </td>
+                                </tr>
+
+                                <!-- Order Details -->
+                                <tr>
+                                    <td style="padding: 0 30px;">
+                                        <div style="border: 1px solid #eee; border-radius: 5px; padding: 20px;">
+                                            <h3 style="color: #333; margin-top: 0;">Order Details</h3>
+                                            <p style="margin: 5px 0;"><strong>Order ID:</strong> #${order._id}</p>
+                                            <p style="margin: 5px 0;"><strong>Order Date:</strong> ${new Date(order.orderDate).toLocaleDateString()}</p>
+                                            <p style="margin: 5px 0;"><strong>Total Amount:</strong> $${order.totalAmount.toFixed(2)}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Items List -->
+                                <tr>
+                                    <td style="padding: 30px;">
+                                        <table width="100%" style="border-collapse: collapse;">
+                                            <tr style="background-color: #f8f9fa;">
+                                                <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Item</th>
+                                                <th style="padding: 10px; text-align: right; border-bottom: 2px solid #dee2e6;">Qty</th>
+                                                <th style="padding: 10px; text-align: right; border-bottom: 2px solid #dee2e6;">Price</th>
+                                            </tr>
+                                            ${order.items.map(item => `
+                                                <tr>
+                                                    <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">${item.productId.title}</td>
+                                                    <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">${item.quantity}</td>
+                                                    <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">$${item.price.toFixed(2)}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <!-- Shipping Address -->
+                                <tr>
+                                    <td style="padding: 0 30px 30px;">
+                                        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px;">
+                                            <h3 style="color: #333; margin-top: 0;">Shipping Address</h3>
+                                            <p style="margin: 5px 0;">${order.shippingAddress.street}</p>
+                                            <p style="margin: 5px 0;">${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.zipCode}</p>
+                                            <p style="margin: 5px 0;">${order.shippingAddress.country}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Footer -->
+                                <tr>
+                                    <td style="padding: 30px; background-color: #f8f9fa; border-radius: 0 0 10px 10px; text-align: center;">
+                                        <p style="margin: 0; color: #666;">Thank you for shopping with BookNest!</p>
+                                        <p style="margin: 10px 0 0; color: #666;">If you have any questions, please contact our support team.</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            `
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        return info;
+
+    } catch (error) {
+        console.error('Email sending error:', error.message);
+        throw new Error('Failed to send order status update email');
+    }
+};

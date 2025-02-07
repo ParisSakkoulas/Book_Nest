@@ -232,6 +232,8 @@ exports.updateBook = async (req, res) => {
             publishDate = req.body.publishDate ? new Date(req.body.publishDate) : null;
         }
 
+        console.log(publishDate)
+
         const updateFields = {
             title: req.body.title ?? bookToUpdate.title,
             author: req.body.author ?? bookToUpdate.author,

@@ -119,49 +119,51 @@ exports.createCustomer = async (req, res) => {
 // Controller: Get all costumers
 exports.getCustomers = async (req, res) => {
     try {
-        // Get page and limit from query params with defaults
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
-        const sortField = req.query.sortField || 'createdAt';
-        const sortOrder = req.query.sortOrder || -1;
-        const searchTerm = req.query.search || '';
-        const customerStatus = req.query.customerStatus;
-        const isActive = req.query.isActive;
+        const { email, phone, firstName, lastName, searchText, customerStatus, isActive } = req.query;
 
-
-
-        // Create a MongoDB search query
         let searchQuery = {};
 
-        if (searchTerm) {
+        // Handle email search
+        if (email) {
 
-            // Check if searchTerm matches email format
-            const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(searchTerm);
+            const users = await User.find({
+                email: { $regex: email, $options: 'i' }
+            }).select('_id');
 
-            // Check if searchTerm matches phone format (adjust regex as needed)
-            const isPhone = /^\+?[\d\s-()]{8,}$/.test(searchTerm.replace(/\s+/g, ''));
+            const userIds = users.map(user => user._id);
+            searchQuery.user = { $in: userIds };
+        }
 
-            if (isEmail) {
-                // If it's an email, search only in email field
-                console.log(isEmail)
-                searchQuery = { user: { $exists: true } };
-                searchQuery = { 'email': { $regex: searchTerm, $options: 'i' } };
-                console.log(searchQuery)
-            } else if (isPhone) {
-                // If it's a phone number, search only in phoneNumber field
-                // Remove spaces and special characters for comparison
-                const cleanPhoneNumber = searchTerm.replace(/[\s()-]/g, '');
-                searchQuery = { phoneNumber: { $regex: searchTerm.replace(/[\s()-]/g, ''), $options: 'i' } };
-            } else {
-                // For other cases, search across multiple fields
-                searchQuery = {
-                    $or: [
-                        { firstName: { $regex: searchTerm, $options: 'i' } },
-                        { lastName: { $regex: searchTerm, $options: 'i' } },
-                        { phoneNumber: { $regex: searchTerm, $options: 'i' } }
-                    ]
-                };
-            }
+        // Handle phone search
+        else if (phone) {
+            searchQuery.phoneNumber = { $regex: phone, $options: 'i' };
+        }
+
+        // Handle first name and last name search
+        else if (firstName && lastName) {
+            searchQuery.$and = [
+                { firstName: { $regex: firstName, $options: 'i' } },
+                { lastName: { $regex: lastName, $options: 'i' } }
+            ];
+        }
+
+        // Handle general search text
+        else if (searchText) {
+
+            const users = await User.find({
+                email: { $regex: searchText, $options: 'i' }
+            }).select('_id');
+
+            const userIds = users.map(user => user._id);
+
+            searchQuery.$or = [
+                { firstName: { $regex: searchText, $options: 'i' } },
+                { lastName: { $regex: searchText, $options: 'i' } },
+                { phoneNumber: { $regex: searchText, $options: 'i' } },
+                { user: { $in: userIds } }
+            ];
         }
 
         // Add customerStatus filter if provided
@@ -174,32 +176,45 @@ exports.getCustomers = async (req, res) => {
             searchQuery.isActive = isActive === 'true';
         }
 
-        // Calculate skip value for pagination
         const skip = (page - 1) * limit;
-
-        // Create sort object
-        const sortObj = {};
-        sortObj[sortField] = sortOrder;
 
         // Get total count for pagination
         const total = await Customer.countDocuments(searchQuery);
 
-        console.log(searchQuery)
-
-        // Get customers with pagination
+        // Get customers with pagination and populate user fields
         const customers = await Customer.find(searchQuery)
-            .sort(sortObj)
+            .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
-            .populate('user');
+            .populate({
+                path: 'user',
+                select: '_id email role status uniqueString createdAt updatedAt'
+            });
 
-        console.log(customers)
 
-        // Send response
         return res.status(200).json({
             success: true,
             data: {
-                customers,
+                customers: customers.map(customer => ({
+                    _id: customer._id,
+                    firstName: customer.firstName,
+                    lastName: customer.lastName,
+                    phoneNumber: customer.phoneNumber,
+                    address: customer.address,
+                    customerStatus: customer.customerStatus,
+                    isActive: customer.isActive,
+                    createdAt: customer.createdAt,
+                    updatedAt: customer.updatedAt,
+                    user: customer.user ? {
+                        _id: customer.user._id,
+                        email: customer.user.email,
+                        role: customer.user.role,
+                        status: customer.user.status,
+                        uniqueString: customer.user.uniqueString,
+                        createdAt: customer.user.createdAt,
+                        updatedAt: customer.user.updatedAt
+                    } : null
+                })),
                 pagination: {
                     total,
                     page,
@@ -210,13 +225,13 @@ exports.getCustomers = async (req, res) => {
         });
 
     } catch (err) {
+        console.error('Error in getCustomers:', err);
         return res.status(500).json({
             success: false,
             message: err.message
         });
     }
-}
-
+};
 
 // Controller: Get single costumer
 exports.getSingleCustomer = async (req, res) => {
