@@ -19,7 +19,7 @@ export class CheckoutService {
   private baseUrl = environment.baseUrl;
 
   //local url
-  private localUrl = environment.localUrl;
+  //private localUrl = environment.localUrl;
 
 
 

@@ -21,7 +21,7 @@ export class CustomersService {
   private baseUrl = environment.baseUrl;
 
   //local url
-  private localUrl = environment.localUrl;
+  //private localUrl = environment.localUrl;
 
 
   constructor(private http: HttpClient, private spinnerService: SpinnerService, private messageService: MessageDialogService

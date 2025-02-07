@@ -13,7 +13,7 @@ export class CartService {
   private baseUrl = environment.baseUrl;
 
   //local url
-  private localUrl = environment.localUrl;
+  //private localUrl = environment.localUrl;
 
 
 

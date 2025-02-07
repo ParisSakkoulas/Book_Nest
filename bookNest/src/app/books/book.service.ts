@@ -18,7 +18,7 @@ export class BookService {
   private baseUrl = environment.baseUrl;
 
   //Local Url
-  private localUrl = environment.localUrl;
+  //private localUrl = environment.localUrl;
 
 
 
