@@ -28,7 +28,11 @@ export class AuthService {
   private currentUser = new BehaviorSubject<any>(null);
 
 
+  //Base url
   private baseUrl = environment.baseUrl;
+
+  //Local url
+  private localUrl = environment.localUrl;
 
 
   constructor(private router: Router, private spinnerService: SpinnerService, private http: HttpClient, private messageService: MessageDialogService) { }
@@ -133,7 +137,7 @@ export class AuthService {
   // Verifies user email
   verifyUser(verificationCode: any) {
 
-    this.http.get<{ message: string, type: string }>(`${this.baseUrl}/auth/verify/${verificationCode}`).subscribe({
+    this.http.get<{ message: string, type: string }>(`${this.localUrl}/auth/verify/${verificationCode}`).subscribe({
       next: (response) => {
         console.log(response);
         this.messageService.showSuccess(response.message);

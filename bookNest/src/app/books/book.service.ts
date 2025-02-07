@@ -17,6 +17,9 @@ export class BookService {
   // API base URL from environment
   private baseUrl = environment.baseUrl;
 
+  //Local Url
+  private localUrl = environment.localUrl;
+
 
 
   // Store books data
@@ -113,7 +116,7 @@ export class BookService {
   //Update existing book
   updateBook(bookId: string, bookData: FormData) {
     return this.http.put<{ message: string; updatedBook: Book }>(
-      `${this.baseUrl}/${bookId}`,
+      `${this.baseUrl}/books/${bookId}`,
       bookData
     )
   }

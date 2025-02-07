@@ -2,7 +2,10 @@
   <div class="books-header">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Search books</mat-label>
-      <input matInput [(ngModel)]="filters.search" (keyup.enter)="onSearch()">
+      <input matInput
+             [(ngModel)]="filters.search"
+             (input)="onSearchChange($event)"
+             (keyup.enter)="onSearch()">
       <button mat-icon-button matSuffix (click)="onSearch()">
         <mat-icon>search</mat-icon>
       </button>

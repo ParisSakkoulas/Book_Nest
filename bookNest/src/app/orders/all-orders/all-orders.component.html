@@ -3,8 +3,8 @@
 
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>Search for order</mat-label>
-    <input #searchInput matInput placeholder="Enter order id, user email or customer phone" [(ngModel)]="searchTerm"
-      (keyup)="onSearchEnter($event)">
+    <input #searchInput matInput placeholder="Enter order id, user email, full name or customer phone"
+      [(ngModel)]="searchTerm" (keyup)="onSearchEnter($event)">
     <mat-icon matPrefix>search</mat-icon>
     <button mat-icon-button matSuffix (click)="applyFilter()">
       <mat-icon>search</mat-icon>
@@ -15,8 +15,10 @@
     <mat-label>Status</mat-label>
     <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilter()">
       <mat-option value="">All</mat-option>
-      <mat-option value="Delivered">Delivered</mat-option>
       <mat-option value="Pending">Pending</mat-option>
+      <mat-option value="Processing">Processing</mat-option>
+      <mat-option value="Shipped">Shipped</mat-option>
+      <mat-option value="Delivered">Delivered</mat-option>
       <mat-option value="Cancelled">Cancelled</mat-option>
     </mat-select>
   </mat-form-field>
@@ -67,10 +69,18 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer </th>
       <td mat-cell *matCellDef="let order">
         <div class="customer-info">
-          <div class="avatar">{{order.userId ? order.userId.email.slice(0,1).toUpperCase() : 'US'}}</div>
+          <div class="avatar">
+            {{order.customerName?.firstName?.charAt(0) || order.userId?.email?.charAt(0)?.toUpperCase() || 'US'}}
+          </div>
           <div class="customer-details">
-            <span class="city">{{order.shippingAddress?.city || 'N/A'}}</span>
-            <span class="country">{{order.shippingAddress?.country || 'N/A'}}</span>
+            <span class="customer-name">
+              {{(order.customerName?.firstName || 'N/A') + ' ' + (order.customerName?.lastName || '')}}
+            </span>
+            <span class="customer-email">{{order.userId?.email || 'N/A'}}</span>
+            <div class="address">
+              <span class="city">{{order.shippingAddress?.city || 'N/A'}}</span>,
+              <span class="country">{{order.shippingAddress?.country || 'N/A'}}</span>
+            </div>
           </div>
         </div>
       </td>

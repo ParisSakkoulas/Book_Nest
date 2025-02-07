@@ -17,7 +17,12 @@ export class CustomersService {
   private paginationSubject = new BehaviorSubject<{ limit: number, page: number, pages: number, total: number }>({ limit: 10, page: 1, pages: 1, total: 0 });
 
 
+  //base url
   private baseUrl = environment.baseUrl;
+
+  //local url
+  private localUrl = environment.localUrl;
+
 
   constructor(private http: HttpClient, private spinnerService: SpinnerService, private messageService: MessageDialogService
   ) { }
@@ -28,7 +33,27 @@ export class CustomersService {
       .set('limit', params.limit.toString());
 
     if (params.search) {
-      httpParams = httpParams.set('search', params.search);
+
+
+
+      if (params.search.includes('@')) {
+        httpParams = httpParams.append('email', params.search);
+      }
+
+      else if (/^\d+$/.test(params.search)) {
+        httpParams = httpParams.append('phone', params.search);
+      }
+
+      else if (params.search.includes(' ')) {
+        const [firstName, lastName] = params.search.split(' ');
+        httpParams = httpParams.append('firstName', firstName);
+        httpParams = httpParams.append('lastName', lastName);
+      }
+
+      else {
+        httpParams = httpParams.append('searchText', params.search);
+      }
+
     }
     if (params.customerStatus) {
       httpParams = httpParams.set('customerStatus', params.customerStatus);
@@ -36,6 +61,8 @@ export class CustomersService {
     if (params.isActive !== undefined && params.isActive !== '') {
       httpParams = httpParams.set('isActive', params.isActive);
     }
+
+    console.log(httpParams)
 
     this.spinnerService.show();
     this.http.get<{

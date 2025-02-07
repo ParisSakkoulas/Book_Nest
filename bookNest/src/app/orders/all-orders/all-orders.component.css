@@ -20,11 +20,13 @@
   overflow: hidden;
   margin: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 /* Table Styles */
 .mat-table {
   width: 100%;
+
 }
 
 .mat-header-cell {

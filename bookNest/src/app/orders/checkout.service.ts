@@ -5,6 +5,7 @@ import { PaginatedOrdersResponse } from '../models/PaginatedOrderItems.Model';
 import { Order } from '../models/Order.Model';
 import { SingleOrderResponse } from '../models/SingleOrderResponse';
 import { environment } from 'src/environments/environment';
+import { SpinnerService } from '../spinner/spinner.service';
 
 
 
@@ -14,12 +15,15 @@ import { environment } from 'src/environments/environment';
 })
 export class CheckoutService {
 
-  //Base url from enviroment
+  //base url from
   private baseUrl = environment.baseUrl;
 
+  //local url
+  private localUrl = environment.localUrl;
 
 
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient, private spinnerService: SpinnerService,) { }
 
   // Get headers with session ID if available
   private getHeaders(): HttpHeaders {
@@ -53,7 +57,6 @@ export class CheckoutService {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
-
     return this.http.get<PaginatedOrdersResponse>(`${this.baseUrl}/orders/myOrders`,);
   }
 
@@ -66,17 +69,40 @@ export class CheckoutService {
 
 
   // Get all orders
-  getOrders(params?: { searchTerm?: string; page?: number; limit?: number }): Observable<PaginatedOrdersResponse> {
+  getOrders(params?: { searchTerm?: string; status?: string, page?: number; limit?: number }): Observable<PaginatedOrdersResponse> {
 
+    console.log(params)
     let queryParams = new HttpParams();
 
     if (params?.searchTerm) {
       if (params.searchTerm.includes('@')) {
         queryParams = queryParams.append('email', params.searchTerm);
-      } else {
+      }
+
+      else if (/^\d+$/.test(params?.searchTerm)) {
         queryParams = queryParams.append('phone', params.searchTerm);
+
+
+      }
+
+      else if (params.searchTerm.includes(' ')) {
+
+        const [firstName, lastName] = params.searchTerm.split(' ');
+        queryParams = queryParams.append('firstName', firstName);
+        queryParams = queryParams.append('lastName', lastName);
+      }
+
+      else {
+        queryParams = queryParams.append('searchText', params.searchTerm);
+
       }
     }
+
+    // Add status to query params
+    if (params?.status) {
+      queryParams = queryParams.append('status', params.status);
+    }
+
     if (params?.page) {
       queryParams = queryParams.append('page', params.page.toString());
     }
@@ -100,7 +126,7 @@ export class CheckoutService {
       .set('page', page.toString())
       .set('limit', limit.toString());
 
-    return this.http.get<{ orders: Order[], paginator: PaginatedOrdersResponse }>(`h${this.baseUrl}/orders/user/${userId}`, { params });
+    return this.http.get<{ orders: Order[], paginator: PaginatedOrdersResponse }>(`${this.baseUrl}/orders/user/${userId}`, { params });
   }
 
 }

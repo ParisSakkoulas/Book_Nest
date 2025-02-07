@@ -3,7 +3,14 @@ import { ShippingAddress } from "./ShippingAddress.Model";
 
 export interface Order {
   _id: string;
-  userId: string;
+  userId: {
+    _id: string;
+    email: string;
+  };
+  customerName?: {
+    firstName: string;
+    lastName: string;
+  };
   sessionId: string | null;
   items: OrderItem[];
   shippingAddress: ShippingAddress;

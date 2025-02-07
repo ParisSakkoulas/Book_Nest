@@ -9,7 +9,14 @@ import { AuthService } from './auth/auth.service';
 })
 export class CartService {
 
+  //base url
   private baseUrl = environment.baseUrl;
+
+  //local url
+  private localUrl = environment.localUrl;
+
+
+
   private cartSubject = new BehaviorSubject<any>(null);
   cart$ = this.cartSubject.asObservable();
 

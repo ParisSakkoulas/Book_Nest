@@ -59,7 +59,6 @@ export class AllOrdersComponent implements OnInit {
     this.loadOrders();
     this.extractCategories();
 
-
   }
 
   ngAfterViewInit() {
@@ -68,13 +67,24 @@ export class AllOrdersComponent implements OnInit {
   }
 
   loadOrders(): void {
-    this.orderService.getOrders().subscribe({
+
+    const params = {
+      status: this.statusFilter,
+      page: this.paginator?.pageIndex + 1 || 1,
+      limit: this.paginator?.pageSize || 10
+    };
+
+    this.spinnerService.show();
+    this.orderService.getOrders(params).subscribe({
       next: (response: any) => {
         this.dataSource.data = response.orders;
         console.log(response.orders)
         this.totalOrders = response.pagination.totalOrders;
+        this.spinnerService.hide();
+
       },
       error: (error) => {
+        this.spinnerService.hide();
         console.error('Error loading orders:', error);
       }
     });
@@ -98,8 +108,11 @@ export class AllOrdersComponent implements OnInit {
       return;
     }
 
+    console.log(this.statusFilter)
+
     const params = {
       searchTerm: this.searchTerm.trim(),
+      status: this.statusFilter,
       page: this.paginator?.pageIndex + 1 || 1,
       limit: this.paginator?.pageSize || 10
     };
@@ -144,6 +157,7 @@ export class AllOrdersComponent implements OnInit {
 
   onSearchEnter(event: KeyboardEvent) {
     this.applyFilter();
+    console.log(this.statusFilter)
   }
 
 

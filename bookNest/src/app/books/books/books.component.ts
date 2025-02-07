@@ -7,6 +7,7 @@ import { BookService } from '../book.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { CurrentUserData } from 'src/app/models/CurrentUser.Data';
 import bookCategories from 'src/app/models/Book.Categories';
+import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-books',
@@ -42,6 +43,12 @@ export class BooksComponent implements OnInit {
   currentUserData !: CurrentUserData;
 
 
+  // for the search
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
+
+
+
   constructor(
     private bookService: BookService,
     private router: Router,
@@ -67,8 +74,18 @@ export class BooksComponent implements OnInit {
           this.currentUserData = user;
         }
       }
-
     )
+
+
+    // Initialize the search subscription
+    this.searchSubscription = this.searchSubject
+      .pipe(
+        debounceTime(300), // Wait for 300ms pause in typing
+        distinctUntilChanged() // Only emit if value is different from previous
+      )
+      .subscribe(() => {
+        this.onSearch();
+      });
 
 
   }
@@ -111,12 +128,12 @@ export class BooksComponent implements OnInit {
     );
   }
 
-  // Navigate to book details page
+  // go to book details page
   onViewBook(bookId: string) {
     this.router.navigate(['/books', bookId]);
   }
 
-  // Get stock level indicator
+  //get stock level indicator
   getStockStatus(stock: number): { color: string; text: string } {
     if (stock > 10) {
       return { color: 'success', text: 'In Stock' };
@@ -124,6 +141,19 @@ export class BooksComponent implements OnInit {
       return { color: 'warning', text: 'Low Stock' };
     } else {
       return { color: 'danger', text: 'Out of Stock' };
+    }
+  }
+
+
+  // add onSearchChange method
+  onSearchChange(event: any): void {
+    this.searchSubject.next(event.target.value);
+  }
+
+
+  ngOnDestroy() {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
     }
   }
 }
