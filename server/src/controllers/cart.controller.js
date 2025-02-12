@@ -180,3 +180,55 @@ exports.getCart = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+// controller : Clear all item carts
+exports.clearCart = async (req, res, next) => {
+
+
+    try {
+
+        const userId = req.user?.userId;
+        const sessionId = req.headers['x-session-id'];
+
+        if (!userId && !sessionId) {
+            return res.status(400).send({ error: 'Session ID required for guest cart' });
+        }
+
+        console.log("user se ", userId)
+
+
+        // Find and update the cart in one operation
+        const updatedCart = await Cart.findOneAndUpdate(
+            userId ? { userId } : { sessionId },
+            {
+                $set: {
+                    items: [],
+                    totalAmount: 0
+                }
+            },
+            { new: true });
+
+        if (!updatedCart) {
+            return res.status(404).json({
+                message: 'Cart not found'
+            });
+        }
+
+
+        return res.status(200).json({
+            message: 'Cart cleared successfully',
+            cart: updatedCart
+        });
+
+
+    } catch (err) {
+
+        console.log(err)
+        res.status(500).json({ error: err.message });
+    }
+
+
+
+
+}

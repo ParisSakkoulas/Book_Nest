@@ -274,38 +274,61 @@ exports.sendVerificationEmail = async ({ email, verificationToken }) => {
             to: email,
             subject: 'Email Verification - BookNest',
             html: `
-                <table width="100%" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td align="center">
-                            <table width="80%" cellpadding="0" cellspacing="0" style="background-color: #86CBFC;">
-                                <tr>
-                                    <td align="center" style="padding: 3%;">
-                                        <h1 style="color: white; line-height: 160%;">BookNest</h1>
-                                        <h1 style="color: white;">Hello</h1>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="center" style="margin-top: 10%;">
-                                        <h1 style="line-height: 150%; margin-bottom: 8%;">Please verify your email address</h1>
-                                        <a href="http://localhost:4200/auth/login/verify/${verificationToken}" 
-                                           style="text-decoration: none; color: inherit; width: 30%; display: block; 
-                                                  height: 50px; line-height: 50px; text-align: center; 
-                                                  background-color: white; font-weight: 600; font-size: 20px; 
-                                                  border-radius: 15px;">
-                                            Verify Email
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="center" style="font-size: 20px; padding: 20px;">
-                                        <p>Thanks,</p>
-                                        <p>BookNest Team</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
+               <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif;">
+    <tr>
+        <td align="center" style="padding: 40px 0; background-color: #f5f5f5;">
+            <table width="600px" cellpadding="0" cellspacing="0" style="background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <!-- Header Section -->
+                <tr>
+                    <td align="center" style="padding: 40px 40px 20px; background-color: #1E88E5; border-radius: 8px 8px 0 0;">
+                        <h1 style="color: white; margin: 0; font-size: 32px; font-weight: 700;">BookNest</h1>
+                        <p style="color: white; margin: 10px 0 0; font-size: 20px;">Hello!</p>
+                    </td>
+                </tr>
+
+                <!-- Main Content Section -->
+                <tr>
+                    <td align="center" style="padding: 40px 40px 30px;">
+                        <h2 style="color: #333; font-size: 24px; margin: 0 0 20px;">Please verify your email address</h2>
+                        <p style="color: #666; font-size: 16px; line-height: 24px; margin: 0 0 30px;">
+                            To complete your registration and access all features of BookNest, please verify your email address.
+                        </p>
+                        <a href="http://localhost:4200/auth/login/verify/${verificationToken}" 
+                           style="display: inline-block; padding: 15px 30px; background-color: #1E88E5; 
+                                  color: white; text-decoration: none; font-weight: 600; font-size: 16px; 
+                                  border-radius: 6px; transition: background-color 0.3s ease;">
+                            Verify Email
+                        </a>
+                    </td>
+                </tr>
+
+                <!-- Footer Section -->
+                <tr>
+                    <td style="padding: 30px 40px; background-color: #f8f9fa; border-top: 1px solid #eee; border-radius: 0 0 8px 8px;">
+                        <table width="100%">
+                            <tr>
+                                <td align="center" style="color: #666; font-size: 14px;">
+                                    <p style="margin: 0 0 10px;">This link will expire in 24 hours.</p>
+                                    <p style="margin: 0 0 10px;">If you didn't request this verification, please ignore this email.</p>
+                                    <p style="margin: 0;">Thanks,<br/>BookNest Team</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Additional Info -->
+            <table width="600px" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td align="center" style="padding: 20px 0; color: #666; font-size: 12px;">
+                        <p style="margin: 0;">Need help? Contact us at academicnetsp@gmail.com</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
             `
         };
 

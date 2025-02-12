@@ -23,24 +23,23 @@ exports.createOrder = async (req, res) => {
         const sessionId = req.headers['x-session-id'];
         const { shippingAddress, visitorInfo } = req.body;
 
-        // Find cart based on user type
+        // Find cart 
         const cart = await Cart.findOne(userId ? { userId } : { sessionId })
             .populate('items.productId');
 
         if (!cart || cart.items.length === 0) {
             return res.status(400).send({ error: 'Cart is empty' });
         }
-        console.error('shippingAddress:', shippingAddress);
-        console.error('visitorInfo:', visitorInfo);
 
-        // Create order based on user type
+
+
+        // Create order
         const order = new Order({
             userId: userId || null,
             sessionId: !userId ? sessionId : null,
             items: cart.items,
             totalAmount: cart.totalAmount,
             shippingAddress: shippingAddress.shippingAddress,
-            // Only include visitorInfo for non-authenticated users
             visitorInfo: !userId ? visitorInfo : undefined,
             status: 'Pending',
             createdAt: new Date()
@@ -62,13 +61,15 @@ exports.createOrder = async (req, res) => {
         }
 
         await order.save();
-        await Cart.findByIdAndDelete(cart._id);
 
-        // Return populated order
+        // Return order
         const populatedOrder = await Order.findById(order._id)
             .populate('items.productId', 'title author price imageUrl');
 
         res.status(201).json(populatedOrder);
+
+
+
     } catch (error) {
         console.error('Order creation error:', error);
         res.status(500).json({ error: error.message });
@@ -381,11 +382,12 @@ exports.getAllOrders = async (req, res) => {
             const orderObj = order.toObject();
             if (orderObj.userId) {
                 const customer = await Customer.findOne({ user: orderObj.userId })
-                    .select('firstName lastName');
+                    .select('firstName lastName phoneNumber');
                 if (customer) {
                     orderObj.customerName = {
                         firstName: customer.firstName,
-                        lastName: customer.lastName
+                        lastName: customer.lastName,
+                        phoneNumber: customer.phoneNumber
                     };
                 }
             }
