@@ -43,9 +43,19 @@ export class AppComponent {
 
   // Subscribe to cart updates
   cartSubscription = this.cartService.cart$.subscribe(cart => {
+
+    console.log(cart)
+
+    //If cart has items
     if (cart) {
       this.cart = cart;
       this.cartItemCount = cart.items.length;
+    }
+
+    //If cart has not items
+    if (!cart) {
+      this.cart = cart;
+      this.cartItemCount = 0;
     }
   });
 

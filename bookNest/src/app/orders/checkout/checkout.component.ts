@@ -6,6 +6,8 @@ import { CartService } from 'src/app/cart.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { CustomersService } from 'src/app/customers/customer.service';
 import { CurrentUserData } from 'src/app/models/CurrentUser.Data';
+import { response } from 'express';
+import { SpinnerService } from 'src/app/spinner/spinner.service';
 
 @Component({
   selector: 'app-checkout',
@@ -38,6 +40,7 @@ export class CheckoutComponent implements OnInit {
     private cartService: CartService,
     private authService: AuthService,
     private customerService: CustomersService,
+    private spinnerService: SpinnerService,
     private fb: FormBuilder,
     private router: Router
   ) {
@@ -115,12 +118,22 @@ export class CheckoutComponent implements OnInit {
         this.loading = true;
         this.error = '';
 
+        this.spinnerService.show();
+
         this.checkoutService.createOrder({
           shippingAddress: this.shippingForm.value
         }).subscribe({
           next: (order) => {
             this.orderId = order._id;
             this.orderComplete = true;
+            this.cartService.clearCart().subscribe({
+              next: (response) => { },
+              error: (error) => { console.log(error) }
+            })
+
+            this.spinnerService.hide();
+
+
           },
           error: (err) => {
             this.error = err.error?.error || 'Failed to create order';

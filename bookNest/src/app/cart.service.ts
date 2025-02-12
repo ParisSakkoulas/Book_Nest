@@ -88,6 +88,12 @@ export class CartService {
     return this.http.get(`${this.baseUrl}/cart`, { headers });
   }
 
+  clearCart() {
+    const headers = this.getHeaders();
+    this.cartSubject.next(null)
+    return this.http.patch(`${this.baseUrl}/cart/clear`, { headers });
+  }
+
 
   clearVisitorSession() {
     localStorage.removeItem('x-session-id');

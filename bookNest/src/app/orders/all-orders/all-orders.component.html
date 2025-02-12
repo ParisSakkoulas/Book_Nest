@@ -31,7 +31,7 @@
     <!-- Order ID Column -->
     <ng-container matColumnDef="orderId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Order ID </th>
-      <td mat-cell *matCellDef="let order"> #{{order._id.slice(-4)}} </td>
+      <td mat-cell *matCellDef="let order"> #{{order._id}} </td>
     </ng-container>
 
     <!-- Date Column -->
@@ -70,13 +70,16 @@
       <td mat-cell *matCellDef="let order">
         <div class="customer-info">
           <div class="avatar">
-            {{order.customerName?.firstName?.charAt(0) || order.userId?.email?.charAt(0)?.toUpperCase() || 'US'}}
+            {{order.customerName?.firstName?.charAt(0) +order.customerName?.lastName?.charAt(0) ||
+            order.userId?.email?.charAt(0)?.toUpperCase() || 'US'}}
           </div>
           <div class="customer-details">
             <span class="customer-name">
               {{(order.customerName?.firstName || 'N/A') + ' ' + (order.customerName?.lastName || '')}}
             </span>
             <span class="customer-email">{{order.userId?.email || 'N/A'}}</span>
+            <span class="customer-phone">{{order.customerName?.phoneNumber}}</span>
+
             <div class="address">
               <span class="city">{{order.shippingAddress?.city || 'N/A'}}</span>,
               <span class="country">{{order.shippingAddress?.country || 'N/A'}}</span>
@@ -120,6 +123,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <mat-paginator [length]="totalOrders" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
+  <mat-paginator [length]="totalOrders" [pageSize]="10" [pageSizeOptions]="[1,2,5, 10, 25, 100]"
+    aria-label="Select page">
   </mat-paginator>
 </div>

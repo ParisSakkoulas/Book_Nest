@@ -10,6 +10,7 @@ export interface Order {
   customerName?: {
     firstName: string;
     lastName: string;
+    phoneNumber: string;
   };
   sessionId: string | null;
   items: OrderItem[];

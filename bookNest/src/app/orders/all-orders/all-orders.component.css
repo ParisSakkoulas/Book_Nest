@@ -58,6 +58,7 @@
   text-transform: uppercase;
   letter-spacing: 0.025em;
   display: inline-block;
+  margin-left: 50px;
 }
 
 .status-badge.delivered {

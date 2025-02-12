@@ -6,6 +6,7 @@ import { Order } from '../models/Order.Model';
 import { SingleOrderResponse } from '../models/SingleOrderResponse';
 import { environment } from 'src/environments/environment';
 import { SpinnerService } from '../spinner/spinner.service';
+import { CartService } from '../cart.service';
 
 
 
@@ -23,7 +24,7 @@ export class CheckoutService {
 
 
 
-  constructor(private http: HttpClient, private spinnerService: SpinnerService,) { }
+  constructor(private http: HttpClient, private spinnerService: SpinnerService) { }
 
   // Get headers with session ID if available
   private getHeaders(): HttpHeaders {
@@ -41,7 +42,6 @@ export class CheckoutService {
 
   // Create new order with shipping address
   createOrder(shippingAddress: any): Observable<any> {
-
     return this.http.post(`${this.baseUrl}/orders/create`, { shippingAddress }, { headers: this.getHeaders() });
   }
 

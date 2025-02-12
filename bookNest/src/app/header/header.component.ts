@@ -31,9 +31,16 @@ export class HeaderComponent implements OnInit {
   ];
 
   cartSubscription = this.cartService.cart$.subscribe(cart => {
+    //If cart has items
     if (cart) {
       this.cart = cart;
       this.cartItemCount = cart.items.length;
+    }
+
+    //If cart has not items
+    if (!cart) {
+      this.cart = cart;
+      this.cartItemCount = 0;
     }
   });
 
