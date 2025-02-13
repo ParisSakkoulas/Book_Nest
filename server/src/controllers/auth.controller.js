@@ -293,7 +293,7 @@ exports.sendVerificationEmail = async ({ email, verificationToken }) => {
                         <p style="color: #666; font-size: 16px; line-height: 24px; margin: 0 0 30px;">
                             To complete your registration and access all features of BookNest, please verify your email address.
                         </p>
-                        <a href="http://localhost:4200/auth/login/verify/${verificationToken}" 
+                        <a href="https://book-nest-d3vf.onrender.com/api/auth/login/verify/${verificationToken}" 
                            style="display: inline-block; padding: 15px 30px; background-color: #1E88E5; 
                                   color: white; text-decoration: none; font-weight: 600; font-size: 16px; 
                                   border-radius: 6px; transition: background-color 0.3s ease;">
