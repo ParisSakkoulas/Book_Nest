@@ -32,7 +32,6 @@ exports.createOrder = async (req, res) => {
         }
 
 
-
         // Create order
         const order = new Order({
             userId: userId || null,
@@ -40,10 +39,12 @@ exports.createOrder = async (req, res) => {
             items: cart.items,
             totalAmount: cart.totalAmount,
             shippingAddress: shippingAddress.shippingAddress,
-            visitorInfo: !userId ? visitorInfo : undefined,
+            visitorInfo: !userId ? shippingAddress.visitorInfo : undefined,
             status: 'Pending',
             createdAt: new Date()
         });
+
+        console.log(req.body)
 
         // Validate stock levels before creating order
         for (const item of cart.items) {
@@ -63,8 +64,15 @@ exports.createOrder = async (req, res) => {
         await order.save();
 
         // Return order
-        const populatedOrder = await Order.findById(order._id)
-            .populate('items.productId', 'title author price imageUrl');
+        const populatedOrder = await Order.findById(order._id).populate('items.productId', 'title author price imageUrl').populate('userId', 'email');
+
+
+        console.log(populatedOrder)
+
+
+        //Send email to either user or customer for the order creation
+        await exports.sendEmailForStatusOrder({ email: order.userId ? populatedOrder.userId.email : order.visitorInfo.email, order });
+
 
         res.status(201).json(populatedOrder);
 
@@ -309,17 +317,36 @@ exports.cancelOrder = async (req, res) => {
 // Controller: get all orderss (admin)
 exports.getAllOrders = async (req, res) => {
     try {
-        const { email, phone, status, orderId, searchText } = req.query;
+        const { email, phone, status, orderId, searchText, firstName, lastName } = req.query;
+
         let userIds = [];
         let query = {};
 
-        // If email filter is provided
+        console.log("First name ", searchText);
+        console.log("last name", lastName);
+
+
+        // If email is provided
         if (email) {
+
+            let emailConditions = [];
+
+            // fot the register user
             const users = await User.find({
                 email: { $regex: email, $options: 'i' }
             }).select('_id');
             userIds = users.map(user => user._id);
-            query.userId = { $in: userIds };
+            emailConditions.push({ userId: { $in: userIds } });
+
+
+            // visitor email condition
+            emailConditions.push({
+                $and: [
+                    { userId: null },
+                    { 'visitorInfo.email': { $regex: email, $options: 'i' } }
+                ]
+            });
+            query.$or = emailConditions;
         }
 
         // If phone is provided
@@ -336,32 +363,58 @@ exports.getAllOrders = async (req, res) => {
             }
         }
 
-        // Search text handling
+        // if searchText is provide
         if (searchText) {
             if (mongoose.Types.ObjectId.isValid(searchText)) {
                 query._id = new mongoose.Types.ObjectId(searchText);
             }
             else {
+                let nameConditions = [];
 
-                // Search for name
+                const nameParts = searchText.trim().split(/\s+/);
+                console.log(nameParts.length)
+
+                // Search for register user in customer modl
                 const customers = await Customer.find({
                     $or: [
                         { firstName: { $regex: searchText, $options: 'i' } },
                         { lastName: { $regex: searchText, $options: 'i' } }
                     ]
                 }).select('user');
+                if (customers.length > 0) {
+                    const customerUserIds = customers.map(customer => customer.user);
+                    nameConditions.push({ userId: { $in: customerUserIds } });
+                }
 
-                const customerUserIds = customers.map(customer => customer.user);
+                //  Search for visitor name condition
+                nameConditions.push({
+                    $and: [
+                        { userId: null },
+                        {
+                            $or: [
+                                { 'visitorInfo.firstName': { $regex: searchText, $options: 'i' } },
+                                { 'visitorInfo.lastName': { $regex: searchText, $options: 'i' } }
+                            ]
+                        }
+                    ]
+                });
 
+
+                // Combined th query
                 if (query.userId) {
-                    query.userId = { $in: userIds.filter(id => customerUserIds.includes(id)) };
+                    query = {
+                        $and: [
+                            { userId: query.userId },
+                            { $or: nameConditions }
+                        ]
+                    };
                 } else {
-                    query.userId = { $in: customerUserIds };
+                    query.$or = nameConditions;
                 }
             }
         }
 
-        // Add status filter if provided
+        // Add status filter if exists
         if (status) {
             query.status = status;
         }
@@ -394,7 +447,7 @@ exports.getAllOrders = async (req, res) => {
             return orderObj;
         }));
 
-        // Count documents with the same query for accurate pagination
+        // Count orders result for pagination
         const total = await Order.countDocuments(query);
 
         res.status(200).json({
