@@ -20,7 +20,7 @@ export class CheckoutService {
   private baseUrl = environment.baseUrl;
 
   //local url
-  //private localUrl = environment.localUrl;
+  // private localUrl = environment.localUrl;
 
 
 
@@ -85,9 +85,14 @@ export class CheckoutService {
 
       }
 
-      else if (params.searchTerm.includes(' ')) {
+      else if (/\s/.test(params.searchTerm)) {
 
-        const [firstName, lastName] = params.searchTerm.split(' ');
+
+        const nameParts = params.searchTerm.trim().split(/\s+/).filter(part => part.length > 0);
+
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(' ');
+
         queryParams = queryParams.append('firstName', firstName);
         queryParams = queryParams.append('lastName', lastName);
       }

@@ -12,6 +12,12 @@ export interface Order {
     lastName: string;
     phoneNumber: string;
   };
+
+  visitorInfo?: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
   sessionId: string | null;
   items: OrderItem[];
   shippingAddress: ShippingAddress;

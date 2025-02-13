@@ -66,6 +66,10 @@ export class AllOrdersComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
+  getFullName(firstName?: string, lastName?: string): string {
+    return `${firstName} ${lastName}`.trim();
+  }
+
   loadOrders(): void {
 
     const params = {

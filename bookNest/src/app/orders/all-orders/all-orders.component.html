@@ -73,18 +73,39 @@
             {{order.customerName?.firstName?.charAt(0) +order.customerName?.lastName?.charAt(0) ||
             order.userId?.email?.charAt(0)?.toUpperCase() || 'US'}}
           </div>
+
           <div class="customer-details">
-            <span class="customer-name">
-              {{(order.customerName?.firstName || 'N/A') + ' ' + (order.customerName?.lastName || '')}}
-            </span>
-            <span class="customer-email">{{order.userId?.email || 'N/A'}}</span>
-            <span class="customer-phone">{{order.customerName?.phoneNumber}}</span>
+            <ng-container *ngIf="order.customerName">
+              <span class="customer-name">
+                {{ getFullName(order.customerName?.firstName, order.customerName?.lastName) }}
+              </span>
+              <span class="customer-email">
+                {{ order.userId?.email || 'N/A' }}
+              </span>
+              <span class="customer-phone">
+                {{ order.customerName?.phoneNumber || 'N/A' }}
+              </span>
+            </ng-container>
+
+            <ng-container *ngIf="order.visitorInfo">
+              <span class="customer-name">
+                {{ getFullName(order.visitorInfo?.firstName, order.visitorInfo?.lastName) }}
+              </span>
+              <span class="customer-email">
+                {{ order.visitorInfo?.email || 'N/A' }}
+              </span>
+            </ng-container>
 
             <div class="address">
-              <span class="city">{{order.shippingAddress?.city || 'N/A'}}</span>,
-              <span class="country">{{order.shippingAddress?.country || 'N/A'}}</span>
+              <span class="city">
+                {{ order.shippingAddress?.city || 'N/A' }}
+              </span>,
+              <span class="country">
+                {{ order.shippingAddress?.country || 'N/A' }}
+              </span>
             </div>
           </div>
+
         </div>
       </td>
     </ng-container>

@@ -170,8 +170,13 @@ export class CheckoutComponent implements OnInit {
             this.orderId = order._id;
             this.orderComplete = true;
 
-            // Clear visitor session after successful order
-            this.cartService.clearVisitorSession();
+            this.cartService.clearCart().subscribe({
+              next: (response) => { },
+              error: (error) => { console.log(error) }
+            })
+
+            this.spinnerService.hide();
+
           },
           error: (err) => {
             this.error = err.error?.error || 'Failed to create order';
